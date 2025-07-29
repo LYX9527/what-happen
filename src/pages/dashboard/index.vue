@@ -12,7 +12,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbList,
+  BreadcrumbList, 
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
@@ -26,14 +26,36 @@ import {useNews, type NewsItem} from "@/composables/useNews"
 // 使用新闻数据管理
 const {fetchPlatforms, fetchNews} = useNews()
 
-// 热门平台配置
+// 热门平台配置 - 包含所有不带TODO的平台
 const hotPlatforms = [
-  {platform: 'weibo', title: '微博热搜', color: 'red' as const},
-  {platform: 'thepaper', title: '澎湃新闻', color: 'blue' as const},
-  {platform: 'baidu', title: '百度热搜', color: 'green' as const},
-  {platform: 'douyin', title: '抖音热搜', color: 'purple' as const},
-  {platform: 'github', title: 'GitHub趋势', color: 'yellow' as const},
-  {platform: 'toutiao', title: '今日头条', color: 'red' as const},
+  {platform: 'weibo', title: '微博热搜'},
+  {platform: 'baidu', title: '百度热搜'},
+  {platform: 'douyin', title: '抖音热搜'},
+  {platform: 'thepaper', title: '澎湃新闻'},
+  {platform: 'github', title: 'GitHub趋势'},
+  {platform: 'toutiao', title: '今日头条'},
+  {platform: '_36kr', title: '36氪'},
+  {platform: 'b_hot_search', title: '哔哩哔哩热搜'},
+  {platform: 'b_hot_video', title: '哔哩哔哩视频'},
+  {platform: 'b_rank', title: '哔哩哔哩排行榜'},
+  {platform: 'cankaoxiaoxi', title: '参考消息'},
+  {platform: 'gelonghui', title: '格隆汇'},
+  {platform: 'guoheboke', title: '果核剥壳'},
+  {platform: 'ithome', title: 'IT之家'},
+  {platform: 'jin10', title: '金十数据'},
+  {platform: 'linuxdo_latest', title: 'LinuxDo最新'},
+  {platform: 'nowcoder', title: '牛客网'},
+  {platform: 'pcbeta_windows', title: '远景论坛Windows'},
+  {platform: 'solidot', title: '奇客Solidot'},
+  {platform: 'sputniknewscn', title: '俄罗斯卫星通讯社'},
+  {platform: 'tieba', title: '百度贴吧'},
+  {platform: 'v2ex', title: 'V2EX'},
+  {platform: 'wallstreetcn_live', title: '华尔街见闻直播'},
+  {platform: 'wallstreetcn_news', title: '华尔街见闻新闻'},
+  {platform: 'wallstreetcn_hot', title: '华尔街见闻热榜'},
+  {platform: 'hotstock', title: '雪球热股'},
+  {platform: 'zaobao', title: '联合早报'},
+  {platform: 'cls_telegraph', title: '财联社'},
 ]
 
 // 各平台数据状态
@@ -63,7 +85,7 @@ const fetchPlatformData = async (platform: string) => {
   try {
     const response = await fetch(`http://localhost:10010/news?platform=${platform}`)
     const result = await response.json()
-
+    
     if (result.code === 200) {
       state.data = result.data
     } else {
@@ -109,75 +131,64 @@ onMounted(() => {
 <template>
   <SidebarProvider>
     <AppSidebar/>
-    <SidebarInset>
-      <header
-          class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+    <SidebarInset class="flex flex-col h-screen">
+      <!-- 固定的Header -->
+      <header class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1"/>
           <Separator orientation="vertical" class="mr-2 h-4"/>
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="#">
+                <BreadcrumbLink href="#" class="text-muted-foreground">
                   新闻聚合平台
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator class="hidden md:block"/>
               <BreadcrumbItem>
-                <BreadcrumbPage>实时热点新闻</BreadcrumbPage>
+                <BreadcrumbPage class="text-foreground font-medium">实时热点新闻</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-
+        
         <!-- 右侧按钮区域 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <Button
-              variant="outline"
-              size="sm"
-              @click="refreshAllData"
-              class="gap-1 hidden sm:flex"
+            variant="outline"
+            size="sm"
+            @click="refreshAllData"
+            class="gap-1 hidden sm:flex h-8"
           >
             <RefreshCw class="w-4 h-4"/>
             刷新全部
           </Button>
           <Button
-              variant="outline"
-              size="icon"
-              @click="refreshAllData"
-              class="sm:hidden"
+            variant="outline"
+            size="icon"
+            @click="refreshAllData"
+            class="sm:hidden h-8 w-8"
           >
             <RefreshCw class="w-4 h-4"/>
           </Button>
           <ThemeToggle/>
         </div>
       </header>
-
-      <div class="flex-1 overflow-auto">
-        <div class="container mx-auto p-4 sm:p-6">
-          <!-- 页面标题 -->
-          <div class="mb-8 text-center">
-            <h1 class="text-3xl font-bold text-foreground mb-2">实时热点新闻聚合</h1>
-            <p class="text-muted-foreground">汇聚全网热门资讯，掌握最新动态</p>
-          </div>
-
+      
+      <!-- 可滚动的主内容区域 -->
+      <div class="flex-1 overflow-hidden bg-muted/20">
+        <div class="h-full overflow-y-auto scrollbar-thin p-4">
           <!-- 榜单网格 -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 lg:gap-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             <NewsRankCard
-                v-for="platform in hotPlatforms"
-                :key="platform.platform"
-                :title="platform.title"
-                :color="platform.color"
-                :data="platformsData[platform.platform]?.data || []"
-                :loading="platformsData[platform.platform]?.loading || false"
-                @item-click="handleCardItemClick"
-                @show-more="handleShowMore(platform.platform, platform.title)"
+              v-for="platform in hotPlatforms"
+              :key="platform.platform"
+              :title="platform.title"
+              :data="platformsData[platform.platform]?.data || []"
+              :loading="platformsData[platform.platform]?.loading || false"
+              @item-click="handleCardItemClick"
+              @show-more="handleShowMore(platform.platform, platform.title)"
             />
-          </div>
-
-          <!-- 底部提示 -->
-          <div class="mt-12 text-center text-sm text-muted-foreground">
-            <p>数据每5分钟自动更新，点击新闻标题可跳转到原始链接</p>
           </div>
         </div>
       </div>
