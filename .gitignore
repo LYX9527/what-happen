@@ -28,3 +28,4 @@ dist-ssr
 .idea/
 .vscode/
 .claude/
+types/*.d.ts
