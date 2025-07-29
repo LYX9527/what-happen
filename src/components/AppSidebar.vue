@@ -12,6 +12,13 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  Newspaper,
+  TrendingUp,
+  Globe,
+  Tv,
+  Car,
+  Film,
+  Monitor
 } from 'lucide-vue-next'
 
 import {
@@ -39,103 +46,111 @@ const data = {
   },
   teams: [
     {
-      name: 'Acme Inc',
+      name: '新闻聚合中心',
       logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
+      plan: '专业版',
     },
     {
-      name: 'Acme Corp.',
+      name: '热点追踪',
       logo: AudioWaveform,
-      plan: 'Startup',
+      plan: '标准版',
     },
     {
-      name: 'Evil Corp.',
+      name: '趋势分析',
       logo: Command,
-      plan: 'Free',
+      plan: '基础版',
     },
   ],
   navMain: [
     {
-      title: 'Playground',
+      title: '新闻聚合',
       url: '#',
-      icon: SquareTerminal,
+      icon: Newspaper,
       isActive: true,
       items: [
         {
-          title: 'History',
+          title: '热搜榜',
           url: '#',
         },
         {
-          title: 'Starred',
+          title: '科技资讯',
           url: '#',
         },
         {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
+          title: '财经新闻',
           url: '#',
         },
         {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
+          title: '社会新闻',
           url: '#',
         },
       ],
     },
     {
-      title: 'Documentation',
+      title: '趋势榜单',
       url: '#',
-      icon: BookOpen,
+      icon: TrendingUp,
       items: [
         {
-          title: 'Introduction',
+          title: '微博热搜',
           url: '#',
         },
         {
-          title: 'Get Started',
+          title: '百度热搜',
           url: '#',
         },
         {
-          title: 'Tutorials',
+          title: '知乎热榜',
           url: '#',
         },
         {
-          title: 'Changelog',
+          title: 'GitHub趋势',
           url: '#',
         },
       ],
     },
     {
-      title: 'Settings',
+      title: '娱乐资讯',
       url: '#',
-      icon: Settings2,
+      icon: Film,
       items: [
         {
-          title: 'General',
+          title: '电影榜',
           url: '#',
         },
         {
-          title: 'Team',
+          title: '电视剧榜',
           url: '#',
         },
         {
-          title: 'Billing',
+          title: '综艺榜',
           url: '#',
         },
         {
-          title: 'Limits',
+          title: '明星动态',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: '专题频道',
+      url: '#',
+      icon: Monitor,
+      items: [
+        {
+          title: '汽车榜',
+          url: '#',
+        },
+        {
+          title: '科技前沿',
+          url: '#',
+        },
+        {
+          title: '游戏资讯',
+          url: '#',
+        },
+        {
+          title: '体育新闻',
           url: '#',
         },
       ],
