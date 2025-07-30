@@ -1,22 +1,12 @@
 <script setup lang="ts">
-import type { SidebarProps } from '@/components/ui/sidebar'
+import type {SidebarProps} from '@/components/ui/sidebar'
 
 import {
   AudioWaveform,
-  BookOpen,
-  Bot,
   Command,
-  Frame,
   GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
   Newspaper,
   TrendingUp,
-  Globe,
-  Tv,
-  Car,
   Film,
   Monitor
 } from 'lucide-vue-next'
@@ -30,18 +20,16 @@ import {
 } from '@/components/ui/sidebar'
 import TeamSwitcher from "@/components/TeamSwitcher.vue";
 import NavMain from "@/components/NavMain.vue";
-import NavProjects from "@/components/NavProjects.vue";
 import NavUser from "@/components/NavUser.vue";
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 })
 
-// This is sample data.
 const data = {
   user: {
-    name: 'shadcn',
-    email: 'm@example.com',
+    name: '倚栏听风',
+    email: 'https://github.com/LYX9527',
     avatar: '/avatars/shadcn.jpg',
   },
   teams: [
@@ -49,17 +37,7 @@ const data = {
       name: '新闻聚合中心',
       logo: GalleryVerticalEnd,
       plan: '专业版',
-    },
-    {
-      name: '热点追踪',
-      logo: AudioWaveform,
-      plan: '标准版',
-    },
-    {
-      name: '趋势分析',
-      logo: Command,
-      plan: '基础版',
-    },
+    }
   ],
   navMain: [
     {
@@ -156,38 +134,20 @@ const data = {
       ],
     },
   ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame,
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map,
-    },
-  ],
 }
 </script>
 
 <template>
   <Sidebar v-bind="props">
     <SidebarHeader>
-      <TeamSwitcher :teams="data.teams" />
+      <TeamSwitcher :teams="data.teams"/>
     </SidebarHeader>
     <SidebarContent>
-      <NavMain :items="data.navMain" />
-      <NavProjects :projects="data.projects" />
+      <NavMain :items="data.navMain"/>
     </SidebarContent>
-    <SidebarFooter>
-      <NavUser :user="data.user" />
-    </SidebarFooter>
-    <SidebarRail />
+<!--    <SidebarFooter>-->
+<!--      <NavUser :user="data.user"/>-->
+<!--    </SidebarFooter>-->
+    <SidebarRail/>
   </Sidebar>
 </template>
