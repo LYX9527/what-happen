@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref, reactive} from 'vue'
+import {onMounted, reactive} from 'vue'
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar"
 import AppSidebar from "@/components/AppSidebar.vue"
 import {
@@ -22,8 +22,7 @@ import {
 } from 'lucide-vue-next'
 import NewsRankCard from "@/components/NewsRankCard.vue"
 import ThemeToggle from "@/components/ThemeToggle.vue"
-import {useNews, type NewsItem} from "@/composables/useNews"
-import {fetchNews as apiFetchNews, fetchPlatforms as apiFetchPlatforms} from "@/api"
+import {fetchNews as apiFetchNews, fetchPlatforms as apiFetchPlatforms, type NewsItem} from "@/api"
 
 import WeiBo from "@/components/icon/weibo.vue"
 import Baidu from "@/components/icon/baidu.vue"
@@ -47,8 +46,6 @@ import Kaopu from "@/components/icon/kaopu.vue";
 import Kuaishou from "@/components/icon/kuaishou.vue";
 import Zhihu from "@/components/icon/zhihu.vue";
 import Coolapk from "@/components/icon/coolapk.vue";
-// 使用新闻数据管理
-const {fetchPlatforms, fetchNews} = useNews()
 
 // 平台图标映射
 const platformIcons = {
@@ -188,7 +185,6 @@ const getPlatformIcon = (platform: string) => {
 
 // 组件挂载时获取数据
 onMounted(() => {
-  fetchPlatforms()
   fetchAllPlatformsData()
 })
 </script>

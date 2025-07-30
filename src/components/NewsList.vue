@@ -2,7 +2,7 @@
 import { ExternalLink, RefreshCw } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { NewsItem } from '@/composables/useNews'
+import type {NewsItem} from "@/api";
 
 interface Props {
   news: NewsItem[]
@@ -50,18 +50,18 @@ const openNewsLink = (url: string) => {
         刷新
       </Button>
     </div>
-    
+
     <!-- 错误提示 -->
     <div v-if="error" class="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
       <p class="text-destructive text-sm">{{ error }}</p>
     </div>
-    
+
     <!-- 空状态 -->
-    <div v-else-if="!selectedPlatformLabel && !loading" 
+    <div v-else-if="!selectedPlatformLabel && !loading"
          class="text-center py-12 text-muted-foreground">
       <p>请选择一个新闻平台查看内容</p>
     </div>
-    
+
     <!-- 加载状态 -->
     <div v-else-if="loading" class="space-y-3">
       <div v-for="i in 10" :key="i" class="space-y-2">
@@ -69,7 +69,7 @@ const openNewsLink = (url: string) => {
         <Skeleton class="h-3 w-1/2" />
       </div>
     </div>
-    
+
     <!-- 新闻列表 -->
     <div v-else-if="news.length > 0" class="space-y-2">
       <div
@@ -93,7 +93,7 @@ const openNewsLink = (url: string) => {
         </div>
       </div>
     </div>
-    
+
     <!-- 无数据状态 -->
     <div v-else class="text-center py-8 text-muted-foreground">
       <p>暂无新闻数据</p>
@@ -108,4 +108,4 @@ const openNewsLink = (url: string) => {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-</style> 
+</style>

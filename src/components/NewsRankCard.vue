@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { TrendingUp, TrendingDown, Minus, ExternalLink, RefreshCw, Globe } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
-import type { NewsItem } from '@/composables/useNews'
+import type {NewsItem} from "@/api";
 
 interface Props {
   title: string

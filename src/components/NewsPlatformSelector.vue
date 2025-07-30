@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { Platform } from '@/composables/useNews'
+import type {Platform} from "@/api";
 
 interface Props {
   platforms: Platform[]
@@ -24,7 +24,7 @@ const emit = defineEmits<{
 // 扁平化平台列表
 const flatPlatforms = computed(() => {
   const result: { platform: string; label: string; parentLabel: string }[] = []
-  
+
   props.platforms.forEach(platform => {
     platform.list.forEach(subPlatform => {
       result.push({
@@ -34,7 +34,7 @@ const flatPlatforms = computed(() => {
       })
     })
   })
-  
+
   return result
 })
 
@@ -48,19 +48,19 @@ const handlePlatformSelect = (platform: string, label: string) => {
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-semibold text-foreground">选择新闻平台</h2>
     </div>
-    
+
     <!-- 错误提示 -->
     <div v-if="error" class="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
       <p class="text-destructive text-sm">{{ error }}</p>
     </div>
-    
+
     <!-- 加载状态 -->
     <div v-if="loading" class="space-y-2">
       <Skeleton class="h-8 w-full" />
       <Skeleton class="h-8 w-full" />
       <Skeleton class="h-8 w-full" />
     </div>
-    
+
     <!-- 平台列表 -->
     <div v-else-if="!error" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
       <Button
@@ -78,4 +78,4 @@ const handlePlatformSelect = (platform: string, label: string) => {
       </Button>
     </div>
   </div>
-</template> 
+</template>
