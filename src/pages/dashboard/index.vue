@@ -1,9 +1,3 @@
-<script lang="ts">
-export const description = '新闻聚合查看界面 - 实时获取各大平台热点新闻'
-export const iframeHeight = '800px'
-export const containerClass = 'w-full h-full'
-</script>
-
 <script setup lang="ts">
 import {onMounted, ref, reactive} from 'vue'
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar"
@@ -12,7 +6,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbList, 
+  BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
@@ -26,7 +20,7 @@ import {useNews, type NewsItem} from "@/composables/useNews"
 // 使用新闻数据管理
 const {fetchPlatforms, fetchNews} = useNews()
 
-// 热门平台配置 - 包含所有不带TODO的平台
+// 热门平台配置
 const hotPlatforms = [
   {platform: 'weibo', title: '微博热搜'},
   {platform: 'baidu', title: '百度热搜'},
@@ -43,7 +37,6 @@ const hotPlatforms = [
   {platform: 'guoheboke', title: '果核剥壳'},
   {platform: 'ithome', title: 'IT之家'},
   {platform: 'jin10', title: '金十数据'},
-  {platform: 'linuxdo_latest', title: 'LinuxDo最新'},
   {platform: 'nowcoder', title: '牛客网'},
   {platform: 'pcbeta_windows', title: '远景论坛Windows'},
   {platform: 'solidot', title: '奇客Solidot'},
@@ -56,6 +49,10 @@ const hotPlatforms = [
   {platform: 'hotstock', title: '雪球热股'},
   {platform: 'zaobao', title: '联合早报'},
   {platform: 'cls_telegraph', title: '财联社'},
+  {platform: 'kaopu', title: '靠谱'},
+  {platform: 'kuaishou', title: '快手热搜'},
+  {platform: 'zhihu', title: '知乎'},
+  {platform: 'coolapk', title: '酷安'},
 ]
 
 // 各平台数据状态
@@ -85,7 +82,7 @@ const fetchPlatformData = async (platform: string) => {
   try {
     const response = await fetch(`http://localhost:10010/news?platform=${platform}`)
     const result = await response.json()
-    
+
     if (result.code === 200) {
       state.data = result.data
     } else {
@@ -133,7 +130,8 @@ onMounted(() => {
     <AppSidebar/>
     <SidebarInset class="flex flex-col h-screen">
       <!-- 固定的Header -->
-      <header class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header
+          class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
           <SidebarTrigger class="-ml-1"/>
           <Separator orientation="vertical" class="mr-2 h-4"/>
@@ -151,43 +149,43 @@ onMounted(() => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        
+
         <!-- 右侧按钮区域 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <Button
-            variant="outline"
-            size="sm"
-            @click="refreshAllData"
-            class="gap-1 hidden sm:flex h-8"
+              variant="outline"
+              size="sm"
+              @click="refreshAllData"
+              class="gap-1 hidden sm:flex h-8"
           >
             <RefreshCw class="w-4 h-4"/>
             刷新全部
           </Button>
           <Button
-            variant="outline"
-            size="icon"
-            @click="refreshAllData"
-            class="sm:hidden h-8 w-8"
+              variant="outline"
+              size="icon"
+              @click="refreshAllData"
+              class="sm:hidden h-8 w-8"
           >
             <RefreshCw class="w-4 h-4"/>
           </Button>
           <ThemeToggle/>
         </div>
       </header>
-      
+
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">
         <div class="h-full overflow-y-auto scrollbar-thin p-4">
           <!-- 榜单网格 -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             <NewsRankCard
-              v-for="platform in hotPlatforms"
-              :key="platform.platform"
-              :title="platform.title"
-              :data="platformsData[platform.platform]?.data || []"
-              :loading="platformsData[platform.platform]?.loading || false"
-              @item-click="handleCardItemClick"
-              @show-more="handleShowMore(platform.platform, platform.title)"
+                v-for="platform in hotPlatforms"
+                :key="platform.platform"
+                :title="platform.title"
+                :data="platformsData[platform.platform]?.data || []"
+                :loading="platformsData[platform.platform]?.loading || false"
+                @item-click="handleCardItemClick"
+                @show-more="handleShowMore(platform.platform, platform.title)"
             />
           </div>
         </div>
