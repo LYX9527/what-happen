@@ -15,31 +15,15 @@ import {Button} from "@/components/ui/button"
 import {
   RefreshCw,
   Globe,
-  MessageCircle,
-  Search,
-  Video,
-  Tv,
-  Newspaper,
   Github,
-  Monitor,
-  TrendingUp,
-  Users,
-  Settings,
-  Sparkles,
-  Code,
   DollarSign,
   Coffee,
-  Gamepad2,
-  ShoppingCart,
-  Star,
-  BookOpen,
-  Briefcase,
-  Radio,
-  Headphones
+  Radio
 } from 'lucide-vue-next'
 import NewsRankCard from "@/components/NewsRankCard.vue"
 import ThemeToggle from "@/components/ThemeToggle.vue"
 import {useNews, type NewsItem} from "@/composables/useNews"
+import {fetchNews as apiFetchNews, fetchPlatforms as apiFetchPlatforms} from "@/api"
 
 import WeiBo from "@/components/icon/weibo.vue"
 import Baidu from "@/components/icon/baidu.vue"
@@ -161,16 +145,9 @@ const fetchPlatformData = async (platform: string) => {
   state.error = null
 
   try {
-    const response = await fetch(`http://localhost:10010/news?platform=${platform}`)
-    const result = await response.json()
-
-    if (result.code === 200) {
-      state.data = result.data
-    } else {
-      state.error = result.msg || '获取数据失败'
-    }
-  } catch (err) {
-    state.error = '网络请求失败'
+    state.data = await apiFetchNews(platform)
+  } catch (err: any) {
+    state.error = err.message || '网络请求失败'
     console.error(`获取${platform}数据失败:`, err)
   } finally {
     state.loading = false
