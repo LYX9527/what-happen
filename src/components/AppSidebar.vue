@@ -161,6 +161,33 @@ const data = {
       ],
     },
     {
+      title: '热门平台',
+      url: '#',
+      icon: TrendingUp,
+      items: [
+        {
+          title: '微博热搜',
+          url: '#',
+          filter: 'weibo'
+        },
+        {
+          title: '百度热搜',
+          url: '#',
+          filter: 'baidu'
+        },
+        {
+          title: 'GitHub趋势',
+          url: '#',
+          filter: 'github'
+        },
+        {
+          title: '知乎热榜',
+          url: '#',
+          filter: 'zhihu'
+        }
+      ],
+    },
+    {
       title: '我的收藏',
       url: '#',
       icon: Star,

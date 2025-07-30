@@ -26,6 +26,7 @@ import {
   ExternalLink
 } from 'lucide-vue-next'
 import NewsRankCard from "@/components/NewsRankCard.vue"
+import LargeNewsRankCard from "@/components/LargeNewsRankCard.vue"
 import ThemeToggle from "@/components/ThemeToggle.vue"
 import {fetchNews as apiFetchNews, fetchPlatforms as apiFetchPlatforms, type NewsItem} from "@/api"
 import {useFavorites, type FavoriteItem} from '@/composables/useFavorites'
@@ -241,7 +242,11 @@ const getFilterTitle = (filter: string) => {
     tech: '科技资讯',
     finance: '财经新闻',
     social: '社会新闻',
-    favorites: '我的收藏'
+    favorites: '我的收藏',
+    weibo: '微博热搜',
+    baidu: '百度热搜',
+    github: 'GitHub趋势',
+    zhihu: '知乎热榜'
   }
   return filterTitles[filter] || '全部榜单'
 }
@@ -446,6 +451,21 @@ onMounted(() => {
                   </div>
                 </TabsContent>
               </Tabs>
+            </div>
+
+            <!-- 单个平台大号卡片 -->
+            <div v-else-if="filteredPlatforms.length === 1" class="max-w-4xl mx-auto">
+              <LargeNewsRankCard
+                  :key="filteredPlatforms[0].platform"
+                  :title="filteredPlatforms[0].title"
+                  :platform="filteredPlatforms[0].platform"
+                  :platform-icon="getPlatformIcon(filteredPlatforms[0].platform)"
+                  :data="platformsData[filteredPlatforms[0].platform]?.data || []"
+                  :loading="platformsData[filteredPlatforms[0].platform]?.loading || false"
+                  :max-items="30"
+                  @item-click="handleCardItemClick"
+                  @refresh="refreshSinglePlatform(filteredPlatforms[0].platform)"
+              />
             </div>
 
             <!-- 普通榜单网格 -->
