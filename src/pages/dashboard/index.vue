@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import {Separator} from "@/components/ui/separator"
 import {Button} from "@/components/ui/button"
+import {ScrollArea} from "@/components/ui/scroll-area"
 import {
   RefreshCw,
   Globe,
@@ -239,23 +240,25 @@ onMounted(() => {
 
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">
-        <div class="h-full overflow-y-auto scrollbar-thin p-4">
-          <!-- 榜单网格 -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-            <NewsRankCard
-                v-for="platform in hotPlatforms"
-                :key="platform.platform"
-                :title="platform.title"
-                :platform="platform.platform"
-                :platform-icon="getPlatformIcon(platform.platform)"
-                :data="platformsData[platform.platform]?.data || []"
-                :loading="platformsData[platform.platform]?.loading || false"
-                @item-click="handleCardItemClick"
-                @show-more="handleShowMore(platform.platform, platform.title)"
-                @refresh="refreshSinglePlatform(platform.platform)"
-            />
+        <ScrollArea class="h-full">
+          <div class="p-4">
+            <!-- 榜单网格 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+              <NewsRankCard
+                  v-for="platform in hotPlatforms"
+                  :key="platform.platform"
+                  :title="platform.title"
+                  :platform="platform.platform"
+                  :platform-icon="getPlatformIcon(platform.platform)"
+                  :data="platformsData[platform.platform]?.data || []"
+                  :loading="platformsData[platform.platform]?.loading || false"
+                  @item-click="handleCardItemClick"
+                  @show-more="handleShowMore(platform.platform, platform.title)"
+                  @refresh="refreshSinglePlatform(platform.platform)"
+              />
+            </div>
           </div>
-        </div>
+        </ScrollArea>
       </div>
     </SidebarInset>
   </SidebarProvider>

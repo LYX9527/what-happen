@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { TrendingUp, TrendingDown, Minus, ExternalLink, RefreshCw, Globe } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import type {NewsItem} from "@/api";
 
 interface Props {
@@ -11,11 +12,13 @@ interface Props {
   showMore?: boolean
   platformIcon?: any // 平台图标组件
   platform?: string // 平台标识，用于默认图标
+  maxItems?: number // 最大显示条数，超出时显示滚动条
 }
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
-  showMore: true
+  showMore: true,
+  maxItems: 20
 })
 
 const emit = defineEmits<{
@@ -83,8 +86,13 @@ const handleRefresh = () => {
   emit('refresh')
 }
 
-// 只显示前10项
-const displayItems = computed(() => props.data.slice(0, 10))
+// 根据maxItems限制显示条数，超出时可以滚动查看
+const displayItems = computed(() => {
+  if (props.maxItems && props.maxItems > 0) {
+    return props.data.slice(0, props.maxItems)
+  }
+  return props.data // 如果maxItems为0或负数，则显示全部
+})
 </script>
 
 <template>
@@ -134,7 +142,7 @@ const displayItems = computed(() => props.data.slice(0, 10))
     <div class="flex-1 overflow-hidden">
       <!-- 加载状态 -->
       <div v-if="loading" class="p-1.5 space-y-1">
-        <div v-for="i in 12" :key="i" class="flex items-center gap-2 px-2 py-1.5">
+        <div v-for="i in Math.min(props.maxItems || 20, 15)" :key="i" class="flex items-center gap-2 px-2 py-1.5">
           <div class="w-4 h-2.5 bg-muted animate-pulse rounded"></div>
           <div class="flex-1 h-2.5 bg-muted animate-pulse rounded"></div>
           <div class="w-2.5 h-2.5 bg-muted animate-pulse rounded"></div>
@@ -142,10 +150,7 @@ const displayItems = computed(() => props.data.slice(0, 10))
       </div>
 
       <!-- 榜单列表 -->
-      <div
-        v-else-if="displayItems.length > 0"
-        class="h-full overflow-y-auto scrollbar-thin"
-      >
+      <ScrollArea v-else-if="displayItems.length > 0" class="h-full">
         <div class="p-1.5 space-y-0.5">
           <div
             v-for="(item, index) in displayItems"
@@ -166,7 +171,8 @@ const displayItems = computed(() => props.data.slice(0, 10))
 
             <!-- 标题 -->
             <div class="flex-1 min-w-0">
-              <p class="text-xs text-foreground group-hover:text-foreground/80 transition-colors truncate leading-normal">
+              <p class="text-xs text-foreground group-hover:text-foreground/80 transition-all duration-200 truncate leading-normal
+                        relative group-hover:underline underline-offset-2 decoration-1 decoration-muted-foreground/50">
                 {{ item.title }}
               </p>
             </div>
@@ -178,7 +184,7 @@ const displayItems = computed(() => props.data.slice(0, 10))
             />
           </div>
         </div>
-      </div>
+      </ScrollArea>
 
       <!-- 空状态 -->
       <div v-else class="flex items-center justify-center h-full text-muted-foreground">
