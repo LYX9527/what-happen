@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {SidebarProps} from '@/components/ui/sidebar'
+import {computed} from 'vue'
 
 import {
   AudioWaveform,
@@ -8,8 +9,11 @@ import {
   Newspaper,
   TrendingUp,
   Film,
-  Monitor
+  Monitor,
+  Star
 } from 'lucide-vue-next'
+
+import {useFavorites} from '@/composables/useFavorites'
 
 import {
   Sidebar,
@@ -25,6 +29,16 @@ import NavUser from "@/components/NavUser.vue";
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 })
+
+const emit = defineEmits<{
+  'filter-change': [filter: string]
+}>()
+
+// 收藏功能
+const {favoritesCount, newsItemsCount, platformsCount} = useFavorites()
+
+// 总收藏数量（用于显示徽章）
+const totalFavoritesCount = computed(() => newsItemsCount.value + platformsCount.value)
 
 const data = {
   user: {
@@ -47,20 +61,29 @@ const data = {
       isActive: true,
       items: [
         {
+          title: '全部榜单',
+          url: '#',
+          filter: 'all'
+        },
+        {
           title: '热搜榜',
           url: '#',
+          filter: 'hot'
         },
         {
           title: '科技资讯',
           url: '#',
+          filter: 'tech'
         },
         {
           title: '财经新闻',
           url: '#',
+          filter: 'finance'
         },
         {
           title: '社会新闻',
           url: '#',
+          filter: 'social'
         },
       ],
     },
@@ -72,18 +95,22 @@ const data = {
         {
           title: '微博热搜',
           url: '#',
+          filter: "weibo"
         },
         {
           title: '百度热搜',
           url: '#',
+          filter: 'baidu'
         },
         {
           title: '知乎热榜',
           url: '#',
+          filter: 'zhihu'
         },
         {
           title: 'GitHub趋势',
           url: '#',
+          filter: 'github'
         },
       ],
     },
@@ -133,7 +160,25 @@ const data = {
         },
       ],
     },
+    {
+      title: '我的收藏',
+      url: '#',
+      icon: Star,
+      badge: computed(() => totalFavoritesCount.value > 0 ? totalFavoritesCount.value.toString() : undefined),
+      items: [
+        {
+          title: '查看收藏',
+          url: '#',
+          filter: 'favorites'
+        }
+      ],
+    },
   ],
+}
+
+// 处理导航点击
+const handleNavClick = (filter: string) => {
+  emit('filter-change', filter)
 }
 </script>
 
@@ -143,11 +188,11 @@ const data = {
       <TeamSwitcher :teams="data.teams"/>
     </SidebarHeader>
     <SidebarContent>
-      <NavMain :items="data.navMain"/>
+      <NavMain :items="data.navMain" @item-click="handleNavClick"/>
     </SidebarContent>
-<!--    <SidebarFooter>-->
-<!--      <NavUser :user="data.user"/>-->
-<!--    </SidebarFooter>-->
+    <!--    <SidebarFooter>-->
+    <!--      <NavUser :user="data.user"/>-->
+    <!--    </SidebarFooter>-->
     <SidebarRail/>
   </Sidebar>
 </template>

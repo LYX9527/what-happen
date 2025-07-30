@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {onMounted, reactive} from 'vue'
+import {onMounted, reactive, ref, computed, watch} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar"
 import AppSidebar from "@/components/AppSidebar.vue"
 import {
@@ -13,17 +14,21 @@ import {
 import {Separator} from "@/components/ui/separator"
 import {Button} from "@/components/ui/button"
 import {ScrollArea} from "@/components/ui/scroll-area"
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {
   RefreshCw,
   Globe,
   Github,
   DollarSign,
   Coffee,
-  Radio
+  Radio,
+  Star,
+  ExternalLink
 } from 'lucide-vue-next'
 import NewsRankCard from "@/components/NewsRankCard.vue"
 import ThemeToggle from "@/components/ThemeToggle.vue"
 import {fetchNews as apiFetchNews, fetchPlatforms as apiFetchPlatforms, type NewsItem} from "@/api"
+import {useFavorites, type FavoriteItem} from '@/composables/useFavorites'
 
 import WeiBo from "@/components/icon/weibo.vue"
 import Baidu from "@/components/icon/baidu.vue"
@@ -47,6 +52,24 @@ import Kaopu from "@/components/icon/kaopu.vue";
 import Kuaishou from "@/components/icon/kuaishou.vue";
 import Zhihu from "@/components/icon/zhihu.vue";
 import Coolapk from "@/components/icon/coolapk.vue";
+
+// 路由
+const route = useRoute()
+const router = useRouter()
+
+// 收藏功能
+const {newsItems, platforms} = useFavorites()
+
+// 有效的筛选值
+const validFilters = ['all', 'hot', 'tech', 'finance', 'social', 'favorites', 'weibo', 'baidu', 'github', 'zhihu']
+
+// 验证并获取有效的筛选值
+const getValidFilter = (filter: string | undefined): string => {
+  return filter && validFilters.includes(filter) ? filter : 'all'
+}
+
+// 筛选状态 - 从URL参数初始化
+const currentFilter = ref<string>(getValidFilter(route.query.filter as string))
 
 // 平台图标映射
 const platformIcons = {
@@ -118,6 +141,32 @@ const hotPlatforms = [
   {platform: 'coolapk', title: '酷安'},
 ]
 
+// 平台分类映射
+const platformCategories: Record<string, string[]> = {
+  hot: ['weibo', 'baidu', 'douyin', 'toutiao', 'zhihu', 'kuaishou'],
+  tech: ['github', '_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk'],
+  finance: ['gelonghui', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph'],
+  social: ['thepaper', 'cankaoxiaoxi', 'zaobao', 'sputniknewscn'],
+  github: ['github'],
+  weibo: ['weibo'],
+  baidu: ['baidu'],
+  zhihu: ['zhihu'],
+}
+
+// 根据筛选条件过滤平台
+const filteredPlatforms = computed(() => {
+  if (currentFilter.value === 'all') {
+    return hotPlatforms
+  }
+
+  if (currentFilter.value === 'favorites') {
+    return [] // 收藏页面不显示普通平台
+  }
+
+  const categoryPlatforms = platformCategories[currentFilter.value] || []
+  return hotPlatforms.filter(p => categoryPlatforms.includes(p.platform));
+})
+
 // 各平台数据状态
 const platformsData = reactive<Record<string, {
   data: NewsItem[]
@@ -184,15 +233,83 @@ const getPlatformIcon = (platform: string) => {
   return platformIcons[platform as keyof typeof platformIcons] || Globe
 }
 
+// 获取筛选标题
+const getFilterTitle = (filter: string) => {
+  const filterTitles: Record<string, string> = {
+    all: '全部榜单',
+    hot: '热搜榜',
+    tech: '科技资讯',
+    finance: '财经新闻',
+    social: '社会新闻',
+    favorites: '我的收藏'
+  }
+  return filterTitles[filter] || '全部榜单'
+}
+
+// 处理筛选变化
+const handleFilterChange = (filter: string) => {
+  currentFilter.value = filter
+
+  // 更新URL参数
+  router.push({
+    query: {
+      ...route.query,
+      filter: filter === 'all' ? undefined : filter // 如果是 'all' 则移除参数
+    }
+  })
+}
+
+// 监听路由参数变化
+watch(() => route.query.filter, (newFilter) => {
+  const filterValue = getValidFilter(newFilter as string)
+  if (currentFilter.value !== filterValue) {
+    currentFilter.value = filterValue
+  }
+})
+
+// 监听收藏平台，自动加载数据
+watch(() => platforms.value, (newPlatforms) => {
+  // 当有收藏的平台时，检查是否需要加载数据
+  newPlatforms.forEach(platform => {
+    const state = platformsData[platform.platform]
+    if (!state) {
+      // 如果没有初始化状态，先初始化
+      platformsData[platform.platform] = {
+        data: [],
+        loading: false,
+        error: null
+      }
+    }
+
+    // 如果没有数据且不在加载中，则加载数据
+    if (state && state.data.length === 0 && !state.loading && !state.error) {
+      fetchPlatformData(platform.platform)
+    }
+  })
+}, {immediate: true, deep: true})
+
 // 组件挂载时获取数据
 onMounted(() => {
   fetchAllPlatformsData()
+
+  // 如果URL参数无效，重定向到有效URL
+  const urlFilter = route.query.filter as string
+  const validFilter = getValidFilter(urlFilter)
+
+  if (urlFilter && urlFilter !== validFilter) {
+    router.replace({
+      query: {
+        ...route.query,
+        filter: validFilter === 'all' ? undefined : validFilter
+      }
+    })
+  }
 })
 </script>
 
 <template>
   <SidebarProvider>
-    <AppSidebar/>
+    <AppSidebar @filter-change="handleFilterChange"/>
     <SidebarInset class="flex flex-col h-screen">
       <!-- 固定的Header -->
       <header
@@ -209,7 +326,7 @@ onMounted(() => {
               </BreadcrumbItem>
               <BreadcrumbSeparator class="hidden md:block"/>
               <BreadcrumbItem>
-                <BreadcrumbPage class="text-foreground font-medium">实时热点新闻</BreadcrumbPage>
+                <BreadcrumbPage class="text-foreground font-medium">{{ getFilterTitle(currentFilter) }}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -242,10 +359,99 @@ onMounted(() => {
       <div class="flex-1 overflow-hidden bg-muted/20">
         <ScrollArea class="h-full">
           <div class="p-4">
-            <!-- 榜单网格 -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            <!-- 收藏页面 -->
+            <div v-if="currentFilter === 'favorites'">
+              <!-- 空状态 -->
+              <div class="text-center py-8" v-if="newsItems.length === 0 && platforms.length === 0">
+                <Star class="w-12 h-12 mx-auto text-muted-foreground mb-4"/>
+                <h3 class="text-lg font-medium text-muted-foreground mb-2">暂无收藏</h3>
+                <p class="text-sm text-muted-foreground">点击平台卡片标题右侧的星星图标收藏整个平台</p>
+                <p class="text-sm text-muted-foreground">或点击新闻条目右侧的星星图标收藏单条新闻</p>
+              </div>
+
+              <!-- 收藏 Tabs -->
+              <Tabs v-else default-value="news" class="w-full">
+                <TabsList class="grid w-full grid-cols-2">
+                  <TabsTrigger value="news" class="flex items-center gap-2">
+                    <Star class="w-4 h-4"/>
+                    收藏的新闻 ({{ newsItems.length }})
+                  </TabsTrigger>
+                  <TabsTrigger value="platforms" class="flex items-center gap-2">
+                    <Star class="w-4 h-4"/>
+                    收藏的平台 ({{ platforms.length }})
+                  </TabsTrigger>
+                </TabsList>
+
+                <!-- 新闻收藏 Tab -->
+                <TabsContent value="news" class="mt-6">
+                  <div v-if="newsItems.length === 0" class="text-center py-8">
+                    <Star class="w-8 h-8 mx-auto text-muted-foreground mb-4"/>
+                    <p class="text-muted-foreground">暂无收藏的新闻</p>
+                    <p class="text-sm text-muted-foreground mt-1">点击新闻条目右侧的星星图标收藏单条新闻</p>
+                  </div>
+
+                  <div v-else class="grid grid-cols-1 gap-3">
+                    <div
+                        v-for="item in newsItems"
+                        :key="`${item.platform}-${item.id}`"
+                        class="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors cursor-pointer group"
+                        @click="handleCardItemClick(item)"
+                    >
+                      <!-- 平台图标 -->
+                      <component
+                          :is="getPlatformIcon(item.platform)"
+                          class="w-5 h-5 text-muted-foreground shrink-0"
+                      />
+
+                      <!-- 内容 -->
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-foreground group-hover:text-foreground/80 truncate">
+                          {{ item.title }}
+                        </p>
+                        <p class="text-xs text-muted-foreground">
+                          来自: {{ item.platformTitle }} · {{ new Date(item.addedAt).toLocaleDateString() }}
+                        </p>
+                      </div>
+
+                      <!-- 外部链接图标 -->
+                      <ExternalLink
+                          class="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0"/>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <!-- 平台收藏 Tab -->
+                <TabsContent value="platforms" class="mt-6">
+                  <div v-if="platforms.length === 0" class="text-center py-8">
+                    <Star class="w-8 h-8 mx-auto text-muted-foreground mb-4"/>
+                    <p class="text-muted-foreground">暂无收藏的平台</p>
+                    <p class="text-sm text-muted-foreground mt-1">点击平台卡片标题右侧的星星图标收藏整个平台</p>
+                  </div>
+
+                  <div v-else
+                       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+                    <NewsRankCard
+                        v-for="platform in platforms"
+                        :key="platform.platform"
+                        :title="platform.platformTitle"
+                        :platform="platform.platform"
+                        :platform-icon="getPlatformIcon(platform.platform)"
+                        :data="platformsData[platform.platform]?.data || []"
+                        :loading="platformsData[platform.platform]?.loading || false"
+                        :show-more="true"
+                        @item-click="handleCardItemClick"
+                        @show-more="handleShowMore(platform.platform, platform.platformTitle)"
+                        @refresh="refreshSinglePlatform(platform.platform)"
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            <!-- 普通榜单网格 -->
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
               <NewsRankCard
-                  v-for="platform in hotPlatforms"
+                  v-for="platform in filteredPlatforms"
                   :key="platform.platform"
                   :title="platform.title"
                   :platform="platform.platform"

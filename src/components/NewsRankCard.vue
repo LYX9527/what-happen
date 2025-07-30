@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { TrendingUp, TrendingDown, Minus, ExternalLink, RefreshCw, Globe } from 'lucide-vue-next'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import type {NewsItem} from "@/api";
+import {computed, ref, watch} from 'vue'
+import {TrendingUp, TrendingDown, Minus, ExternalLink, RefreshCw, Globe, Star} from 'lucide-vue-next'
+import {Button} from '@/components/ui/button'
+import {ScrollArea} from '@/components/ui/scroll-area'
+import {toast} from 'vue-sonner'
+import type {NewsItem} from "@/api"
+import {useFavorites} from '@/composables/useFavorites'
 
 interface Props {
   title: string
@@ -25,11 +27,20 @@ const emit = defineEmits<{
   'show-more': []
   'item-click': [item: NewsItem]
   'refresh': []
+  'favorite': [item: NewsItem, favorited: boolean]
 }>()
 
 // 本地刷新动画状态，确保动画平滑完成
 const localRefreshing = ref(false)
 let refreshTimeout: ReturnType<typeof setTimeout> | null = null
+
+// 收藏功能
+const {
+  isFavorited,
+  toggleFavorite,
+  isPlatformFavorited,
+  togglePlatformFavorite
+} = useFavorites()
 
 // 监听loading状态变化
 watch(() => props.loading, (newLoading, oldLoading) => {
@@ -86,6 +97,44 @@ const handleRefresh = () => {
   emit('refresh')
 }
 
+// 处理收藏单条新闻
+const handleFavorite = (item: NewsItem, event: Event) => {
+  event.stopPropagation() // 阻止事件冒泡
+
+  const platformKey = props.platform || 'unknown'
+  const platformTitle = props.title || '未知平台'
+
+  const success = toggleFavorite(item, platformKey, platformTitle)
+  const favorited = isFavorited(item)
+
+  if (success) {
+    toast(favorited ? '已添加到收藏' : '已从收藏中移除', {
+      description: `"${item.title.slice(0, 30)}${item.title.length > 30 ? '...' : ''}"`,
+      duration: 2000,
+    })
+
+    emit('favorite', item, favorited)
+  }
+}
+
+// 处理收藏整个平台
+const handlePlatformFavorite = (event: Event) => {
+  event.stopPropagation() // 阻止事件冒泡
+
+  const platformKey = props.platform || 'unknown'
+  const platformTitle = props.title || '未知平台'
+
+  const success = togglePlatformFavorite(platformKey, platformTitle)
+  const favorited = isPlatformFavorited(platformKey)
+
+  if (success) {
+    toast(favorited ? '已收藏整个平台' : '已取消收藏平台', {
+      description: `"${platformTitle}"`,
+      duration: 2000,
+    })
+  }
+}
+
 // 根据maxItems限制显示条数，超出时可以滚动查看
 const displayItems = computed(() => {
   if (props.maxItems && props.maxItems > 0) {
@@ -103,8 +152,8 @@ const displayItems = computed(() => {
         <!-- 平台图标 -->
         <div class="flex items-center justify-center w-4 h-4 shrink-0">
           <component
-            :is="getPlatformIcon()"
-            class="w-3.5 h-3.5 text-muted-foreground"
+              :is="getPlatformIcon()"
+              class="w-3.5 h-3.5 text-muted-foreground"
           />
         </div>
         <h3 class="font-medium text-sm text-foreground">
@@ -113,28 +162,46 @@ const displayItems = computed(() => {
       </div>
 
       <div class="flex items-center gap-1">
+        <!-- 收藏整个平台按钮 -->
+        <Button
+            variant="ghost"
+            size="sm"
+            class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
+            @click="handlePlatformFavorite"
+            :title="isPlatformFavorited(platform || '') ? '取消收藏平台' : '收藏整个平台'"
+        >
+          <Star
+              v-if="isPlatformFavorited(platform || '')"
+              class="w-3 h-3 text-yellow-500 fill-yellow-500"
+          />
+          <Star
+              v-else
+              class="w-3 h-3 hover:text-yellow-500"
+          />
+        </Button>
+
         <!-- 单个刷新按钮 -->
         <Button
-          variant="ghost"
-          size="sm"
-          class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
-          :disabled="loading || localRefreshing"
-          @click="handleRefresh"
+            variant="ghost"
+            size="sm"
+            class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
+            :disabled="loading || localRefreshing"
+            @click="handleRefresh"
         >
-          <RefreshCw :class="['w-3 h-3 transition-transform duration-300', { 'animate-spin': localRefreshing }]" />
+          <RefreshCw :class="['w-3 h-3 transition-transform duration-300', { 'animate-spin': localRefreshing }]"/>
         </Button>
 
         <!-- 更多按钮 -->
-        <Button
-          v-if="showMore"
-          variant="ghost"
-          size="sm"
-          class="text-muted-foreground hover:text-foreground h-6 px-2 text-xs"
-          @click="handleShowMore"
-        >
-          更多
-          <ExternalLink class="w-2.5 h-2.5 ml-1" />
-        </Button>
+        <!--        <Button-->
+        <!--          v-if="showMore"-->
+        <!--          variant="ghost"-->
+        <!--          size="sm"-->
+        <!--          class="text-muted-foreground hover:text-foreground h-6 px-2 text-xs"-->
+        <!--          @click="handleShowMore"-->
+        <!--        >-->
+        <!--          更多-->
+        <!--          <ExternalLink class="w-2.5 h-2.5 ml-1" />-->
+        <!--        </Button>-->
       </div>
     </div>
 
@@ -153,15 +220,15 @@ const displayItems = computed(() => {
       <ScrollArea v-else-if="displayItems.length > 0" class="h-full">
         <div class="p-1.5 space-y-0.5">
           <div
-            v-for="(item, index) in displayItems"
-            :key="item.id"
-            class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-muted/50 transition-colors cursor-pointer group"
-            @click="handleItemClick(item)"
+              v-for="(item, index) in displayItems"
+              :key="item.id"
+              class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-muted/50 transition-colors cursor-pointer group"
+              @click="handleItemClick(item)"
           >
             <!-- 排名 -->
             <div class="flex items-center justify-center w-5 h-4 text-xs font-mono shrink-0">
               <span
-                :class="[
+                  :class="[
                   index < 3 ? 'text-foreground font-medium' : 'text-muted-foreground'
                 ]"
               >
@@ -177,10 +244,30 @@ const displayItems = computed(() => {
               </p>
             </div>
 
+            <!-- 收藏按钮 -->
+            <Button
+                variant="ghost"
+                size="sm"
+                :class="[
+                'w-5 h-5 p-0 transition-opacity shrink-0',
+                isFavorited(item) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+              ]"
+                @click="handleFavorite(item, $event)"
+            >
+              <Star
+                  v-if="isFavorited(item)"
+                  class="w-3 h-3 text-yellow-500 fill-yellow-500"
+              />
+              <Star
+                  v-else
+                  class="w-3 h-3 text-muted-foreground hover:text-yellow-500"
+              />
+            </Button>
+
             <!-- 趋势图标 -->
             <component
-              :is="getTrendIcon(index)"
-              :class="['w-2.5 h-2.5 shrink-0 opacity-50', getTrendColor(index)]"
+                :is="getTrendIcon(index)"
+                :class="['w-2.5 h-2.5 shrink-0 opacity-50', getTrendColor(index)]"
             />
           </div>
         </div>
