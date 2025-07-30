@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { TrendingUp, TrendingDown, Minus, ExternalLink } from 'lucide-vue-next'
+import { computed, ref, watch } from 'vue'
+import { TrendingUp, TrendingDown, Minus, ExternalLink, RefreshCw, Globe } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import type { NewsItem } from '@/composables/useNews'
 
@@ -9,6 +9,8 @@ interface Props {
   data: NewsItem[]
   loading?: boolean
   showMore?: boolean
+  platformIcon?: any // 平台图标组件
+  platform?: string // 平台标识，用于默认图标
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,7 +21,42 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   'show-more': []
   'item-click': [item: NewsItem]
+  'refresh': []
 }>()
+
+// 本地刷新动画状态，确保动画平滑完成
+const localRefreshing = ref(false)
+let refreshTimeout: ReturnType<typeof setTimeout> | null = null
+
+// 监听loading状态变化
+watch(() => props.loading, (newLoading, oldLoading) => {
+  if (newLoading && !oldLoading) {
+    // 开始加载时，立即显示动画
+    localRefreshing.value = true
+    // 清除之前的定时器
+    if (refreshTimeout) {
+      clearTimeout(refreshTimeout)
+    }
+  } else if (!newLoading && oldLoading) {
+    // 加载完成时，延迟停止动画，确保至少完成一圈旋转
+    if (refreshTimeout) {
+      clearTimeout(refreshTimeout)
+    }
+    refreshTimeout = setTimeout(() => {
+      localRefreshing.value = false
+    }, 500) // 500ms确保动画平滑完成
+  }
+})
+
+// 平台图标映射
+const getPlatformIcon = () => {
+  if (props.platformIcon) {
+    return props.platformIcon
+  }
+
+  // 如果没有传入图标，使用默认的地球图标
+  return Globe
+}
 
 // 模拟趋势数据
 const getTrendIcon = (index: number) => {
@@ -42,6 +79,10 @@ const handleShowMore = () => {
   emit('show-more')
 }
 
+const handleRefresh = () => {
+  emit('refresh')
+}
+
 // 只显示前10项
 const displayItems = computed(() => props.data.slice(0, 10))
 </script>
@@ -51,22 +92,42 @@ const displayItems = computed(() => props.data.slice(0, 10))
     <!-- 卡片标题 - 固定高度 -->
     <div class="flex items-center justify-between px-4 py-3 border-b bg-muted/20">
       <div class="flex items-center gap-2">
-        <div class="w-1.5 h-1.5 rounded-full bg-foreground"></div>
+        <!-- 平台图标 -->
+        <div class="flex items-center justify-center w-4 h-4 shrink-0">
+          <component
+            :is="getPlatformIcon()"
+            class="w-3.5 h-3.5 text-muted-foreground"
+          />
+        </div>
         <h3 class="font-medium text-sm text-foreground">
           {{ title }}
         </h3>
       </div>
-      
-      <Button 
-        v-if="showMore"
-        variant="ghost" 
-        size="sm"
-        class="text-muted-foreground hover:text-foreground h-6 px-2 text-xs"
-        @click="handleShowMore"
-      >
-        更多
-        <ExternalLink class="w-2.5 h-2.5 ml-1" />
-      </Button>
+
+      <div class="flex items-center gap-1">
+        <!-- 单个刷新按钮 -->
+        <Button
+          variant="ghost"
+          size="sm"
+          class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
+          :disabled="loading || localRefreshing"
+          @click="handleRefresh"
+        >
+          <RefreshCw :class="['w-3 h-3 transition-transform duration-300', { 'animate-spin': localRefreshing }]" />
+        </Button>
+
+        <!-- 更多按钮 -->
+        <Button
+          v-if="showMore"
+          variant="ghost"
+          size="sm"
+          class="text-muted-foreground hover:text-foreground h-6 px-2 text-xs"
+          @click="handleShowMore"
+        >
+          更多
+          <ExternalLink class="w-2.5 h-2.5 ml-1" />
+        </Button>
+      </div>
     </div>
 
     <!-- 内容区域 - 可滚动 -->
@@ -81,8 +142,8 @@ const displayItems = computed(() => props.data.slice(0, 10))
       </div>
 
       <!-- 榜单列表 -->
-      <div 
-        v-else-if="displayItems.length > 0" 
+      <div
+        v-else-if="displayItems.length > 0"
         class="h-full overflow-y-auto scrollbar-thin"
       >
         <div class="p-1.5 space-y-0.5">
@@ -94,7 +155,7 @@ const displayItems = computed(() => props.data.slice(0, 10))
           >
             <!-- 排名 -->
             <div class="flex items-center justify-center w-5 h-4 text-xs font-mono shrink-0">
-              <span 
+              <span
                 :class="[
                   index < 3 ? 'text-foreground font-medium' : 'text-muted-foreground'
                 ]"
@@ -111,7 +172,7 @@ const displayItems = computed(() => props.data.slice(0, 10))
             </div>
 
             <!-- 趋势图标 -->
-            <component 
+            <component
               :is="getTrendIcon(index)"
               :class="['w-2.5 h-2.5 shrink-0 opacity-50', getTrendColor(index)]"
             />
@@ -127,4 +188,3 @@ const displayItems = computed(() => props.data.slice(0, 10))
   </div>
 </template>
 
- 

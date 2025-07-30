@@ -12,13 +12,94 @@ import {
 } from "@/components/ui/breadcrumb"
 import {Separator} from "@/components/ui/separator"
 import {Button} from "@/components/ui/button"
-import {RefreshCw} from 'lucide-vue-next'
+import {
+  RefreshCw,
+  Globe,
+  MessageCircle,
+  Search,
+  Video,
+  Tv,
+  Newspaper,
+  Github,
+  Monitor,
+  TrendingUp,
+  Users,
+  Settings,
+  Sparkles,
+  Code,
+  DollarSign,
+  Coffee,
+  Gamepad2,
+  ShoppingCart,
+  Star,
+  BookOpen,
+  Briefcase,
+  Radio,
+  Headphones
+} from 'lucide-vue-next'
 import NewsRankCard from "@/components/NewsRankCard.vue"
 import ThemeToggle from "@/components/ThemeToggle.vue"
 import {useNews, type NewsItem} from "@/composables/useNews"
 
+import WeiBo from "@/components/icon/weibo.vue"
+import Baidu from "@/components/icon/baidu.vue"
+import DouYin from "@/components/icon/douyin.vue"
+import ThePaper from "@/components/icon/thepaper.vue"
+import TouTiao from "@/components/icon/toutiao.vue"
+import _36kr from "@/components/icon/_36kr.vue";
+import Blbl from "@/components/icon/blbl.vue";
+import CankaoXiaoxi from "@/components/icon/cankaoxiaoxi.vue";
+import ItHome from "@/components/icon/ithome.vue";
+import Jin10 from "@/components/icon/jin10.vue";
+import nowcoder from "@/components/icon/nowcoder.vue";
+import PcBeta from "@/components/icon/pcbeta_windows.vue";
+import Solidot from "@/components/icon/solidot.vue";
+import TieBa from "@/components/icon/tieba.vue";
+import V2ex from "@/components/icon/v2ex.vue";
+import WallStreetCN from "@/components/icon/wallstreetcn.vue";
+import Hotstock from "@/components/icon/hotstock.vue";
+import Zaobao from "@/components/icon/zaobao.vue";
+import Kaopu from "@/components/icon/kaopu.vue";
+import Kuaishou from "@/components/icon/kuaishou.vue";
+import Zhihu from "@/components/icon/zhihu.vue";
+import Coolapk from "@/components/icon/coolapk.vue";
 // 使用新闻数据管理
 const {fetchPlatforms, fetchNews} = useNews()
+
+// 平台图标映射
+const platformIcons = {
+  weibo: WeiBo,
+  baidu: Baidu,
+  douyin: DouYin,
+  thepaper: ThePaper,
+  github: Github,
+  toutiao: TouTiao,
+  '_36kr': _36kr,
+  b_hot_search: Blbl,
+  b_hot_video: Blbl,
+  b_rank: Blbl,
+  cankaoxiaoxi: CankaoXiaoxi,
+  gelonghui: DollarSign,
+  guoheboke: Coffee,
+  ithome: ItHome,
+  jin10: Jin10,
+  nowcoder: nowcoder,
+  pcbeta_windows: PcBeta,
+  solidot: Solidot,
+  sputniknewscn: Radio,
+  tieba: TieBa,
+  v2ex: V2ex,
+  wallstreetcn_live: WallStreetCN,
+  wallstreetcn_news: WallStreetCN,
+  wallstreetcn_hot: WallStreetCN,
+  hotstock: Hotstock,
+  zaobao: Zaobao,
+  cls_telegraph: DollarSign,
+  kaopu: Kaopu,
+  kuaishou: Kuaishou,
+  zhihu: Zhihu,
+  coolapk: Coolapk
+}
 
 // 热门平台配置
 const hotPlatforms = [
@@ -107,6 +188,11 @@ const refreshAllData = () => {
   fetchAllPlatformsData()
 }
 
+// 刷新单个平台数据
+const refreshSinglePlatform = (platform: string) => {
+  fetchPlatformData(platform)
+}
+
 // 处理卡片点击
 const handleCardItemClick = (item: NewsItem) => {
   window.open(item.url, '_blank')
@@ -116,6 +202,11 @@ const handleCardItemClick = (item: NewsItem) => {
 const handleShowMore = (platform: string, title: string) => {
   console.log(`显示更多: ${title}`)
   // 这里可以跳转到详细页面或打开模态框
+}
+
+// 获取平台图标
+const getPlatformIcon = (platform: string) => {
+  return platformIcons[platform as keyof typeof platformIcons] || Globe
 }
 
 // 组件挂载时获取数据
@@ -182,10 +273,13 @@ onMounted(() => {
                 v-for="platform in hotPlatforms"
                 :key="platform.platform"
                 :title="platform.title"
+                :platform="platform.platform"
+                :platform-icon="getPlatformIcon(platform.platform)"
                 :data="platformsData[platform.platform]?.data || []"
                 :loading="platformsData[platform.platform]?.loading || false"
                 @item-click="handleCardItemClick"
                 @show-more="handleShowMore(platform.platform, platform.title)"
+                @refresh="refreshSinglePlatform(platform.platform)"
             />
           </div>
         </div>
