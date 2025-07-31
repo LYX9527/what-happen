@@ -32,9 +32,9 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     // 设置页面标题
     if (to.meta.title) {
-        document.title = `${to.meta.title} - 开发者工具箱`
+        document.title = `${to.meta.title} - 今天发生了什么?`
     } else {
-        document.title = '开发者工具箱'
+        document.title = '今天发生了什么?'
     }
     next()
 })

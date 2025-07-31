@@ -13,6 +13,10 @@ export interface NewsItem {
   id: string
   title: string
   url: string
+  extra?: {
+    info?: string
+    hover?: string
+  }
 }
 
 /**

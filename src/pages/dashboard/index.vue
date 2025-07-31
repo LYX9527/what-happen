@@ -26,7 +26,6 @@ import {
   ExternalLink
 } from 'lucide-vue-next'
 import NewsRankCard from "@/components/NewsRankCard.vue"
-import LargeNewsRankCard from "@/components/LargeNewsRankCard.vue"
 import ThemeToggle from "@/components/ThemeToggle.vue"
 import {fetchNews as apiFetchNews, fetchPlatforms as apiFetchPlatforms, type NewsItem} from "@/api"
 import {useFavorites, type FavoriteItem} from '@/composables/useFavorites'
@@ -53,6 +52,7 @@ import Kaopu from "@/components/icon/kaopu.vue";
 import Kuaishou from "@/components/icon/kuaishou.vue";
 import Zhihu from "@/components/icon/zhihu.vue";
 import Coolapk from "@/components/icon/coolapk.vue";
+import Hupu from "@/components/icon/hupu.vue";
 
 // 路由
 const route = useRoute()
@@ -104,7 +104,8 @@ const platformIcons = {
   kaopu: Kaopu,
   kuaishou: Kuaishou,
   zhihu: Zhihu,
-  coolapk: Coolapk
+  coolapk: Coolapk,
+  hupu: Hupu,
 }
 
 // 热门平台配置
@@ -140,6 +141,7 @@ const hotPlatforms = [
   {platform: 'kuaishou', title: '快手热搜'},
   {platform: 'zhihu', title: '知乎'},
   {platform: 'coolapk', title: '酷安'},
+  {platform: 'hupu', title: '虎扑'},
 ]
 
 // 平台分类映射
@@ -184,18 +186,40 @@ hotPlatforms.forEach(platform => {
   }
 })
 
+// 确保平台数据状态存在
+const ensurePlatformState = (platform: string) => {
+  if (!platformsData[platform]) {
+    platformsData[platform] = {
+      data: [],
+      loading: false,
+      error: null
+    }
+  }
+}
+
 // 获取单个平台数据
 const fetchPlatformData = async (platform: string) => {
+  if (!platform) return
+
+  ensurePlatformState(platform)
   const state = platformsData[platform]
+
   if (!state) return
 
   state.loading = true
   state.error = null
 
   try {
-    state.data = await apiFetchNews(platform)
+    const result = await apiFetchNews(platform)
+    if (result && Array.isArray(result)) {
+      state.data = result
+    } else {
+      state.data = []
+      state.error = '数据格式错误'
+    }
   } catch (err: any) {
     state.error = err.message || '网络请求失败'
+    state.data = []
     console.error(`获取${platform}数据失败:`, err)
   } finally {
     state.loading = false
@@ -205,7 +229,14 @@ const fetchPlatformData = async (platform: string) => {
 // 获取所有热门平台数据
 const fetchAllPlatformsData = async () => {
   const promises = hotPlatforms.map(p => fetchPlatformData(p.platform))
-  await Promise.all(promises)
+  const results = await Promise.allSettled(promises)
+
+  // 记录失败的平台
+  results.forEach((result, index) => {
+    if (result.status === 'rejected') {
+      console.error(`平台 ${hotPlatforms[index].platform} 数据获取失败:`, result.reason)
+    }
+  })
 }
 
 // 刷新所有数据
@@ -276,15 +307,10 @@ watch(() => route.query.filter, (newFilter) => {
 watch(() => platforms.value, (newPlatforms) => {
   // 当有收藏的平台时，检查是否需要加载数据
   newPlatforms.forEach(platform => {
+    if (!platform?.platform) return
+
+    ensurePlatformState(platform.platform)
     const state = platformsData[platform.platform]
-    if (!state) {
-      // 如果没有初始化状态，先初始化
-      platformsData[platform.platform] = {
-        data: [],
-        loading: false,
-        error: null
-      }
-    }
 
     // 如果没有数据且不在加载中，则加载数据
     if (state && state.data.length === 0 && !state.loading && !state.error) {
@@ -436,43 +462,29 @@ onMounted(() => {
                   <div v-else
                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                     <NewsRankCard
-                        v-for="platform in platforms"
-                        :key="platform.platform"
-                        :title="platform.platformTitle"
-                        :platform="platform.platform"
-                        :platform-icon="getPlatformIcon(platform.platform)"
-                        :data="platformsData[platform.platform]?.data || []"
-                        :loading="platformsData[platform.platform]?.loading || false"
+                        v-for="p in platforms"
+                        :key="`favorite-platform-${p.platform}`"
+                        :title="p.platformTitle || '未知平台'"
+                        :platform="p.platform"
+                        :platform-icon="getPlatformIcon(p.platform)"
+                        :data="platformsData[p.platform]?.data || []"
+                        :loading="platformsData[p.platform]?.loading || false"
                         :show-more="true"
                         @item-click="handleCardItemClick"
-                        @show-more="handleShowMore(platform.platform, platform.platformTitle)"
-                        @refresh="refreshSinglePlatform(platform.platform)"
+                        @show-more="handleShowMore(p.platform, p.platformTitle || '未知平台')"
+                        @refresh="refreshSinglePlatform(p.platform)"
                     />
                   </div>
                 </TabsContent>
               </Tabs>
             </div>
 
-            <!-- 单个平台大号卡片 -->
-            <div v-else-if="filteredPlatforms.length === 1" class="max-w-4xl mx-auto">
-              <LargeNewsRankCard
-                  :key="filteredPlatforms[0].platform"
-                  :title="filteredPlatforms[0].title"
-                  :platform="filteredPlatforms[0].platform"
-                  :platform-icon="getPlatformIcon(filteredPlatforms[0].platform)"
-                  :data="platformsData[filteredPlatforms[0].platform]?.data || []"
-                  :loading="platformsData[filteredPlatforms[0].platform]?.loading || false"
-                  :max-items="30"
-                  @item-click="handleCardItemClick"
-                  @refresh="refreshSinglePlatform(filteredPlatforms[0].platform)"
-              />
-            </div>
-
             <!-- 普通榜单网格 -->
-            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+                 :key="`grid-view-${currentFilter}`">
               <NewsRankCard
                   v-for="platform in filteredPlatforms"
-                  :key="platform.platform"
+                  :key="`grid-card-${platform.platform}-${currentFilter}`"
                   :title="platform.title"
                   :platform="platform.platform"
                   :platform-icon="getPlatformIcon(platform.platform)"
