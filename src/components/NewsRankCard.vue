@@ -126,7 +126,7 @@ const displayItems = computed(() => {
 </script>
 
 <template>
-  <div class="bg-card border rounded-lg flex flex-col h-[400px]">
+  <div class="bg-card border rounded-lg flex flex-col h-[400px] select-none">
     <!-- 卡片标题 - 固定高度 -->
     <div class="flex items-center justify-between px-4 py-3 border-b bg-muted/20">
       <div class="flex items-center gap-2">

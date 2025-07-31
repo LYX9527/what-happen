@@ -12,7 +12,6 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import {Separator} from '@/components/ui/separator'
-import {Toaster} from '@/components/ui/sonner'
 import {VueDraggable} from 'vue-draggable-plus'
 import {
   RefreshCw,
