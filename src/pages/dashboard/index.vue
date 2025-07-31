@@ -1,20 +1,43 @@
 <script setup lang="ts">
 import {computed, onMounted, reactive, ref, watch} from 'vue'
-import {ExternalLink, Star, Globe} from 'lucide-vue-next'
 import {useRoute, useRouter} from 'vue-router'
-import {SidebarInset, SidebarProvider} from '@/components/ui/sidebar'
+import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
 import {ScrollArea} from '@/components/ui/scroll-area'
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator} from '@/components/ui/breadcrumb'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator
+} from '@/components/ui/breadcrumb'
 import {Separator} from '@/components/ui/separator'
 import {Toaster} from '@/components/ui/sonner'
 import {VueDraggable} from 'vue-draggable-plus'
-
+import {
+  RefreshCw,
+  Globe,
+  Github,
+  DollarSign,
+  Coffee,
+  Radio,
+  Star,
+  ExternalLink
+} from 'lucide-vue-next'
+import {
+  WeiBo
+  , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
+  ItHome, Jin10, nowcoder, PcBeta, Solidot,
+  TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
+  Coolapk, Hupu
+} from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
 import {useFavorites} from '@/composables/useFavorites'
 
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews, fetchPlatforms} from "@/api"
+import {Button} from "@/components/ui/button";
 
 // 使用收藏功能
 const {newsItems, platforms} = useFavorites()
@@ -34,55 +57,122 @@ const currentFilter = ref(getValidFilter(route.query.filter as string))
 
 // 平台图标映射
 const platformIcons = {
-  weibo: Globe,
-  baidu: Globe,
-  zhihu: Globe,
-  douyin: Globe,
-  toutiao: Globe,
-  kuaishou: Globe,
-  github: Globe,
-  _36kr: Globe,
-  ithome: Globe,
-  solidot: Globe,
-  v2ex: Globe,
-  coolapk: Globe,
-  gelonghui: Globe,
-  wallstreetcn_live: Globe,
-  wallstreetcn_news: Globe,
-  wallstreetcn_hot: Globe,
-  hotstock: Globe,
-  cls_telegraph: Globe,
-  thepaper: Globe,
-  cankaoxiaoxi: Globe,
-  zaobao: Globe,
-  sputniknewscn: Globe,
+  weibo: WeiBo,
+  baidu: Baidu,
+  douyin: DouYin,
+  thepaper: ThePaper,
+  github: Github,
+  toutiao: TouTiao,
+  '_36kr': _36kr,
+  b_hot_search: Blbl,
+  b_hot_video: Blbl,
+  b_rank: Blbl,
+  cankaoxiaoxi: CankaoXiaoxi,
+  gelonghui: DollarSign,
+  guoheboke: Coffee,
+  ithome: ItHome,
+  jin10: Jin10,
+  nowcoder: nowcoder,
+  pcbeta_windows: PcBeta,
+  solidot: Solidot,
+  sputniknewscn: Radio,
+  tieba: TieBa,
+  v2ex: V2ex,
+  wallstreetcn_live: WallStreetCN,
+  wallstreetcn_news: WallStreetCN,
+  wallstreetcn_hot: WallStreetCN,
+  hotstock: Hotstock,
+  zaobao: Zaobao,
+  cls_telegraph: DollarSign,
+  kaopu: Kaopu,
+  kuaishou: Kuaishou,
+  zhihu: Zhihu,
+  coolapk: Coolapk,
+  hupu: Hupu,
 }
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
-const hotPlatforms = ref([
+const defaultPlatforms = [
   {platform: 'weibo', title: '微博热搜'},
   {platform: 'baidu', title: '百度热搜'},
-  {platform: 'zhihu', title: '知乎热榜'},
-  {platform: 'douyin', title: '抖音热点'},
-  {platform: 'toutiao', title: '今日头条'},
-  {platform: 'kuaishou', title: '快手热榜'},
+  {platform: 'douyin', title: '抖音热搜'},
+  {platform: 'thepaper', title: '澎湃新闻'},
   {platform: 'github', title: 'GitHub趋势'},
+  {platform: 'toutiao', title: '今日头条'},
   {platform: '_36kr', title: '36氪'},
-  {platform: 'ithome', title: 'IT之家'},
-  {platform: 'solidot', title: 'Solidot'},
-  {platform: 'v2ex', title: 'V2EX'},
-  {platform: 'coolapk', title: '酷安'},
+  {platform: 'b_hot_search', title: '哔哩哔哩热搜'},
+  {platform: 'b_hot_video', title: '哔哩哔哩视频'},
+  {platform: 'b_rank', title: '哔哩哔哩排行榜'},
+  {platform: 'cankaoxiaoxi', title: '参考消息'},
   {platform: 'gelonghui', title: '格隆汇'},
-  {platform: 'wallstreetcn_live', title: '华尔街见闻实时'},
+  {platform: 'guoheboke', title: '果核剥壳'},
+  {platform: 'ithome', title: 'IT之家'},
+  {platform: 'jin10', title: '金十数据'},
+  {platform: 'nowcoder', title: '牛客网'},
+  {platform: 'pcbeta_windows', title: '远景论坛Windows'},
+  {platform: 'solidot', title: '奇客Solidot'},
+  {platform: 'sputniknewscn', title: '俄罗斯卫星通讯社'},
+  {platform: 'tieba', title: '百度贴吧'},
+  {platform: 'v2ex', title: 'V2EX'},
+  {platform: 'wallstreetcn_live', title: '华尔街见闻直播'},
   {platform: 'wallstreetcn_news', title: '华尔街见闻新闻'},
   {platform: 'wallstreetcn_hot', title: '华尔街见闻热榜'},
-  {platform: 'hotstock', title: '热股榜'},
-  {platform: 'cls_telegraph', title: '财联社电报'},
-  {platform: 'thepaper', title: '澎湃新闻'},
-  {platform: 'cankaoxiaoxi', title: '参考消息'},
+  {platform: 'hotstock', title: '雪球热股'},
   {platform: 'zaobao', title: '联合早报'},
-  {platform: 'sputniknewscn', title: '俄罗斯卫星通讯社'},
-])
+  {platform: 'cls_telegraph', title: '财联社'},
+  {platform: 'kaopu', title: '靠谱'},
+  {platform: 'kuaishou', title: '快手热搜'},
+  {platform: 'zhihu', title: '知乎'},
+  {platform: 'coolapk', title: '酷安'},
+  {platform: 'hupu', title: '虎扑'},
+]
+
+// 加载已保存的排序
+const loadSavedOrder = (filter: string) => {
+  try {
+    const savedOrders = localStorage.getItem('platform-orders')
+    if (savedOrders) {
+      const orders = JSON.parse(savedOrders)
+      if (orders[filter]) {
+        // 根据保存的顺序重新排列平台
+        const orderedPlatforms = []
+        const remainingPlatforms = [...defaultPlatforms]
+
+        // 按保存的顺序添加平台
+        orders[filter].forEach((platformId: string) => {
+          const platform = remainingPlatforms.find(p => p.platform === platformId)
+          if (platform) {
+            orderedPlatforms.push(platform)
+            const index = remainingPlatforms.indexOf(platform)
+            remainingPlatforms.splice(index, 1)
+          }
+        })
+
+        // 添加剩余的平台（新增的平台）
+        orderedPlatforms.push(...remainingPlatforms)
+
+        return orderedPlatforms
+      }
+    }
+  } catch (error) {
+    console.error('加载排序失败:', error)
+  }
+  return [...defaultPlatforms]
+}
+
+// 保存排序
+const saveOrder = (filter: string, platforms: typeof defaultPlatforms) => {
+  try {
+    const savedOrders = localStorage.getItem('platform-orders')
+    const orders = savedOrders ? JSON.parse(savedOrders) : {}
+    orders[filter] = platforms.map(p => p.platform)
+    localStorage.setItem('platform-orders', JSON.stringify(orders))
+  } catch (error) {
+    console.error('保存排序失败:', error)
+  }
+}
+
+const hotPlatforms = ref(loadSavedOrder(currentFilter.value))
 
 // 平台分类映射
 const platformCategories: Record<string, string[]> = {
@@ -202,6 +292,11 @@ const handleShowMore = (platform: string, title: string) => {
   // 这里可以跳转到详细页面或打开模态框
 }
 
+// 处理外部链接打开
+const openLink = () => {
+  window.open('https://github.com/LYX9527/what-happen', '_blank');
+}
+
 // 获取平台图标
 const getPlatformIcon = (platform: string) => {
   return platformIcons[platform as keyof typeof platformIcons] || Globe
@@ -263,10 +358,19 @@ watch(() => platforms.value, (newPlatforms) => {
   })
 }, {immediate: true, deep: true})
 
+// 监听筛选条件变化，加载对应的排序
+watch(currentFilter, (newFilter) => {
+  const savedOrder = loadSavedOrder(newFilter)
+  hotPlatforms.value = savedOrder
+}, {immediate: false})
+
 // 拖拽排序处理
 const onDragEnd = () => {
-  console.log('平台排序已更新:', hotPlatforms.value.map(p => p.title))
-  // 这里可以保存排序到本地存储或后端
+  const currentFilterValue = currentFilter.value
+  console.log(`${currentFilterValue} 平台排序已更新:`, hotPlatforms.value.map(p => p.title))
+
+  // 保存当前筛选条件下的排序
+  saveOrder(currentFilterValue, hotPlatforms.value)
 }
 
 // 组件挂载时获取数据
@@ -293,21 +397,53 @@ onMounted(() => {
     <AppSidebar @filter-change="handleFilterChange"/>
     <SidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 -->
-      <header class="flex h-16 shrink-0 items-center gap-2 px-4">
-        <div class="flex items-center gap-2 text-sm">
+      <header
+          class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div class="flex items-center gap-2 px-4">
+          <SidebarTrigger class="-ml-1"/>
+          <Separator orientation="vertical" class="mr-2 h-4"/>
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="#">
-                  新闻聚合中心
+                <BreadcrumbLink href="#" class="text-muted-foreground">
+                  新闻聚合平台
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator class="hidden md:block"/>
               <BreadcrumbItem>
-                <BreadcrumbPage>{{ getFilterTitle(currentFilter) }}</BreadcrumbPage>
+                <BreadcrumbPage class="text-foreground font-medium">{{ getFilterTitle(currentFilter) }}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+        </div>
+        <!-- 右侧按钮区域 -->
+        <div class="flex items-center gap-2 ml-auto px-4">
+          <Button
+              variant="outline"
+              size="sm"
+              @click="refreshAllData"
+              class="gap-1 hidden sm:flex h-8"
+          >
+            <RefreshCw class="w-4 h-4"/>
+            刷新全部
+          </Button>
+          <Button
+              variant="outline"
+              size="icon"
+              @click="refreshAllData"
+              class="sm:hidden h-8 w-8"
+          >
+            <RefreshCw class="w-4 h-4"/>
+          </Button>
+          <Button
+              variant="ghost"
+              size="icon"
+              class="h-8 w-8"
+              @click="openLink"
+          >
+            <Github class="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors"/>
+          </Button>
+          <ThemeToggle/>
         </div>
       </header>
       <Separator/>
@@ -380,7 +516,6 @@ onMounted(() => {
                   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                     <NewsRankCard
                         v-for="platform in platforms"
-                        v-if="platform?.platform"
                         :key="`favorite-platform-${platform.platform}`"
                         :title="platform.platformTitle || '未知平台'"
                         :platform="platform.platform"
@@ -388,6 +523,7 @@ onMounted(() => {
                         :data="platformsData[platform.platform]?.data || []"
                         :loading="platformsData[platform.platform]?.loading || false"
                         :show-more="true"
+                        :show-drag-handle="false"
                         @item-click="handleCardItemClick"
                         @show-more="handleShowMore(platform.platform, platform.platformTitle || '未知平台')"
                         @refresh="refreshSinglePlatform(platform.platform)"
@@ -453,6 +589,7 @@ onMounted(() => {
                       :data="platformsData[platform.platform]?.data || []"
                       :loading="platformsData[platform.platform]?.loading || false"
                       :show-more="true"
+                      :show-drag-handle="false"
                       @item-click="handleCardItemClick"
                       @show-more="handleShowMore(platform.platform, platform.platformTitle || '未知平台')"
                       @refresh="refreshSinglePlatform(platform.platform)"
@@ -466,6 +603,7 @@ onMounted(() => {
                 v-else
                 v-model="hotPlatforms"
                 :animation="200"
+                handle=".drag-handle"
                 ghostClass="opacity-50"
                 chosenClass="scale-105"
                 @end="onDragEnd"
@@ -480,6 +618,7 @@ onMounted(() => {
                   :platform-icon="getPlatformIcon(platform.platform)"
                   :data="platformsData[platform.platform]?.data || []"
                   :loading="platformsData[platform.platform]?.loading || false"
+                  :show-drag-handle="true"
                   @item-click="handleCardItemClick"
                   @show-more="handleShowMore(platform.platform, platform.title)"
                   @refresh="refreshSinglePlatform(platform.platform)"
@@ -490,5 +629,4 @@ onMounted(() => {
       </div>
     </SidebarInset>
   </SidebarProvider>
-  <Toaster/>
 </template>

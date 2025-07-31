@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
-import {RefreshCw, Globe, Star} from 'lucide-vue-next'
+import {RefreshCw, Globe, Star, GripVertical} from 'lucide-vue-next'
 import {Button} from '@/components/ui/button'
 import {ScrollArea} from '@/components/ui/scroll-area'
 import {toast} from 'vue-sonner'
@@ -16,12 +16,14 @@ interface Props {
   platformIcon?: any // 平台图标组件
   platform?: string // 平台标识，用于默认图标
   maxItems?: number // 最大显示条数，超出时显示滚动条
+  showDragHandle?: boolean // 是否显示拖拽手柄
 }
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
   showMore: true,
-  maxItems: 20
+  maxItems: 20,
+  showDragHandle: true
 })
 
 const emit = defineEmits<{
@@ -168,6 +170,17 @@ const displayItems = computed(() => {
             @click="handleRefresh"
         >
           <RefreshCw :class="['w-3 h-3 transition-transform duration-300', { 'animate-spin': localRefreshing }]"/>
+        </Button>
+
+        <!-- 拖拽手柄 -->
+        <Button
+            v-if="showDragHandle"
+            variant="ghost"
+            size="sm"
+            class="drag-handle text-muted-foreground hover:text-foreground h-6 w-6 p-0 cursor-grab active:cursor-grabbing"
+            title="拖拽排序"
+        >
+          <GripVertical class="w-3 h-3"/>
         </Button>
       </div>
     </div>
