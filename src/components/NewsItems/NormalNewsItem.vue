@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Star, TrendingUp, TrendingDown, Minus } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import type { NewsItem } from "@/api"
 import { useFavorites } from '@/composables/useFavorites'
 import { toast } from 'vue-sonner'
@@ -76,10 +77,19 @@ const handleFavorite = (event: Event) => {
 
     <!-- 标题和内容 -->
     <div class="flex-1 min-w-0">
-      <p class="text-xs text-foreground group-hover:text-foreground/80 transition-all duration-200 truncate leading-normal
-                relative group-hover:underline underline-offset-2 decoration-1 decoration-muted-foreground/50">
-        {{ item.title }}
-      </p>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <p class="text-xs text-foreground group-hover:text-foreground/80 transition-all duration-200 truncate leading-normal
+                      relative group-hover:underline underline-offset-2 decoration-1 decoration-muted-foreground/50">
+              {{ item.title }}
+            </p>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p class="max-w-sm">{{ item.title }}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
 
     <!-- 收藏按钮 -->

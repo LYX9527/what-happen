@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Star, TrendingUp, TrendingDown } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import type { NewsItem } from "@/api"
 import { useFavorites } from '@/composables/useFavorites'
 import { toast } from 'vue-sonner'
@@ -39,13 +40,13 @@ const handleClick = () => {
 // 处理收藏
 const handleFavorite = (event: Event) => {
   event.stopPropagation()
-
+  
   const platformKey = props.platform || 'unknown'
   const platformTitle = props.platformTitle || '未知平台'
-
+  
   const success = toggleFavorite(props.item, platformKey, platformTitle)
   const favorited = isFavorited(props.item)
-
+  
   if (success) {
     toast(favorited ? '已添加到收藏' : '已从收藏中移除', {
       description: `"${props.item.title.slice(0, 30)}${props.item.title.length > 30 ? '...' : ''}"`,
@@ -74,10 +75,19 @@ const handleFavorite = (event: Event) => {
     <!-- 标题和内容 -->
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-1.5">
-        <p class="text-xs text-foreground group-hover:text-foreground/80 transition-all duration-200 truncate leading-normal
-                  relative group-hover:underline underline-offset-2 decoration-1 decoration-muted-foreground/50 flex-1">
-          {{ item.title }}
-        </p>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p class="text-xs text-foreground group-hover:text-foreground/80 transition-all duration-200 truncate leading-normal
+                        relative group-hover:underline underline-offset-2 decoration-1 decoration-muted-foreground/50 flex-1">
+                {{ item.title }}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p class="max-w-sm">{{ item.title }}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <div class="flex items-center gap-1 shrink-0">
           <span :class="['text-xs font-medium', getStockColor(item.extra?.info || '')]">
             {{ item.extra?.info }}
@@ -113,6 +123,5 @@ const handleFavorite = (event: Event) => {
         class="w-3 h-3 text-muted-foreground hover:text-yellow-500"
       />
     </Button>
-
   </div>
 </template>

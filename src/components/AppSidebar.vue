@@ -194,9 +194,16 @@ const data = {
       badge: computed(() => totalFavoritesCount.value > 0 ? totalFavoritesCount.value.toString() : undefined),
       items: [
         {
-          title: '查看收藏',
+          title: '收藏的新闻',
           url: '#',
-          filter: 'favorites'
+          filter: 'favorites-news',
+          badge: computed(() => newsItemsCount.value > 0 ? newsItemsCount.value.toString() : undefined)
+        },
+        {
+          title: '收藏的平台',
+          url: '#',
+          filter: 'favorites-platforms',
+          badge: computed(() => platformsCount.value > 0 ? platformsCount.value.toString() : undefined)
         }
       ],
     },

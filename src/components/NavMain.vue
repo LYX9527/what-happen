@@ -29,6 +29,7 @@ defineProps<{
       title: string
       url: string
       filter?: string
+      badge?: ComputedRef<string | undefined> | string
     }[]
   }[]
 }>()
@@ -83,6 +84,13 @@ const handleSubItemClick = (event: Event, filter?: string) => {
                     @click="handleSubItemClick($event, subItem.filter)"
                   >
                     <span>{{ subItem.title }}</span>
+                    <Badge 
+                      v-if="subItem.badge && (typeof subItem.badge === 'string' ? subItem.badge : subItem.badge.value)" 
+                      variant="secondary" 
+                      class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center"
+                    >
+                      {{ typeof subItem.badge === 'string' ? subItem.badge : subItem.badge.value }}
+                    </Badge>
                   </a>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>

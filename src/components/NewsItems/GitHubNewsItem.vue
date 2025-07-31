@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Star, ExternalLink } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import type { NewsItem } from "@/api"
 import { useFavorites } from '@/composables/useFavorites'
 import { toast } from 'vue-sonner'
@@ -64,18 +65,36 @@ const handleFavorite = (event: Event) => {
     <!-- 标题和内容 -->
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-1.5">
-        <p class="text-xs text-foreground group-hover:text-foreground/80 transition-all duration-200 truncate leading-normal
-                  relative group-hover:underline underline-offset-2 decoration-1 decoration-muted-foreground/50 flex-1">
-          {{ item.title }}
-        </p>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p class="text-xs text-foreground group-hover:text-foreground/80 transition-all duration-200 truncate leading-normal
+                        relative group-hover:underline underline-offset-2 decoration-1 decoration-muted-foreground/50 flex-1">
+                {{ item.title }}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p class="max-w-sm">{{ item.title }}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <div class="flex items-center gap-1 shrink-0">
           <Star class="w-2.5 h-2.5 text-yellow-500 fill-yellow-500" />
           <span class="text-xs text-muted-foreground">{{ item.extra?.info?.replace('✰ ', '') }}</span>
         </div>
       </div>
-      <p v-if="item.extra?.hover" class="text-xs text-muted-foreground mt-0.5 truncate" :title="item.extra?.hover">
-        {{ item.extra?.hover }}
-      </p>
+      <TooltipProvider v-if="item.extra?.hover">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <p class="text-xs text-muted-foreground mt-0.5 truncate cursor-help">
+              {{ item.extra?.hover }}
+            </p>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p class="max-w-md">{{ item.extra?.hover }}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
 
     <!-- 收藏按钮 -->
