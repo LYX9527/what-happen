@@ -294,6 +294,10 @@ const handleFilterChange = (filter: string) => {
     }
   })
 }
+// 处理外部链接打开
+const openLink = () => {
+  window.open('https://github.com/LYX9527/what-happen', '_blank');
+}
 
 // 监听路由参数变化
 watch(() => route.query.filter, (newFilter) => {
@@ -381,6 +385,14 @@ onMounted(() => {
               class="sm:hidden h-8 w-8"
           >
             <RefreshCw class="w-4 h-4"/>
+          </Button>
+          <Button
+              variant="ghost"
+              size="icon"
+              class="h-8 w-8"
+              @click="openLink"
+          >
+            <Github class="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors"/>
           </Button>
           <ThemeToggle/>
         </div>
