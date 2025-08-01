@@ -30,13 +30,13 @@ const handleClick = () => {
 // 处理收藏
 const handleFavorite = (event: Event) => {
   event.stopPropagation()
-  
+
   const platformKey = props.platform || 'unknown'
   const platformTitle = props.platformTitle || '未知平台'
-  
+
   const success = toggleFavorite(props.item, platformKey, platformTitle)
   const favorited = isFavorited(props.item)
-  
+
   if (success) {
     toast(favorited ? '已添加到收藏' : '已从收藏中移除', {
       description: `"${props.item.title.slice(0, 30)}${props.item.title.length > 30 ? '...' : ''}"`,
@@ -117,9 +117,5 @@ const handleFavorite = (event: Event) => {
       />
     </Button>
 
-    <!-- 右侧指示器 -->
-    <div class="shrink-0">
-      <ExternalLink class="w-2.5 h-2.5 text-muted-foreground opacity-50" />
-    </div>
   </div>
-</template> 
+</template>

@@ -6,7 +6,14 @@ import {ScrollArea} from '@/components/ui/scroll-area'
 import {toast} from 'vue-sonner'
 import type {NewsItem} from "@/api"
 import {useFavorites} from '@/composables/useFavorites'
-import {GitHubNewsItem, StockNewsItem, NormalNewsItem, getNewsItemComponent} from '@/components/NewsItems'
+import {
+  GitHubNewsItem,
+  StockNewsItem,
+  NormalNewsItem,
+  getNewsItemComponent,
+  HotSearchItem,
+  TimelineNewsItem
+} from '@/components/NewsItems'
 
 interface Props {
   title: string
@@ -81,6 +88,10 @@ const newsItemComponent = computed(() => {
       return GitHubNewsItem
     case 'StockNewsItem':
       return StockNewsItem
+    case 'TimelineNewsItem':
+      return TimelineNewsItem
+    case 'HotSearchItem':
+      return HotSearchItem
     default:
       return NormalNewsItem
   }
