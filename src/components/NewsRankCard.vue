@@ -12,7 +12,7 @@ import {
   NormalNewsItem,
   getNewsItemComponent,
   HotSearchItem,
-  TimelineNewsItem
+  TimelineNewsItem, ArticleReadItem, VideoListItem
 } from '@/components/NewsItems'
 
 interface Props {
@@ -29,7 +29,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
   showMore: true,
-  maxItems: 20,
+  maxItems: 50,
   showDragHandle: true
 })
 
@@ -92,6 +92,10 @@ const newsItemComponent = computed(() => {
       return TimelineNewsItem
     case 'HotSearchItem':
       return HotSearchItem
+    case 'ArticleReadItem':
+      return ArticleReadItem
+    case 'VideoListItem':
+      return VideoListItem
     default:
       return NormalNewsItem
   }
@@ -99,10 +103,6 @@ const newsItemComponent = computed(() => {
 
 const handleItemClick = (item: NewsItem) => {
   emit('item-click', item)
-}
-
-const handleShowMore = () => {
-  emit('show-more')
 }
 
 const handleRefresh = () => {
@@ -211,14 +211,14 @@ const displayItems = computed(() => {
       <ScrollArea v-else-if="displayItems.length > 0" class="h-full">
         <div class="p-1.5 space-y-0.5">
           <component
-            v-for="(item, index) in displayItems"
-            :key="item.id"
-            :is="newsItemComponent"
-            :item="item"
-            :index="index"
-            :platform="platform"
-            :platform-title="title"
-            @item-click="handleItemClick"
+              v-for="(item, index) in displayItems"
+              :key="item.id"
+              :is="newsItemComponent"
+              :item="item"
+              :index="index"
+              :platform="platform"
+              :platform-title="title"
+              @item-click="handleItemClick"
           />
         </div>
       </ScrollArea>

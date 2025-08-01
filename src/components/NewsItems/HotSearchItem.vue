@@ -34,19 +34,6 @@ const getRankBackgroundClass = (index: number): string => {
   return 'bg-transparent text-muted-foreground' // 其他：透明
 }
 
-// 模拟趋势数据
-const getTrendIcon = (index: number) => {
-  if (index < 3) return TrendingUp
-  if (index < 6) return Minus
-  return TrendingDown
-}
-
-const getTrendColor = (index: number) => {
-  if (index < 3) return 'text-green-600 dark:text-green-400'
-  if (index < 6) return 'text-muted-foreground'
-  return 'text-red-500 dark:text-red-400'
-}
-
 // 处理点击
 const handleClick = () => {
   emit('item-click', props.item)
@@ -117,7 +104,7 @@ const handleFavorite = (event: Event) => {
             v-if="item.extra.icon.url"
             :src="item.extra.icon.url"
             :style="{ transform: `scale(${item.extra.icon.scale || 1})` }"
-            class="w-4 h-4 object-contain"
+            class=" h-4 object-contain"
             alt="热搜图标"
         />
         <!-- 如果是文字图标（兼容旧格式） -->

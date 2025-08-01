@@ -28,7 +28,7 @@ import {
   , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
   ItHome, Jin10, nowcoder, PcBeta, Solidot,
   TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-  Coolapk, Hupu
+  Coolapk, Hupu, Juejin
 } from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
@@ -88,6 +88,7 @@ const platformIcons = {
   zhihu: Zhihu,
   coolapk: Coolapk,
   hupu: Hupu,
+  juejin: Juejin
 }
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
@@ -124,6 +125,7 @@ const defaultPlatforms = [
   {platform: 'zhihu', title: '知乎'},
   {platform: 'coolapk', title: '酷安'},
   {platform: 'hupu', title: '虎扑'},
+  {platform: 'juejin', title: '稀土掘金'},
 ]
 
 // 加载已保存的排序

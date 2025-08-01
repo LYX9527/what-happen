@@ -23,6 +23,10 @@ export interface NewsItem {
             scale: number
         }
         num: number
+        view?: number
+        like?: number
+        comment?: number
+        collect?: number
     }
 }
 

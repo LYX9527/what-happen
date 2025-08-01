@@ -4,6 +4,8 @@ export {default as StockNewsItem} from './StockNewsItem.vue'
 export {default as NormalNewsItem} from './NormalNewsItem.vue'
 export {default as TimelineNewsItem} from './TimelineNewsItem.vue'
 export {default as HotSearchItem} from './HotSearchItem.vue'
+export {default as ArticleReadItem} from './ArticleReadItem.vue'
+export {default as VideoListItem} from './VideoListItem.vue'
 
 // 时间线新闻相关组件
 
@@ -29,6 +31,7 @@ export const NewsItemComponents = {
     douyin: 'HotSearchItem',
     zhihu: 'HotSearchItem',
     toutiao: 'HotSearchItem',
+    b_hot_search: 'HotSearchItem',
 
     // 时间线新闻
     _36kr: 'TimelineNewsItem',
@@ -46,6 +49,12 @@ export const NewsItemComponents = {
     pcbeta_windows: 'TimelineNewsItem',
     nowcoder: 'TimelineNewsItem',
 
+
+    // 文章阅读
+    juejin: "ArticleReadItem",
+
+    // 视频列表
+    b_hot_video: 'VideoListItem',
     // 普通新闻项
     hupu: 'NormalNewsItem',
 
