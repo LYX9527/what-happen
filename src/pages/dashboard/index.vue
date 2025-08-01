@@ -105,7 +105,7 @@ const defaultPlatforms = [
   {platform: 'b_rank', title: '哔哩哔哩排行榜'},
   {platform: 'cankaoxiaoxi', title: '参考消息'},
   {platform: 'gelonghui', title: '格隆汇'},
-  {platform: 'guoheboke', title: '果核剥壳'},
+  // {platform: 'guoheboke', title: '果核剥壳'},
   {platform: 'ithome', title: 'IT之家'},
   {platform: 'jin10', title: '金十数据'},
   {platform: 'nowcoder', title: '牛客网'},

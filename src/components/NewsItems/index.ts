@@ -55,6 +55,8 @@ export const NewsItemComponents = {
 
     // 视频列表
     b_hot_video: 'VideoListItem',
+    b_rank: 'VideoListItem',
+
     // 普通新闻项
     hupu: 'NormalNewsItem',
 

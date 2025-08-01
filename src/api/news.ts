@@ -27,6 +27,14 @@ export interface NewsItem {
         like?: number
         comment?: number
         collect?: number
+        thumbnail?: {
+            url: string
+            hover?: string
+        }
+        video?: {
+            info: string
+            duration: string
+        }
     }
 }
 
