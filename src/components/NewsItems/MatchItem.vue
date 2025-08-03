@@ -23,7 +23,7 @@ const {isFavorited, toggleFavorite} = useFavorites()
 
 // 动态计算比赛名称字体大小
 const matchNameFontSize = computed(() => {
-  const matchName = props.item.matchName || props.item.title || ''
+  const matchName = props.item.matchName  || ''
   const length = matchName.length
 
   // 根据文字长度动态调整字体大小
@@ -77,15 +77,15 @@ const getPositionName = (position: string): string => {
 }
 
 // 获取位置图标
-const getPositionIcon = (position: string): string => {
-  const positionIconMap: Record<string, string> = {
+const getPositionIcon = (position: string) => {
+  const positionIconMap: Record<string, typeof TOP> = {
     'TOP': TOP,
     'JUN': JUN,
     'MID': MID,
     'BOT': BOT,
     'SUP': SUP
   }
-  return positionIconMap[position] || '❓'
+  return positionIconMap[position]
 }
 
 // 定义位置排序顺序
@@ -150,8 +150,8 @@ const getScoreColorClass = (scoreA: string | number, scoreB: string | number): {
 }
 
 // 格式化时间显示
-const formatMatchTime = (timestamp: string): string => {
-  const date = new Date(parseInt(timestamp))
+const formatMatchTime = (timestamp: string | number): string => {
+  const date = new Date(parseInt(timestamp + ""))
   const now = new Date()
   const diffMs = date.getTime() - now.getTime()
 
@@ -229,7 +229,7 @@ const handleClick = () => {
                 <div
                     :class="[matchNameFontSize, 'text-muted-foreground mb-0.5 whitespace-nowrap']"
                 >
-                  {{ item.matchName || item.title }}
+                  {{ item.matchName }}
                 </div>
 
                 <!-- 比分 -->
@@ -322,7 +322,7 @@ const handleClick = () => {
             <div
                 :class="[matchNameFontSize, 'text-muted-foreground mb-0.5 whitespace-nowrap']"
             >
-              {{ item.matchName || item.title }}
+              {{ item.matchName }}
             </div>
 
             <!-- 比分 -->
