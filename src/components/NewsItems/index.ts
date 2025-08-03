@@ -8,6 +8,7 @@ export {default as ArticleReadItem} from './ArticleReadItem.vue'
 export {default as VideoListItem} from './VideoListItem.vue'
 export {default as HotMovieItem} from './HotMovieItem.vue'
 export {default as HotTVShowItem} from './HotTVShowItem.vue'
+export {default as MatchItem} from './MatchItem.vue'
 
 // 时间线新闻相关组件
 
@@ -62,6 +63,9 @@ export const NewsItemComponents = {
     // 电影榜单
     douban: "HotMovieItem",
     bd_tv: "HotTVShowItem",
+
+    // 比赛相关
+    hupu_lol: 'MatchItem',
 
     // 普通新闻项
     hupu: 'NormalNewsItem',

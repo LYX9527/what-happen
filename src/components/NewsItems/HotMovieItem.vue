@@ -131,7 +131,7 @@ const handleFavorite = (event: Event) => {
           </div>
 
           <!-- 精选评论 -->
-          <div v-if="item.extra?.comment &&(item.extra?.comments.content!=='') "
+          <div v-if="item.extra?.comments &&(item.extra?.comments.content!=='') "
                class="mt-4 pt-3 border-t border-border">
             <div class="flex items-start gap-2">
               <!-- 用户头像 -->

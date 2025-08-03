@@ -52,6 +52,18 @@ export interface NewsItem {
     }
 }
 
+export interface MatchItem {
+    matchName: string
+    matchStatus: string
+    matchStartTimeStamp: number
+    memberInfos: {
+        memberName: string
+        memberId: string
+        memberBaseScore: string
+        memberLogo: string
+    }[]
+}
+
 /**
  * 基础请求函数
  */

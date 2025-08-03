@@ -10,7 +10,7 @@ import {
   TrendingUp,
   Film,
   Monitor,
-  Star
+  Star, ScanEye
 } from 'lucide-vue-next'
 
 import {useFavorites} from '@/composables/useFavorites'
@@ -163,30 +163,19 @@ const data = {
       ],
     },
     {
-      title: '热门平台',
+      title: '比赛资讯',
       url: '#',
-      icon: TrendingUp,
+      icon: ScanEye,
       items: [
         {
-          title: '微博热搜',
+          title: '英雄联盟',
           url: '#',
-          filter: 'weibo'
+          filter: 'lol'
         },
         {
-          title: '百度热搜',
-          url: '#',
-          filter: 'baidu'
+          title: 'NBA',
+          url: '#'
         },
-        {
-          title: 'GitHub趋势',
-          url: '#',
-          filter: 'github'
-        },
-        {
-          title: '知乎热榜',
-          url: '#',
-          filter: 'zhihu'
-        }
       ],
     },
     {

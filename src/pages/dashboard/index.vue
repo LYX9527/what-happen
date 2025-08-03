@@ -28,7 +28,7 @@ import {
   , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
   ItHome, Jin10, nowcoder, PcBeta, Solidot,
   TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-  Coolapk, Hupu, Juejin, Douban
+  Coolapk, Hupu, Juejin, Douban, LoL
 } from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
@@ -61,6 +61,7 @@ const validFilters = [
   'zhihu',
   "movies",
   "teleplay",
+  "lol",
 ]
 
 const getValidFilter = (filter: string): string => {
@@ -105,7 +106,8 @@ const platformIcons = {
   hupu: Hupu,
   juejin: Juejin,
   douban: Douban,
-  bd_tv: Baidu
+  bd_tv: Baidu,
+  hupu_lol: LoL,
 }
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
@@ -145,6 +147,7 @@ const defaultPlatforms = [
   {platform: 'juejin', title: '稀土掘金'},
   {platform: 'douban', title: '豆瓣热影'},
   {platform: 'bd_tv', title: '百度热剧'},
+  {platform: 'hupu_lol', title: '英雄联盟比赛'},
 ]
 
 // 加载已保存的排序
@@ -206,6 +209,7 @@ const platformCategories: Record<string, string[]> = {
   zhihu: ['zhihu'],
   movies: ['douban'],
   teleplay: ['bd_tv'],
+  lol: ['hupu_lol'],
 }
 
 // 根据筛选条件过滤平台
@@ -341,6 +345,7 @@ const getFilterTitle = (filter: string) => {
     zhihu: '知乎热榜',
     movies: '电影榜',
     teleplay: '电视剧榜',
+    lol: '英雄联盟',
   }
   return filterTitles[filter] || '全部榜单'
 }
