@@ -56,11 +56,23 @@ export interface MatchItem {
     matchName: string
     matchStatus: string
     matchStartTimeStamp: number
-    memberInfos: {
+        memberInfos: {
         memberName: string
         memberId: string
         memberBaseScore: string
         memberLogo: string
+    }[]
+    totalScore?: {
+        teamId: string
+        teamName?: string
+        playerInfo: {
+            playerId: number
+            playerName: string
+            playerScore: number
+            playerScoreNum: number
+            playerLocation: string
+            isSubstitution: boolean
+        }[]
     }[]
 }
 
