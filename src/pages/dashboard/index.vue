@@ -28,7 +28,7 @@ import {
   , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
   ItHome, Jin10, nowcoder, PcBeta, Solidot,
   TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-  Coolapk, Hupu, Juejin, Douban, LoL
+  Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic
 } from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
@@ -62,6 +62,7 @@ const validFilters = [
   "movies",
   "teleplay",
   "lol",
+  "music",
 ]
 
 const getValidFilter = (filter: string): string => {
@@ -108,6 +109,8 @@ const platformIcons = {
   douban: Douban,
   bd_tv: Baidu,
   hupu_lol: LoL,
+  kugou: KuGou,
+  qq_music: QQMusic
 }
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
@@ -148,6 +151,8 @@ const defaultPlatforms = [
   {platform: 'douban', title: '豆瓣热影'},
   {platform: 'bd_tv', title: '百度热剧'},
   {platform: 'hupu_lol', title: '英雄联盟比赛'},
+  {platform: 'kugou', title: '酷狗音乐飙升榜'},
+  {platform: 'qq_music', title: 'QQ音乐流行榜'},
 ]
 
 // 加载已保存的排序
@@ -210,6 +215,7 @@ const platformCategories: Record<string, string[]> = {
   movies: ['douban'],
   teleplay: ['bd_tv'],
   lol: ['hupu_lol'],
+  music: ['kugou', 'qq_music'],
 }
 
 // 根据筛选条件过滤平台
@@ -346,6 +352,7 @@ const getFilterTitle = (filter: string) => {
     movies: '电影榜',
     teleplay: '电视剧榜',
     lol: '英雄联盟',
+    music : '音乐榜',
   }
   return filterTitles[filter] || '全部榜单'
 }

@@ -29,5 +29,7 @@ export {default as JUN} from './JUN.vue'
 export {default as MID} from './MID.vue'
 export {default as BOT} from './BOT.vue'
 export {default as SUP} from './SUP.vue'
+export {default as KuGou} from './kugou.vue'
+export {default as QQMusic} from './qqmusic.vue'
 
 

@@ -134,6 +134,11 @@ const data = {
           url: '#',
         },
         {
+          title: '音乐榜',
+          url: '#',
+          filter: "music"
+        },
+        {
           title: '明星动态',
           url: '#',
         },

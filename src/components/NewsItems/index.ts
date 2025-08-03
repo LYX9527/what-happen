@@ -9,6 +9,7 @@ export {default as VideoListItem} from './VideoListItem.vue'
 export {default as HotMovieItem} from './HotMovieItem.vue'
 export {default as HotTVShowItem} from './HotTVShowItem.vue'
 export {default as MatchItem} from './MatchItem.vue'
+export {default as MusicItem} from './MusicItem.vue'
 
 // 时间线新闻相关组件
 
@@ -66,6 +67,12 @@ export const NewsItemComponents = {
 
     // 比赛相关
     hupu_lol: 'MatchItem',
+
+    // 音乐榜单
+    music: 'MusicItem',
+    kugou: 'MusicItem',
+    netease_music: 'MusicItem',
+    qq_music: 'MusicItem',
 
     // 普通新闻项
     hupu: 'NormalNewsItem',
