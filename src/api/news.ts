@@ -21,11 +21,15 @@ export interface NewsItem {
         icon?: {
             url: string
             scale: number
+            info: string
         }
         num: number
         view?: number
         like?: number
-        comment?: number
+        comment?: number | {
+            content: string
+            avatar: string
+        }
         collect?: number
         thumbnail?: {
             url: string
@@ -34,6 +38,16 @@ export interface NewsItem {
         video?: {
             info: string
             duration: string
+        }
+        score?: number
+        desc?: string
+        rating?: {
+            count: number
+            value: number
+        }
+        comments: {
+            content: string
+            avatar: string
         }
     }
 }

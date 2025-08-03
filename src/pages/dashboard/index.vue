@@ -28,7 +28,7 @@ import {
   , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
   ItHome, Jin10, nowcoder, PcBeta, Solidot,
   TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-  Coolapk, Hupu, Juejin
+  Coolapk, Hupu, Juejin, Douban
 } from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
@@ -46,7 +46,22 @@ const route = useRoute()
 const router = useRouter()
 
 // 当前筛选条件
-const validFilters = ['all', 'hot', 'tech', 'finance', 'social', 'favorites', 'favorites-news', 'favorites-platforms', 'weibo', 'baidu', 'github', 'zhihu']
+const validFilters = [
+  'all',
+  'hot',
+  'tech',
+  'finance',
+  'social',
+  'favorites',
+  'favorites-news',
+  'favorites-platforms',
+  'weibo',
+  'baidu',
+  'github',
+  'zhihu',
+  "movies",
+  "teleplay",
+]
 
 const getValidFilter = (filter: string): string => {
   return validFilters.includes(filter) ? filter : 'all'
@@ -88,7 +103,9 @@ const platformIcons = {
   zhihu: Zhihu,
   coolapk: Coolapk,
   hupu: Hupu,
-  juejin: Juejin
+  juejin: Juejin,
+  douban: Douban,
+  bd_tv: Baidu
 }
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
@@ -126,6 +143,8 @@ const defaultPlatforms = [
   {platform: 'coolapk', title: '酷安'},
   {platform: 'hupu', title: '虎扑'},
   {platform: 'juejin', title: '稀土掘金'},
+  {platform: 'douban', title: '豆瓣热影'},
+  {platform: 'bd_tv', title: '百度热剧'},
 ]
 
 // 加载已保存的排序
@@ -185,6 +204,8 @@ const platformCategories: Record<string, string[]> = {
   weibo: ['weibo'],
   baidu: ['baidu'],
   zhihu: ['zhihu'],
+  movies: ['douban'],
+  teleplay: ['bd_tv'],
 }
 
 // 根据筛选条件过滤平台
@@ -317,7 +338,9 @@ const getFilterTitle = (filter: string) => {
     weibo: '微博热搜',
     baidu: '百度热搜',
     github: 'GitHub趋势',
-    zhihu: '知乎热榜'
+    zhihu: '知乎热榜',
+    movies: '电影榜',
+    teleplay: '电视剧榜',
   }
   return filterTitles[filter] || '全部榜单'
 }

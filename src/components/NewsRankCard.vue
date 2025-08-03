@@ -12,7 +12,7 @@ import {
   NormalNewsItem,
   getNewsItemComponent,
   HotSearchItem,
-  TimelineNewsItem, ArticleReadItem, VideoListItem
+  TimelineNewsItem, ArticleReadItem, VideoListItem, HotMovieItem, HotTVShowItem
 } from '@/components/NewsItems'
 
 interface Props {
@@ -96,6 +96,10 @@ const newsItemComponent = computed(() => {
       return ArticleReadItem
     case 'VideoListItem':
       return VideoListItem
+    case 'HotMovieItem':
+      return HotMovieItem
+    case 'HotTVShowItem':
+      return HotTVShowItem
     default:
       return NormalNewsItem
   }

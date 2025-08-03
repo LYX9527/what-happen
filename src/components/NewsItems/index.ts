@@ -6,6 +6,8 @@ export {default as TimelineNewsItem} from './TimelineNewsItem.vue'
 export {default as HotSearchItem} from './HotSearchItem.vue'
 export {default as ArticleReadItem} from './ArticleReadItem.vue'
 export {default as VideoListItem} from './VideoListItem.vue'
+export {default as HotMovieItem} from './HotMovieItem.vue'
+export {default as HotTVShowItem} from './HotTVShowItem.vue'
 
 // 时间线新闻相关组件
 
@@ -56,6 +58,10 @@ export const NewsItemComponents = {
     // 视频列表
     b_hot_video: 'VideoListItem',
     b_rank: 'VideoListItem',
+
+    // 电影榜单
+    douban: "HotMovieItem",
+    bd_tv: "HotTVShowItem",
 
     // 普通新闻项
     hupu: 'NormalNewsItem',

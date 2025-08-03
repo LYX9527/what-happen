@@ -122,10 +122,12 @@ const data = {
         {
           title: '电影榜',
           url: '#',
+          filter: "movies"
         },
         {
           title: '电视剧榜',
           url: '#',
+          filter: "teleplay"
         },
         {
           title: '综艺榜',
