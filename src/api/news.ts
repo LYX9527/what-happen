@@ -56,7 +56,7 @@ export interface MatchItem {
     matchName: string
     matchStatus: string
     matchStartTimeStamp: number
-        memberInfos: {
+    memberInfos: {
         memberName: string
         memberId: string
         memberBaseScore: string

@@ -52,10 +52,12 @@ export const NewsItemComponents = {
     jin10: 'TimelineNewsItem',
     pcbeta_windows: 'TimelineNewsItem',
     nowcoder: 'TimelineNewsItem',
-
+    jqka: 'TimelineNewsItem',
 
     // 文章阅读
     juejin: "ArticleReadItem",
+    csdn: "ArticleReadItem",
+    sspai: "ArticleReadItem",
 
     // 视频列表
     b_hot_video: 'VideoListItem',

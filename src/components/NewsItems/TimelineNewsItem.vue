@@ -92,7 +92,7 @@ const handleFavorite = (event: Event) => {
               </p>
             </TooltipTrigger>
             <TooltipContent>
-              <p class="max-w-sm">{{ item.title }}</p>
+              <p class="max-w-sm">{{ item.extra?.desc ? item.extra?.desc : item.title }}}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

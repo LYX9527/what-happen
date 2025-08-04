@@ -40,13 +40,13 @@ const handleClick = () => {
 // 处理收藏
 const handleFavorite = (event: Event) => {
   event.stopPropagation()
-  
+
   const platformKey = props.platform || 'unknown'
   const platformTitle = props.platformTitle || '未知平台'
-  
+
   const success = toggleFavorite(props.item, platformKey, platformTitle)
   const favorited = isFavorited(props.item)
-  
+
   if (success) {
     toast(favorited ? '已添加到收藏' : '已从收藏中移除', {
       description: `"${props.item.title.slice(0, 30)}${props.item.title.length > 30 ? '...' : ''}"`,
@@ -83,33 +83,33 @@ const handleFavorite = (event: Event) => {
             </p>
           </TooltipTrigger>
           <TooltipContent>
-            <p class="max-w-sm">{{ item.title }}</p>
+            <p class="max-w-sm">{{ item.extra?.desc ? item.extra?.desc : item.title }}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      
+
       <!-- 统计信息行 -->
       <div class="flex items-center gap-2 text-xs text-muted-foreground">
         <!-- 浏览量 -->
         <span v-if="item.extra?.view">
           {{ formatNumber(item.extra.view) }} 浏览
         </span>
-        
+
         <!-- 分隔符 -->
         <span v-if="item.extra?.view && (item.extra?.like || item.extra?.collect)" class="text-muted-foreground/50">
           ·
         </span>
-        
+
         <!-- 互动数 -->
         <span v-if="item.extra?.like">
           {{ formatNumber(item.extra.like) }} 互动
         </span>
-        
+
         <!-- 分隔符 -->
         <span v-if="item.extra?.like && item.extra?.collect" class="text-muted-foreground/50">
           ·
         </span>
-        
+
         <!-- 收藏数 -->
         <span v-if="item.extra?.collect">
           {{ formatNumber(item.extra.collect) }} 收藏

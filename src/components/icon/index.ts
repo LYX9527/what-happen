@@ -31,5 +31,8 @@ export {default as BOT} from './BOT.vue'
 export {default as SUP} from './SUP.vue'
 export {default as KuGou} from './kugou.vue'
 export {default as QQMusic} from './qqmusic.vue'
+export {default as CSDN} from './csdn.vue'
+export {default as Sspai} from './sspai.vue'
+export {default as Jqka} from './jqka.vue'
 
 

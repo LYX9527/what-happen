@@ -28,7 +28,7 @@ import {
   , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
   ItHome, Jin10, nowcoder, PcBeta, Solidot,
   TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-  Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic
+  Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic, CSDN, Sspai, Jqka
 } from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
@@ -110,7 +110,10 @@ const platformIcons = {
   bd_tv: Baidu,
   hupu_lol: LoL,
   kugou: KuGou,
-  qq_music: QQMusic
+  qq_music: QQMusic,
+  csdn: CSDN,
+  sspai: Sspai,
+  jqka: Jqka
 }
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
@@ -153,6 +156,9 @@ const defaultPlatforms = [
   {platform: 'hupu_lol', title: '英雄联盟比赛'},
   {platform: 'kugou', title: '酷狗音乐飙升榜'},
   {platform: 'qq_music', title: 'QQ音乐流行榜'},
+  {platform: 'csdn', title: 'CSDN'},
+  {platform: 'sspai', title: '少数派'},
+  {platform: 'jqka', title: '同花顺要闻'},
 ]
 
 // 加载已保存的排序
@@ -352,7 +358,7 @@ const getFilterTitle = (filter: string) => {
     movies: '电影榜',
     teleplay: '电视剧榜',
     lol: '英雄联盟',
-    music : '音乐榜',
+    music: '音乐榜',
   }
   return filterTitles[filter] || '全部榜单'
 }
