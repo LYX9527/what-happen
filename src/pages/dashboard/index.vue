@@ -211,8 +211,8 @@ const hotPlatforms = ref(loadSavedOrder(currentFilter.value))
 // 平台分类映射
 const platformCategories: Record<string, string[]> = {
   hot: ['weibo', 'baidu', 'douyin', 'toutiao', 'zhihu', 'kuaishou'],
-  tech: ['github', '_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk'],
-  finance: ['gelonghui', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph'],
+  tech: ['github', '_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk', "juejin", "sspai", "csdn"],
+  finance: ['gelonghui', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph', "jqka"],
   social: ['thepaper', 'cankaoxiaoxi', 'zaobao', 'sputniknewscn'],
   github: ['github'],
   weibo: ['weibo'],
