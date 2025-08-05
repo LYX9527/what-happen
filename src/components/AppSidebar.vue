@@ -152,6 +152,7 @@ const data = {
         {
           title: '汽车榜',
           url: '#',
+          filter: 'car'
         },
         {
           title: '科技前沿',

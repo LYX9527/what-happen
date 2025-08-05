@@ -63,6 +63,7 @@ const validFilters = [
   "teleplay",
   "lol",
   "music",
+  "car",
 ]
 
 const getValidFilter = (filter: string): string => {
@@ -159,6 +160,9 @@ const defaultPlatforms = [
   {platform: 'csdn', title: 'CSDN'},
   {platform: 'sspai', title: '少数派'},
   {platform: 'jqka', title: '同花顺要闻'},
+  {platform: '_51cto', title: '51CTO'},
+  {platform: 'dcd_hot', title: '懂车帝热搜'},
+  {platform: 'dcd_news', title: '懂车帝资讯'},
 ]
 
 // 加载已保存的排序
@@ -222,6 +226,7 @@ const platformCategories: Record<string, string[]> = {
   teleplay: ['bd_tv'],
   lol: ['hupu_lol'],
   music: ['kugou', 'qq_music'],
+  car: ['dcd_hot','dcd_news'],
 }
 
 // 根据筛选条件过滤平台
@@ -359,6 +364,7 @@ const getFilterTitle = (filter: string) => {
     teleplay: '电视剧榜',
     lol: '英雄联盟',
     music: '音乐榜',
+    car: '汽车榜',
   }
   return filterTitles[filter] || '全部榜单'
 }

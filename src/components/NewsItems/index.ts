@@ -36,6 +36,7 @@ export const NewsItemComponents = {
     zhihu: 'HotSearchItem',
     toutiao: 'HotSearchItem',
     b_hot_search: 'HotSearchItem',
+    dcd_hot: 'HotSearchItem',
 
     // 时间线新闻
     _36kr: 'TimelineNewsItem',
@@ -53,6 +54,7 @@ export const NewsItemComponents = {
     pcbeta_windows: 'TimelineNewsItem',
     nowcoder: 'TimelineNewsItem',
     jqka: 'TimelineNewsItem',
+    dcd_news: 'TimelineNewsItem',
 
     // 文章阅读
     juejin: "ArticleReadItem",
