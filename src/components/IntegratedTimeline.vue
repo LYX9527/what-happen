@@ -8,13 +8,18 @@ import {
   RefreshCw,
   Star,
   Newspaper,
-  TrendingUp
+  TrendingUp,
+  ChevronUp,
+  ChevronDown,
+  Expand,
+  Minimize
 } from 'lucide-vue-next'
 import type {NewsItem} from '@/api'
 import {useFavorites} from '@/composables/useFavorites'
 import {toast} from 'vue-sonner'
 import TimelineNewsContent from '@/components/TimelineNewsContent.vue'
 import FinanceNewsContent from '@/components/FinanceNewsContent.vue'
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion'
 
 // 时间线平台配置
 const TIMELINE_PLATFORMS = [
@@ -62,6 +67,15 @@ const {isFavorited, toggleFavorite} = useFavorites()
 // 筛选状态
 const activeCategory = ref<string>('all')
 const categories = ['all', '科技', '社会', '财经', '汽车']
+
+// 手风琴展开状态
+const expandedTimeGroups = ref<string[]>([])
+
+
+// 监听分类变化，重置展开状态
+watch(activeCategory, () => {
+  expandedTimeGroups.value = []
+})
 
 // 获取平台配置
 const getPlatformConfig = (platformKey: string) => {
@@ -158,12 +172,52 @@ const allIntegratedNews = computed(() => {
 // 整合并排序所有时间线新闻（用于显示）
 const integratedNews = computed(() => {
   // 根据分类筛选
-  if (activeCategory.value === 'all') {
-    return allIntegratedNews.value
-  }
+  let filteredNews = activeCategory.value === 'all'
+      ? allIntegratedNews.value
+      : allIntegratedNews.value.filter(item => item.platformConfig.category === activeCategory.value)
 
-  return allIntegratedNews.value.filter(item => item.platformConfig.category === activeCategory.value)
+  return filteredNews
 })
+
+// 按时间分组的新闻数据
+const groupedNewsByTime = computed(() => {
+  const groups: Array<{
+    timeKey: string
+    displayTime: string
+    items: Array<NewsItem & {
+      platformKey: string
+      platformConfig: any
+      parsedTime: Date
+    }>
+  }> = []
+
+  integratedNews.value.forEach(item => {
+    const displayTime = formatDisplayTime(item.parsedTime)
+
+    // 查找是否已有相同时间的分组
+    let existingGroup = groups.find(group => group.displayTime === displayTime)
+
+    if (!existingGroup) {
+      existingGroup = {
+        timeKey: `${displayTime}-${Date.now()}`,
+        displayTime,
+        items: []
+      }
+      groups.push(existingGroup)
+    }
+
+    existingGroup.items.push(item)
+  })
+
+  return groups
+})
+// 初始化展开前3个时间组
+watch(groupedNewsByTime, (newGroups, oldGroups) => {
+  // 如果是初次加载或分类切换导致的数据变化
+  if (newGroups.length > 0 && (!oldGroups || newGroups.length !== oldGroups.length || newGroups[0]?.timeKey !== oldGroups[0]?.timeKey)) {
+    expandedTimeGroups.value = newGroups.slice(0, 15).map(g => g.timeKey)
+  }
+}, {immediate: true})
 
 // 加载状态
 const isLoading = computed(() => {
@@ -217,6 +271,22 @@ const handleRefresh = () => {
   emit('refresh')
 }
 
+// 全部展开/收起
+const toggleAllTimeGroups = () => {
+  if (expandedTimeGroups.value.length === groupedNewsByTime.value.length) {
+    // 如果全部展开，则全部收起
+    expandedTimeGroups.value = []
+  } else {
+    // 否则全部展开
+    expandedTimeGroups.value = groupedNewsByTime.value.map(g => g.timeKey)
+  }
+}
+
+// 判断是否全部展开
+const isAllExpanded = computed(() => {
+  return expandedTimeGroups.value.length === groupedNewsByTime.value.length && groupedNewsByTime.value.length > 0
+})
+
 // 根据平台类型选择对应的内容组件
 const getNewsContentComponent = (platformConfig: any) => {
   // 财经类新闻使用特殊组件
@@ -251,16 +321,29 @@ const getNewsContentComponent = (platformConfig: any) => {
           </Badge>
         </div>
 
-        <Button
-            variant="outline"
-            size="sm"
-            @click="handleRefresh"
-            :disabled="isLoading"
-            class="gap-1.5"
-        >
-          <RefreshCw :class="['w-3.5 h-3.5', isLoading && 'animate-spin']"/>
-          刷新
-        </Button>
+        <div class="flex items-center gap-2">
+          <Button
+              variant="outline"
+              size="sm"
+              @click="toggleAllTimeGroups"
+              :disabled="groupedNewsByTime.length === 0"
+              class="gap-1.5"
+          >
+            <component :is="isAllExpanded ? Minimize : Expand" class="w-3.5 h-3.5"/>
+            {{ isAllExpanded ? '全部收起' : '全部展开' }}
+          </Button>
+
+          <Button
+              variant="outline"
+              size="sm"
+              @click="handleRefresh"
+              :disabled="isLoading"
+              class="gap-1.5"
+          >
+            <RefreshCw :class="['w-3.5 h-3.5', isLoading && 'animate-spin']"/>
+            刷新
+          </Button>
+        </div>
       </div>
 
       <!-- 分类筛选 -->
@@ -290,7 +373,7 @@ const getNewsContentComponent = (platformConfig: any) => {
       <ScrollArea class="h-full">
         <div class="px-4 py-2">
           <!-- 加载状态 -->
-          <div v-if="isLoading && integratedNews.length === 0" class="space-y-3">
+          <div v-if="isLoading && groupedNewsByTime.length === 0" class="space-y-3">
             <div v-for="i in 8" :key="i" class="flex items-start gap-3 py-2">
               <Skeleton class="w-12 h-4 rounded"/>
               <div class="flex-1 space-y-2">
@@ -302,60 +385,113 @@ const getNewsContentComponent = (platformConfig: any) => {
           </div>
 
           <!-- 空状态 -->
-          <div v-else-if="integratedNews.length === 0" class="text-center py-12">
+          <div v-else-if="groupedNewsByTime.length === 0" class="text-center py-12">
             <Newspaper class="w-12 h-12 mx-auto text-muted-foreground mb-4"/>
             <h3 class="text-lg font-medium text-muted-foreground mb-2">暂无新闻</h3>
             <p class="text-sm text-muted-foreground">{{ hasErrors ? '加载失败，请尝试刷新' : '等待数据加载中...' }}</p>
           </div>
 
-          <!-- 时间线列表 -->
-          <div v-else class="space-y-1">
-            <div
-                v-for="(item, index) in integratedNews"
-                :key="`${item.platformKey}-${item.id}`"
-                class="relative group"
+          <!-- 时间线分组列表 -->
+          <div v-else>
+            <Accordion
+                type="multiple"
+                v-model="expandedTimeGroups"
+                class="space-y-4"
             >
-              <!-- 时间线连接线 -->
-              <div
-                  v-if="index < integratedNews.length - 1"
-                  class="absolute left-6 top-8 bottom-0 w-px bg-border/60"
-              ></div>
-
-              <div
-                  class="flex items-start gap-3 py-2 px-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+              <AccordionItem
+                  v-for="(timeGroup, groupIndex) in groupedNewsByTime"
+                  :key="timeGroup.timeKey"
+                  :value="timeGroup.timeKey"
+                  class="border rounded-lg bg-card"
               >
-                <!-- 时间和平台标识 -->
-                <div class="flex flex-col items-center gap-1 w-12 flex-shrink-0">
-                  <div class="text-xs text-muted-foreground font-mono whitespace-nowrap">
-                    {{ formatDisplayTime(item.parsedTime) }}
+                <!-- 时间标签 (可点击展开/收起) -->
+                <AccordionTrigger class="px-4 py-3 hover:no-underline group">
+                  <div class="flex items-center gap-3 w-full">
+                    <div class="flex items-center justify-center">
+                      <div
+                          class="text-sm font-medium text-foreground bg-primary/10 border rounded-full px-3 py-1 whitespace-nowrap group-hover:bg-primary/20 transition-colors">
+                        {{ timeGroup.displayTime }}
+                      </div>
+                    </div>
+
+                    <!-- 平台来源预览 -->
+                    <div class="flex items-center gap-1 flex-1 min-w-0">
+                      <div class="flex -space-x-1 overflow-hidden">
+                        <div
+                            v-for="(platform, index) in [...new Set(timeGroup.items.map(item => item.platformConfig))].slice(0, 5)"
+                            :key="platform.key"
+                            :class="['w-4 h-4 rounded-full border border-background flex-shrink-0', platform.color]"
+                            :title="platform.title"
+                        ></div>
+                        <div
+                            v-if="[...new Set(timeGroup.items.map(item => item.platformConfig.key))].length > 5"
+                            class="w-4 h-4 rounded-full bg-muted border border-background flex items-center justify-center text-xs text-muted-foreground"
+                            :title="`还有 ${[...new Set(timeGroup.items.map(item => item.platformConfig.key))].length - 5} 个平台`"
+                        >
+                          +
+                        </div>
+                      </div>
+                      <div class="flex-1 h-px bg-border/50 ml-2"></div>
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                      <Badge variant="secondary" class="text-xs">
+                        {{ timeGroup.items.length }} 条
+                      </Badge>
+                    </div>
                   </div>
-                  <div :class="['w-3 h-3 rounded-full flex-shrink-0', item.platformConfig.color]"></div>
-                </div>
+                </AccordionTrigger>
 
-                <!-- 新闻内容 -->
-                <component
-                    :is="getNewsContentComponent(item.platformConfig)"
-                    :item="item"
-                    :platform-config="item.platformConfig"
-                    @click="handleNewsClick"
-                />
+                <!-- 该时间段的新闻列表 -->
+                <AccordionContent class="px-4 pb-4 pt-0">
+                  <div class="space-y-1 ml-2 animate-in fade-in duration-200">
+                    <div
+                        v-for="(item, itemIndex) in timeGroup.items"
+                        :key="`${item.platformKey}-${item.id}`"
+                        class="relative group"
+                    >
+                      <!-- 时间线连接线 -->
+                      <div
+                          v-if="itemIndex < timeGroup.items.length - 1"
+                          class="absolute left-3 top-8 bottom-0 w-px bg-border/40"
+                      ></div>
 
-                <!-- 操作按钮 -->
-                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                      variant="ghost"
-                      size="sm"
-                      :class="[
-                      'w-7 h-7 p-0',
-                      isFavorited(item) ? 'text-yellow-500' : 'text-muted-foreground'
-                    ]"
-                      @click="handleFavorite($event, item)"
-                  >
-                    <Star class="w-3.5 h-3.5" :fill="isFavorited(item) ? 'currentColor' : 'none'"/>
-                  </Button>
-                </div>
-              </div>
-            </div>
+                      <div
+                          class="flex items-start gap-3 py-2 px-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                      >
+                        <!-- 平台标识圆点 -->
+                        <div class="flex items-center justify-center w-6 flex-shrink-0 pt-1">
+                          <div :class="['w-2 h-2 rounded-full flex-shrink-0', item.platformConfig.color]"></div>
+                        </div>
+
+                        <!-- 新闻内容 -->
+                        <component
+                            :is="getNewsContentComponent(item.platformConfig)"
+                            :item="item"
+                            :platform-config="item.platformConfig"
+                            @click="handleNewsClick"
+                        />
+
+                        <!-- 操作按钮 -->
+                        <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                              variant="ghost"
+                              size="sm"
+                              :class="[
+                              'w-7 h-7 p-0',
+                              isFavorited(item) ? 'text-yellow-500' : 'text-muted-foreground'
+                            ]"
+                              @click="handleFavorite($event, item)"
+                          >
+                            <Star class="w-3.5 h-3.5" :fill="isFavorited(item) ? 'currentColor' : 'none'"/>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </ScrollArea>
