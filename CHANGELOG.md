@@ -1,3 +1,12 @@
+# 2025.08.05 更新记录
+## 1. 新增平台
+- [x] 51CTO
+- [x] 懂车帝
+  ![](public/51cto-dcd-timeline.png)
+## 2. 新增时间线
+![](public/first-time.png)
+
+
 # 2025.08.04 更新记录
 ## 1. 新增平台
 - [x] CSDN
