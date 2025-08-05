@@ -26,8 +26,15 @@ import TeamSwitcher from "@/components/TeamSwitcher.vue";
 import NavMain from "@/components/NavMain.vue";
 import NavUser from "@/components/NavUser.vue";
 
-const props = withDefaults(defineProps<SidebarProps>(), {
+interface AppSidebarProps extends SidebarProps {
+  currentFilter?: string
+  hotPlatforms?: Array<{ platform: string; title: string }>
+}
+
+const props = withDefaults(defineProps<AppSidebarProps>(), {
   collapsible: 'icon',
+  currentFilter: 'all',
+  hotPlatforms: () => []
 })
 
 const emit = defineEmits<{
@@ -40,7 +47,39 @@ const {favoritesCount, newsItemsCount, platformsCount} = useFavorites()
 // 总收藏数量（用于显示徽章）
 const totalFavoritesCount = computed(() => newsItemsCount.value + platformsCount.value)
 
-const data = {
+// 平台分类映射 - 与dashboard中保持一致
+const platformCategories: Record<string, string[]> = {
+  hot: ['weibo', 'baidu', 'douyin', 'toutiao', 'zhihu', 'kuaishou'],
+  tech: ['github', '_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk', 'juejin', 'sspai', 'csdn'],
+  finance: ['gelonghui', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph', 'jqka'],
+  social: ['thepaper', 'cankaoxiaoxi', 'zaobao', 'sputniknewscn'],
+  github: ['github'],
+  weibo: ['weibo'],
+  baidu: ['baidu'],
+  zhihu: ['zhihu'],
+  movies: ['douban'],
+  teleplay: ['bd_tv'],
+  lol: ['hupu_lol'],
+  music: ['kugou', 'qq_music'],
+  car: ['dcd_hot', 'dcd_news']
+}
+
+// 计算分类平台数量
+const getCategoryCount = (filter: string): number => {
+  if (filter === 'all') {
+    return props.hotPlatforms.length
+  }
+  const categoryPlatforms = platformCategories[filter] || []
+  return props.hotPlatforms.filter(p => categoryPlatforms.includes(p.platform)).length
+}
+
+// 生成数量徽章
+const generateBadge = (filter: string): string | undefined => {
+  const count = getCategoryCount(filter)
+  return count > 0 ? count.toString() : "0"
+}
+
+const data = computed(() => ({
   user: {
     name: '倚栏听风',
     email: 'https://github.com/LYX9527',
@@ -63,27 +102,32 @@ const data = {
         {
           title: '全部榜单',
           url: '#',
-          filter: 'all'
+          filter: 'all',
+          badge: generateBadge('all')
         },
         {
           title: '热搜榜',
           url: '#',
-          filter: 'hot'
+          filter: 'hot',
+          badge: generateBadge('hot')
         },
         {
           title: '科技资讯',
           url: '#',
-          filter: 'tech'
+          filter: 'tech',
+          badge: generateBadge('tech')
         },
         {
           title: '财经新闻',
           url: '#',
-          filter: 'finance'
+          filter: 'finance',
+          badge: generateBadge('finance')
         },
         {
           title: '社会新闻',
           url: '#',
-          filter: 'social'
+          filter: 'social',
+          badge: generateBadge('social')
         },
       ],
     },
@@ -95,22 +139,26 @@ const data = {
         {
           title: '微博热搜',
           url: '#',
-          filter: "weibo"
+          filter: "weibo",
+          badge: generateBadge('weibo')
         },
         {
           title: '百度热搜',
           url: '#',
-          filter: 'baidu'
+          filter: 'baidu',
+          badge: generateBadge('baidu')
         },
         {
           title: '知乎热榜',
           url: '#',
-          filter: 'zhihu'
+          filter: 'zhihu',
+          badge: generateBadge('zhihu')
         },
         {
           title: 'GitHub趋势',
           url: '#',
-          filter: 'github'
+          filter: 'github',
+          badge: generateBadge('github')
         },
       ],
     },
@@ -122,12 +170,14 @@ const data = {
         {
           title: '电影榜',
           url: '#',
-          filter: "movies"
+          filter: "movies",
+          badge: generateBadge('movies')
         },
         {
           title: '电视剧榜',
           url: '#',
-          filter: "teleplay"
+          filter: "teleplay",
+          badge: generateBadge('teleplay')
         },
         {
           title: '综艺榜',
@@ -136,7 +186,8 @@ const data = {
         {
           title: '音乐榜',
           url: '#',
-          filter: "music"
+          filter: "music",
+          badge: generateBadge('music')
         },
         {
           title: '明星动态',
@@ -152,7 +203,8 @@ const data = {
         {
           title: '汽车榜',
           url: '#',
-          filter: 'car'
+          filter: 'car',
+          badge: generateBadge('car')
         },
         {
           title: '科技前沿',
@@ -176,7 +228,8 @@ const data = {
         {
           title: '英雄联盟',
           url: '#',
-          filter: 'lol'
+          filter: 'lol',
+          badge: generateBadge('lol')
         },
         {
           title: 'NBA',
@@ -205,7 +258,7 @@ const data = {
       ],
     },
   ],
-}
+}))
 
 // 处理导航点击
 const handleNavClick = (filter: string) => {
@@ -219,7 +272,7 @@ const handleNavClick = (filter: string) => {
       <TeamSwitcher :teams="data.teams"/>
     </SidebarHeader>
     <SidebarContent>
-      <NavMain :items="data.navMain" @item-click="handleNavClick"/>
+      <NavMain :items="data.navMain" :current-filter="currentFilter" @item-click="handleNavClick"/>
     </SidebarContent>
     <!--    <SidebarFooter>-->
     <!--      <NavUser :user="data.user"/>-->

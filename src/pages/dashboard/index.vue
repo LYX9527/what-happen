@@ -28,7 +28,7 @@ import {
   , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
   ItHome, Jin10, nowcoder, PcBeta, Solidot,
   TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-  Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic, CSDN, Sspai, Jqka
+  Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic, CSDN, Sspai, Jqka, _51Cto, Dongchedi
 } from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
@@ -114,7 +114,10 @@ const platformIcons = {
   qq_music: QQMusic,
   csdn: CSDN,
   sspai: Sspai,
-  jqka: Jqka
+  jqka: Jqka,
+  _51cto: _51Cto,
+  dcd_hot: Dongchedi,
+  dcd_news: Dongchedi,
 }
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
@@ -226,7 +229,7 @@ const platformCategories: Record<string, string[]> = {
   teleplay: ['bd_tv'],
   lol: ['hupu_lol'],
   music: ['kugou', 'qq_music'],
-  car: ['dcd_hot','dcd_news'],
+  car: ['dcd_hot', 'dcd_news'],
 }
 
 // 根据筛选条件过滤平台
@@ -442,7 +445,11 @@ onMounted(() => {
 
 <template>
   <SidebarProvider>
-    <AppSidebar @filter-change="handleFilterChange"/>
+    <AppSidebar
+        :current-filter="currentFilter"
+        :hot-platforms="hotPlatforms"
+        @filter-change="handleFilterChange"
+    />
     <SidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 -->
       <header

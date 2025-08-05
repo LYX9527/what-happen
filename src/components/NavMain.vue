@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ChevronRight, type LucideIcon} from 'lucide-vue-next'
-import { type ComputedRef } from 'vue'
+import {type ComputedRef} from 'vue'
 import {
   Collapsible,
   CollapsibleContent,
@@ -16,9 +16,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-import { Badge } from '@/components/ui/badge'
+import {Badge} from '@/components/ui/badge'
 
 defineProps<{
+  currentFilter?: string
   items: {
     title: string
     url: string
@@ -45,11 +46,16 @@ const handleSubItemClick = (event: Event, filter?: string) => {
     emit('item-click', filter)
   }
 }
+
+// 检查子项是否被选中
+const isSubItemActive = (filter?: string, currentFilter?: string) => {
+  return (filter && currentFilter && filter === currentFilter) as boolean
+}
 </script>
 
 <template>
   <SidebarGroup>
-    <SidebarGroupLabel>平台分类</SidebarGroupLabel>
+
     <SidebarMenu>
       <Collapsible
           v-for="item in items"
@@ -63,31 +69,37 @@ const handleSubItemClick = (event: Event, filter?: string) => {
             <SidebarMenuButton :tooltip="item.title">
               <component :is="item.icon" v-if="item.icon"/>
               <span>{{ item.title }}</span>
-              <Badge 
-                v-if="item.badge && (typeof item.badge === 'string' ? item.badge : item.badge.value)" 
-                variant="secondary" 
-                class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center"
+              <Badge
+                  v-if="item.badge && (typeof item.badge === 'string' ? item.badge : item.badge.value)"
+                  variant="secondary"
+                  class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center"
               >
                 {{ typeof item.badge === 'string' ? item.badge : item.badge.value }}
               </Badge>
               <ChevronRight
-                v-else
-                class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
+                  v-else
+                  class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent>
             <SidebarMenuSub>
               <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title">
-                <SidebarMenuSubButton as-child>
-                  <a 
-                    :href="subItem.url" 
-                    @click="handleSubItemClick($event, subItem.filter)"
+                <SidebarMenuSubButton as-child :is-active="isSubItemActive(subItem.filter, currentFilter)">
+                  <a
+                      :href="subItem.url"
+                      @click="handleSubItemClick($event, subItem.filter)"
+                      :class="[
+                      'flex items-center justify-between w-full',
+                      isSubItemActive(subItem.filter, currentFilter)
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
+                        : ''
+                    ]"
                   >
                     <span>{{ subItem.title }}</span>
-                    <Badge 
-                      v-if="subItem.badge && (typeof subItem.badge === 'string' ? subItem.badge : subItem.badge.value)" 
-                      variant="secondary" 
-                      class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center"
+                    <Badge
+                        v-if="subItem.badge && (typeof subItem.badge === 'string' ? subItem.badge : subItem.badge.value)"
+                        :variant="isSubItemActive(subItem.filter, currentFilter) ? 'default' : 'secondary'"
+                        class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center"
                     >
                       {{ typeof subItem.badge === 'string' ? subItem.badge : subItem.badge.value }}
                     </Badge>
