@@ -3,20 +3,18 @@ import {computed, ref, watch} from 'vue'
 import {ScrollArea} from '@/components/ui/scroll-area'
 import {Button} from '@/components/ui/button'
 import {Badge} from '@/components/ui/badge'
-import {Separator} from '@/components/ui/separator'
 import {Skeleton} from '@/components/ui/skeleton'
 import {
-  Clock,
   RefreshCw,
   Star,
-  ExternalLink,
   Newspaper,
   TrendingUp
 } from 'lucide-vue-next'
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
 import type {NewsItem} from '@/api'
 import {useFavorites} from '@/composables/useFavorites'
 import {toast} from 'vue-sonner'
+import TimelineNewsContent from '@/components/TimelineNewsContent.vue'
+import FinanceNewsContent from '@/components/FinanceNewsContent.vue'
 
 // 时间线平台配置
 const TIMELINE_PLATFORMS = [
@@ -77,10 +75,6 @@ const getPlatformConfig = (platformKey: string) => {
 
 // 处理时间解析
 const parseTime = (item: NewsItem, platformKey: string): Date => {
-  // 如果有时间戳，直接使用
-  if (item.extra?.timestamp) {
-    return new Date(item.extra.timestamp)
-  }
 
   // 如果有时间字符串，尝试解析
   if (item.extra?.time) {
@@ -222,6 +216,23 @@ const handleFavorite = (event: Event, item: NewsItem & { platformKey: string, pl
 const handleRefresh = () => {
   emit('refresh')
 }
+
+// 根据平台类型选择对应的内容组件
+const getNewsContentComponent = (platformConfig: any) => {
+  // 财经类新闻使用特殊组件
+  if (platformConfig.category === '财经') {
+    return FinanceNewsContent
+  }
+
+  // 特定财经平台
+  const financeKeys = ['jin10', 'jqka', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph', 'gelonghui']
+  if (financeKeys.includes(platformConfig.key)) {
+    return FinanceNewsContent
+  }
+
+  // 其他平台使用通用组件
+  return TimelineNewsContent
+}
 </script>
 
 <template>
@@ -312,7 +323,6 @@ const handleRefresh = () => {
 
               <div
                   class="flex items-start gap-3 py-2 px-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                  @click="handleNewsClick(item)"
               >
                 <!-- 时间和平台标识 -->
                 <div class="flex flex-col items-center gap-1 w-12 flex-shrink-0">
@@ -323,42 +333,12 @@ const handleRefresh = () => {
                 </div>
 
                 <!-- 新闻内容 -->
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2 mb-1">
-                    <Badge
-                        variant="outline"
-                        class="text-xs px-1.5 py-0 h-5"
-                    >
-                      {{ item.platformConfig.title }}
-                    </Badge>
-                    <Badge
-                        variant="secondary"
-                        class="text-xs px-1.5 py-0 h-5"
-                    >
-                      {{ item.platformConfig.category }}
-                    </Badge>
-                  </div>
-
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <h3 class="text-sm font-medium text-foreground group-hover:text-foreground/80 transition-colors line-clamp-2 leading-relaxed">
-                          {{ item.title }}
-                        </h3>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p class="max-w-sm">{{ item.title }}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  <!-- 额外信息 -->
-                  <div v-if="item.extra?.hover || item.extra?.desc" class="mt-1">
-                    <p class="text-xs text-muted-foreground line-clamp-1">
-                      {{ item.extra?.hover || item.extra?.desc }}
-                    </p>
-                  </div>
-                </div>
+                <component
+                    :is="getNewsContentComponent(item.platformConfig)"
+                    :item="item"
+                    :platform-config="item.platformConfig"
+                    @click="handleNewsClick"
+                />
 
                 <!-- 操作按钮 -->
                 <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -383,18 +363,4 @@ const handleRefresh = () => {
   </div>
 </template>
 
-<style scoped>
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
 
-.line-clamp-2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-</style>
