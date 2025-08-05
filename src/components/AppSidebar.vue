@@ -94,10 +94,28 @@ const data = computed(() => ({
   ],
   navMain: [
     {
+      title: '首页',
+      url: '#',
+      icon: TrendingUp,
+      isActive: true,
+      filter: 'timeline',
+      items: [
+        {
+          title: '新闻第一线',
+          url: '#',
+          filter: 'timeline',
+        },
+        {
+          "title": '内娱动态',
+          "url": '#',
+        }
+      ],
+    },
+    {
       title: '新闻聚合',
       url: '#',
       icon: Newspaper,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: '全部榜单',

@@ -21,7 +21,8 @@ import {
   Coffee,
   Radio,
   Star,
-  ExternalLink
+  ExternalLink,
+  Search
 } from 'lucide-vue-next'
 import {
   WeiBo
@@ -32,6 +33,9 @@ import {
 } from "@/components/icon";
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
+import GlobalSearch from '@/components/GlobalSearch.vue'
+import IntegratedTimeline from '@/components/IntegratedTimeline.vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
 
 import type {NewsItem} from "@/api"
@@ -47,6 +51,7 @@ const router = useRouter()
 
 // 当前筛选条件
 const validFilters = [
+  'timeline',
   'all',
   'hot',
   'tech',
@@ -67,10 +72,20 @@ const validFilters = [
 ]
 
 const getValidFilter = (filter: string): string => {
-  return validFilters.includes(filter) ? filter : 'all'
+  return validFilters.includes(filter) ? filter : 'timeline'
 }
 
 const currentFilter = ref(getValidFilter(route.query.filter as string))
+
+// 全局搜索组件引用
+const globalSearchRef = ref()
+
+// 检测是否为Mac平台
+const isMac = computed(() => {
+  return typeof navigator !== 'undefined' &&
+      navigator.platform &&
+      navigator.platform.toLowerCase().includes('mac')
+})
 
 // 平台图标映射
 const platformIcons = {
@@ -238,10 +253,11 @@ const filteredPlatforms = computed(() => {
     return hotPlatforms.value
   }
 
-  if (currentFilter.value === 'favorites' ||
+  if (currentFilter.value === 'timeline' ||
+      currentFilter.value === 'favorites' ||
       currentFilter.value === 'favorites-news' ||
       currentFilter.value === 'favorites-platforms') {
-    return [] // 收藏页面不显示普通平台
+    return [] // 时间线和收藏页面不显示普通平台
   }
 
   const categoryPlatforms = platformCategories[currentFilter.value] || []
@@ -343,6 +359,13 @@ const openLink = () => {
   window.open('https://github.com/LYX9527/what-happen', '_blank');
 }
 
+// 打开全局搜索
+const openGlobalSearch = () => {
+  if (globalSearchRef.value) {
+    globalSearchRef.value.open()
+  }
+}
+
 // 获取平台图标
 const getPlatformIcon = (platform: string) => {
   return platformIcons[platform as keyof typeof platformIcons] || Globe
@@ -351,6 +374,7 @@ const getPlatformIcon = (platform: string) => {
 // 获取筛选标题
 const getFilterTitle = (filter: string) => {
   const filterTitles: Record<string, string> = {
+    timeline: '新闻第一线',
     all: '全部榜单',
     hot: '热搜榜',
     tech: '科技资讯',
@@ -380,7 +404,7 @@ const handleFilterChange = (filter: string) => {
   router.push({
     query: {
       ...route.query,
-      filter: filter === 'all' ? undefined : filter // 如果是 'all' 则移除参数
+      filter: filter === 'timeline' ? undefined : filter // 如果是 'timeline' 则移除参数（作为默认）
     }
   })
 }
@@ -436,7 +460,7 @@ onMounted(() => {
     router.replace({
       query: {
         ...route.query,
-        filter: validFilter === 'all' ? undefined : validFilter
+        filter: validFilter === 'timeline' ? undefined : validFilter
       }
     })
   }
@@ -449,6 +473,14 @@ onMounted(() => {
         :current-filter="currentFilter"
         :hot-platforms="hotPlatforms"
         @filter-change="handleFilterChange"
+    />
+    <!-- 全局搜索组件 -->
+    <GlobalSearch
+        ref="globalSearchRef"
+        :hot-platforms="hotPlatforms"
+        :platforms-data="platformsData"
+        @filter-change="handleFilterChange"
+        @news-click="handleCardItemClick"
     />
     <SidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 -->
@@ -478,6 +510,7 @@ onMounted(() => {
               size="sm"
               @click="refreshAllData"
               class="gap-1 hidden sm:flex h-8"
+              v-if="currentFilter==='all'"
           >
             <RefreshCw class="w-4 h-4"/>
             刷新全部
@@ -490,6 +523,30 @@ onMounted(() => {
           >
             <RefreshCw class="w-4 h-4"/>
           </Button>
+
+          <!-- 搜索按钮 -->
+          <Button
+              variant="outline"
+              size="sm"
+              @click="openGlobalSearch"
+              class="gap-1 hidden sm:flex h-8"
+          >
+            <Search class="w-4 h-4"/>
+            <span>搜索</span>
+            <kbd
+                class="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+              {{ isMac ? '⌘K' : 'Ctrl+K' }}
+            </kbd>
+          </Button>
+          <Button
+              variant="outline"
+              size="icon"
+              @click="openGlobalSearch"
+              class="sm:hidden h-8 w-8"
+          >
+            <Search class="w-4 h-4"/>
+          </Button>
+
           <Button
               variant="ghost"
               size="icon"
@@ -507,8 +564,17 @@ onMounted(() => {
       <div class="flex-1 overflow-hidden bg-muted/20">
         <ScrollArea class="h-full">
           <div class="p-4">
+            <!-- 第一线时间线页面 -->
+            <div v-if="currentFilter === 'timeline'" class="h-full -m-4">
+              <IntegratedTimeline
+                  :platforms-data="platformsData"
+                  @news-click="handleCardItemClick"
+                  @refresh="refreshAllData"
+              />
+            </div>
+
             <!-- 收藏页面 -->
-            <div v-if="currentFilter === 'favorites' ||
+            <div v-else-if="currentFilter === 'favorites' ||
                        currentFilter === 'favorites-news' ||
                        currentFilter === 'favorites-platforms'">
               <!-- 空状态 -->
