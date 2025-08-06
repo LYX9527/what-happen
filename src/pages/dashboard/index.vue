@@ -24,13 +24,7 @@ import {
   ExternalLink,
   Search
 } from 'lucide-vue-next'
-import {
-  WeiBo
-  , Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
-  ItHome, Jin10, nowcoder, PcBeta, Solidot,
-  TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-  Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic, CSDN, Sspai, Jqka, _51Cto, Dongchedi
-} from "@/components/icon";
+
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
@@ -41,6 +35,7 @@ import {useFavorites} from '@/composables/useFavorites'
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews, fetchPlatforms} from "@/api"
 import {Button} from "@/components/ui/button";
+import {PlatformIcons} from "@/config/icon.ts";
 
 // 使用收藏功能
 const {newsItems, platforms} = useFavorites()
@@ -87,53 +82,6 @@ const isMac = computed(() => {
       navigator.platform.toLowerCase().includes('mac')
 })
 
-// 平台图标映射
-const platformIcons = {
-  weibo: WeiBo,
-  baidu: Baidu,
-  douyin: DouYin,
-  thepaper: ThePaper,
-  github: Github,
-  toutiao: TouTiao,
-  '_36kr': _36kr,
-  b_hot_search: Blbl,
-  b_hot_video: Blbl,
-  b_rank: Blbl,
-  cankaoxiaoxi: CankaoXiaoxi,
-  gelonghui: DollarSign,
-  guoheboke: Coffee,
-  ithome: ItHome,
-  jin10: Jin10,
-  nowcoder: nowcoder,
-  pcbeta_windows: PcBeta,
-  solidot: Solidot,
-  sputniknewscn: Radio,
-  tieba: TieBa,
-  v2ex: V2ex,
-  wallstreetcn_live: WallStreetCN,
-  wallstreetcn_news: WallStreetCN,
-  wallstreetcn_hot: WallStreetCN,
-  hotstock: Hotstock,
-  zaobao: Zaobao,
-  cls_telegraph: DollarSign,
-  kaopu: Kaopu,
-  kuaishou: Kuaishou,
-  zhihu: Zhihu,
-  coolapk: Coolapk,
-  hupu: Hupu,
-  juejin: Juejin,
-  douban: Douban,
-  bd_tv: Baidu,
-  hupu_lol: LoL,
-  kugou: KuGou,
-  qq_music: QQMusic,
-  csdn: CSDN,
-  sspai: Sspai,
-  jqka: Jqka,
-  _51cto: _51Cto,
-  dcd_hot: Dongchedi,
-  dcd_news: Dongchedi,
-}
 
 // 热门平台列表 - 使用 ref 以支持拖拽排序
 const defaultPlatforms = [
@@ -368,7 +316,7 @@ const openGlobalSearch = () => {
 
 // 获取平台图标
 const getPlatformIcon = (platform: string) => {
-  return platformIcons[platform as keyof typeof platformIcons] || Globe
+  return PlatformIcons[platform as keyof typeof PlatformIcons] || Globe
 }
 
 // 获取筛选标题

@@ -11,6 +11,14 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
+        path: '/404',
+        name: 'NotFound',
+        component: () => import('@/pages/404.vue'),
+        meta: {
+            title: '页面未找到'
+        }
+    },
+    {
         path: '/:pathMatch(.*)*',
         redirect: '/404'
     }
