@@ -185,20 +185,20 @@ onMounted(() => {
 
     <!-- 清空收藏确认对话框 -->
     <UiAlertDialog v-model:open="showClearAllDialog">
-      <AlertDialogContent>
+      <UiAlertDialogContent>
         <UiAlertDialogHeader>
-          <AlertDialogTitle>确认清空所有收藏</AlertDialogTitle>
-          <AlertDialogDescription>
+          <UiAlertDialogTitle>确认清空所有收藏</UiAlertDialogTitle>
+          <UiAlertDialogDescription>
             这个操作不可撤销。您确定要清空所有已收藏的平台吗？清空后您需要重新收藏感兴趣的平台。
-          </AlertDialogDescription>
+          </UiAlertDialogDescription>
         </UiAlertDialogHeader>
         <UiAlertDialogFooter>
-          <AlertDialogCancel @click="showClearAllDialog = false">取消</AlertDialogCancel>
-          <AlertDialogAction @click="confirmClearAll" class="bg-destructive hover:bg-destructive/90">
+          <UiAlertDialogCancel @click="showClearAllDialog = false">取消</UiAlertDialogCancel>
+          <UiAlertDialogAction @click="confirmClearAll" class="bg-destructive hover:bg-destructive/90">
             确认清空
-          </AlertDialogAction>
+          </UiAlertDialogAction>
         </UiAlertDialogFooter>
-      </AlertDialogContent>
+      </UiAlertDialogContent>
     </UiAlertDialog>
     <UiSidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 - 带sticky和backdrop-blur效果 -->
@@ -206,7 +206,7 @@ onMounted(() => {
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
           <UiSidebarTrigger class="-ml-1"/>
-          <Separator orientation="vertical" class="mr-2 h-4"/>
+          <UiSeparator orientation="vertical" class="mr-2 h-4"/>
           <UiBreadcrumb>
             <UiBreadcrumbList>
               <UiBreadcrumbItem class="hidden md:block">
@@ -311,15 +311,15 @@ onMounted(() => {
           <div class="p-4">
             <!-- 页面标题 -->
             <div class="mb-6">
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 ml-5">
                 <Bookmark class="h-6 w-6 text-blue-500"/>
                 <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
               </div>
-              <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
+              <p class="text-muted-foreground mt-2 ml-5">{{ routeConfig.description }}</p>
             </div>
 
             <!-- 操作栏 -->
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 ml-5">
               <p class="text-sm text-muted-foreground">
                 共收藏了 {{ platforms.length }} 个平台
               </p>

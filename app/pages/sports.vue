@@ -274,12 +274,12 @@ onMounted(async () => {
         <UiScrollArea class="h-full">
           <div class="p-4">
             <div class="mb-6">
-              <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
-              <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
+              <h1 class="text-3xl font-bold tracking-tight ml-5">{{ routeConfig.title }}</h1>
+              <p class="text-muted-foreground mt-2 ml-5">{{ routeConfig.description }}</p>
             </div>
 
             <!-- 操作栏 -->
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 ml-5">
               <p class="text-sm text-muted-foreground">
                 共 {{ sportsPlatforms.length }} 个体育平台，支持拖拽排序
               </p>

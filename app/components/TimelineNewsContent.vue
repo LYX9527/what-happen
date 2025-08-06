@@ -51,33 +51,33 @@ const handleClick = () => {
     </div>
 
     <!-- 新闻标题 -->
-    <TooltipProvider>
+    <UiTooltipProvider>
       <UiTooltip>
-        <TooltipTrigger asChild>
+        <UiTooltipTrigger asChild>
           <h3 :class="titleClass">
             {{ item.title }}
           </h3>
-        </TooltipTrigger>
-        <TooltipContent>
+        </UiTooltipTrigger>
+        <UiTooltipContent>
           <p class="max-w-sm">{{ item.title }}</p>
-        </TooltipContent>
+        </UiTooltipContent>
       </UiTooltip>
-    </TooltipProvider>
+    </UiTooltipProvider>
 
     <!-- 额外信息 -->
     <div v-if="item.extra?.hover || item.extra?.desc" class="mt-1">
-      <TooltipProvider v-if="item.extra?.hover">
+      <UiTooltipProvider v-if="item.extra?.hover">
         <UiTooltip>
-          <TooltipTrigger asChild>
+          <UiTooltipTrigger asChild>
             <p :class="extraClass">
               {{ item.extra.hover || item.extra.desc }}
             </p>
-          </TooltipTrigger>
-          <TooltipContent>
+          </UiTooltipTrigger>
+          <UiTooltipContent>
             <p class="max-w-md">{{ item.extra.hover }}</p>
-          </TooltipContent>
+          </UiTooltipContent>
         </UiTooltip>
-      </TooltipProvider>
+      </UiTooltipProvider>
       <p v-else :class="extraClass">
         {{ item.extra.desc }}
       </p>

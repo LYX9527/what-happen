@@ -18,6 +18,7 @@ import {PlatformIcons} from '@/config/icon'
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews} from "@/api"
 import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
+import type {TimelinePlatform} from "~/components/IntegratedTimeline.vue";
 
 // 获取时间线路由配置
 const routeConfig = getRouteConfig('/timeline')!
@@ -35,6 +36,52 @@ useHead({
 
 // 获取平台配置
 const platformConfigs = getPlatformConfigs(routeConfig.platforms)
+
+// 平台配置映射（包含分类和颜色）
+const timelinePlatformConfigs = computed(() => {
+  const categoryColors = {
+    '科技': ['bg-blue-500', 'bg-orange-500', 'bg-green-500', 'bg-gray-500', 'bg-teal-500', 'bg-yellow-500', 'bg-slate-500', 'bg-emerald-500'],
+    '社会': ['bg-red-500', 'bg-purple-500', 'bg-indigo-500', 'bg-pink-500', 'bg-cyan-500'],
+    '财经': ['bg-amber-600', 'bg-rose-500'],
+    '汽车': ['bg-violet-500'],
+    '其他': ['bg-gray-400']
+  }
+
+  const categoryCounters = {
+    '科技': 0,
+    '社会': 0,
+    '财经': 0,
+    '汽车': 0,
+    '其他': 0
+  }
+
+  return platformConfigs.map(config => {
+    // 根据平台确定分类
+    let category = '其他'
+    if (['_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk', 'juejin', 'sspai', 'csdn', 'nowcoder', 'pcbeta_windows', '_51cto', 'kaopu'].includes(config.platform)) {
+      category = '科技'
+    } else if (['thepaper', 'cankaoxiaoxi', 'zaobao', 'sputniknewscn', 'tieba'].includes(config.platform)) {
+      category = '社会'
+    } else if (['jin10', 'jqka', 'gelonghui', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph'].includes(config.platform)) {
+      category = '财经'
+    } else if (['dcd_hot', 'dcd_news'].includes(config.platform)) {
+      category = '汽车'
+    }
+
+    // 分配颜色
+    const colors = categoryColors[category as keyof typeof categoryColors] || categoryColors['其他']
+    const colorIndex = categoryCounters[category as keyof typeof categoryCounters] % colors.length
+    const color = colors[colorIndex]
+    categoryCounters[category as keyof typeof categoryCounters]++
+
+    return {
+      key: config.platform,
+      title: config.title,
+      category,
+      color
+    } as TimelinePlatform
+  })
+})
 
 // 使用收藏功能
 const {platforms} = useFavorites()
@@ -182,16 +229,6 @@ onMounted(async () => {
 
         <!-- 右侧按钮区域 - 响应式适配 -->
         <div class="flex items-center gap-2 ml-auto px-4">
-          <!-- 刷新按钮 - 桌面版 -->
-          <UiButton
-              variant="outline"
-              size="sm"
-              @click="refreshAllData"
-              class="gap-1 hidden sm:flex h-8"
-          >
-            <RefreshCw class="w-4 h-4"/>
-            刷新全部
-          </UiButton>
           <!-- 刷新按钮 - 移动版 -->
           <UiButton
               variant="outline"
@@ -257,6 +294,7 @@ onMounted(async () => {
             <!-- 时间线组件 -->
             <IntegratedTimeline
                 :platforms-data="platformsData"
+                :platform-configs="timelinePlatformConfigs"
                 @news-click="handleNewsClick"
                 @refresh="refreshAllData"
             />

@@ -243,7 +243,7 @@ onMounted(async () => {
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
           <UiSidebarTrigger class="-ml-1"/>
-          <Separator orientation="vertical" class="mr-2 h-4"/>
+          <UiSeparator orientation="vertical" class="mr-2 h-4"/>
           <UiBreadcrumb>
             <UiBreadcrumbList>
               <UiBreadcrumbItem class="hidden md:block">
@@ -324,12 +324,12 @@ onMounted(async () => {
           <div class="p-4">
             <!-- 页面标题 -->
             <div class="mb-6">
-              <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
-              <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
+              <h1 class="text-3xl font-bold tracking-tight ml-5">{{ routeConfig.title }}</h1>
+              <p class="text-muted-foreground mt-2 ml-5">{{ routeConfig.description }}</p>
             </div>
 
             <!-- 操作栏 -->
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 ml-5">
               <p class="text-sm text-muted-foreground">
                 共 {{ financePlatforms.length }} 个财经平台，支持拖拽排序
               </p>

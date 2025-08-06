@@ -8,25 +8,13 @@ import TimelineNewsContent from '@/components/TimelineNewsContent.vue'
 import FinanceNewsContent from '@/components/FinanceNewsContent.vue'
 import dayjs from "dayjs";
 
-// 时间线平台配置
-const TIMELINE_PLATFORMS = [
-  {key: '_36kr', title: '36氪', category: '科技', color: 'bg-blue-500'},
-  {key: 'ithome', title: 'IT之家', category: '科技', color: 'bg-orange-500'},
-  {key: 'thepaper', title: '澎湃新闻', category: '社会', color: 'bg-red-500'},
-  {key: 'solidot', title: 'Solidot', category: '科技', color: 'bg-green-500'},
-  {key: 'v2ex', title: 'V2EX', category: '科技', color: 'bg-gray-500'},
-  {key: 'coolapk', title: '酷安', category: '科技', color: 'bg-teal-500'},
-  {key: 'cankaoxiaoxi', title: '参考消息', category: '社会', color: 'bg-purple-500'},
-  {key: 'zaobao', title: '联合早报', category: '社会', color: 'bg-indigo-500'},
-  {key: 'sputniknewscn', title: '俄罗斯卫星通讯社', category: '社会', color: 'bg-pink-500'},
-  {key: 'tieba', title: '百度贴吧', category: '社会', color: 'bg-cyan-500'},
-  {key: 'kaopu', title: '靠谱', category: '科技', color: 'bg-yellow-500'},
-  {key: 'jin10', title: '金十数据', category: '财经', color: 'bg-amber-600'},
-  {key: 'pcbeta_windows', title: '远景论坛', category: '科技', color: 'bg-slate-500'},
-  {key: 'nowcoder', title: '牛客网', category: '科技', color: 'bg-emerald-500'},
-  {key: 'jqka', title: '同花顺', category: '财经', color: 'bg-rose-500'},
-  {key: 'dcd_news', title: '懂车帝资讯', category: '汽车', color: 'bg-violet-500'},
-]
+// 平台配置接口
+export interface TimelinePlatform {
+  key: string
+  title: string
+  category: string
+  color: string
+}
 
 // Props
 interface Props {
@@ -35,12 +23,14 @@ interface Props {
     loading: boolean
     error: string | null
   }>
+  platformConfigs?: TimelinePlatform[]
   onNewsClick?: (item: NewsItem) => void
   onRefresh?: () => void
 }
 
 const props = withDefaults(defineProps<Props>(), {
   platformsData: () => ({}),
+  platformConfigs: () => [],
 })
 
 const emit = defineEmits<{
@@ -64,15 +54,6 @@ watch(activeCategory, () => {
   expandedTimeGroups.value = []
 })
 
-// 获取平台配置
-const getPlatformConfig = (platformKey: string) => {
-  return TIMELINE_PLATFORMS.find(p => p.key === platformKey) || {
-    key: platformKey,
-    title: platformKey,
-    category: '其他',
-    color: 'bg-gray-400'
-  }
-}
 
 // 处理时间解析
 const parseTime = (item: NewsItem, platformKey: string): Date => {
@@ -136,7 +117,7 @@ const allIntegratedNews = computed(() => {
   }> = []
 
   // 收集所有时间线平台的新闻
-  TIMELINE_PLATFORMS.forEach(platformConfig => {
+  props.platformConfigs.forEach(platformConfig => {
     const platformData = props.platformsData[platformConfig.key]
     if (platformData?.data && Array.isArray(platformData.data)) {
       platformData.data.forEach(item => {
@@ -200,20 +181,20 @@ const groupedNewsByTime = computed(() => {
 watch(groupedNewsByTime, (newGroups, oldGroups) => {
   // 如果是初次加载或分类切换导致的数据变化
   if (newGroups.length > 0 && (!oldGroups || newGroups.length !== oldGroups.length || newGroups[0]?.timeKey !== oldGroups[0]?.timeKey)) {
-    expandedTimeGroups.value = newGroups.slice(0, 15).map(g => g.timeKey)
+    expandedTimeGroups.value = newGroups.slice(0, 10).map(g => g.timeKey)
   }
 }, {immediate: true})
 
 // 加载状态
 const isLoading = computed(() => {
-  return TIMELINE_PLATFORMS.some(platform =>
+  return props.platformConfigs.some(platform =>
       props.platformsData[platform.key]?.loading
   )
 })
 
 // 错误状态
 const hasErrors = computed(() => {
-  return TIMELINE_PLATFORMS.some(platform =>
+  return props.platformConfigs.some(platform =>
       props.platformsData[platform.key]?.error
   )
 })
@@ -301,7 +282,9 @@ const getNewsContentComponent = (platformConfig: any) => {
             <TrendingUp class="h-4 w-4 text-primary-foreground"/>
           </div>
           <h2 class="text-lg font-semibold">新闻第一线</h2>
-
+          <UiBadge variant="secondary" class="text-xs">
+            {{ categoryStats.all }} 条
+          </UiBadge>
         </div>
 
         <div class="flex items-center gap-2">
@@ -381,14 +364,14 @@ const getNewsContentComponent = (platformConfig: any) => {
                 v-model="expandedTimeGroups"
                 class="space-y-4"
             >
-              <AccordionItem
-                  v-for="(timeGroup) in groupedNewsByTime"
+              <UiAccordionItem
+                  v-for="(timeGroup, groupIndex) in groupedNewsByTime"
                   :key="timeGroup.timeKey"
                   :value="timeGroup.timeKey"
                   class="border rounded-lg bg-card"
               >
                 <!-- 时间标签 (可点击展开/收起) -->
-                <AccordionTrigger class="px-4 py-3 hover:no-underline group">
+                <UiAccordionTrigger class="px-4 py-3 hover:no-underline group">
                   <div class="flex items-center gap-3 w-full">
                     <div class="flex items-center justify-center">
                       <div
@@ -401,7 +384,7 @@ const getNewsContentComponent = (platformConfig: any) => {
                     <div class="flex items-center gap-1 flex-1 min-w-0">
                       <div class="flex -space-x-1 overflow-hidden">
                         <div
-                            v-for="(platform) in [...new Set(timeGroup.items.map(item => item.platformConfig))].slice(0, 5)"
+                            v-for="(platform, index) in [...new Set(timeGroup.items.map(item => item.platformConfig))].slice(0, 5)"
                             :key="platform.key"
                             :class="['w-4 h-4 rounded-full border border-background flex-shrink-0', platform.color]"
                             :title="platform.title"
@@ -423,10 +406,10 @@ const getNewsContentComponent = (platformConfig: any) => {
                       </UiBadge>
                     </div>
                   </div>
-                </AccordionTrigger>
+                </UiAccordionTrigger>
 
                 <!-- 该时间段的新闻列表 -->
-                <AccordionContent class="px-4 pb-4 pt-0">
+                <UiAccordionContent class="px-4 pb-4 pt-0">
                   <div class="space-y-1 ml-2 animate-in fade-in duration-200">
                     <div
                         v-for="(item, itemIndex) in timeGroup.items"
@@ -472,8 +455,8 @@ const getNewsContentComponent = (platformConfig: any) => {
                       </div>
                     </div>
                   </div>
-                </AccordionContent>
-              </AccordionItem>
+                </UiAccordionContent>
+              </UiAccordionItem>
             </UiAccordion>
           </div>
         </div>

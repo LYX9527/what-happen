@@ -138,7 +138,13 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
     path: '/timeline',
     title: '新闻第一线',
     description: '按时间线整合的综合新闻',
-    platforms: ['_36kr', 'ithome', 'thepaper', 'solidot', 'v2ex', 'coolapk', 'cankaoxiaoxi', 'zaobao', 'sputniknewscn', 'tieba', 'kaopu', 'jin10'],
+    platforms: [
+      '_36kr', 'ithome', 'thepaper', 'solidot', 'v2ex', 'coolapk', 'juejin', 'sspai', 'csdn',
+      'cankaoxiaoxi', 'zaobao', 'sputniknewscn', 'tieba', 
+      'jin10', 'jqka', 'gelonghui',
+      'kaopu', 'pcbeta_windows', 'nowcoder', '_51cto',
+      'dcd_news'
+    ],
     category: 'timeline'
   },
 

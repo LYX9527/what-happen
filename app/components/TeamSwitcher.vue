@@ -17,7 +17,7 @@ const activeTeam = ref(props.teams[0])
   <UiSidebarMenu>
     <UiSidebarMenuItem>
       <UiDropdownMenu>
-        <DropdownMenuTrigger as-child>
+        <UiDropdownMenuTrigger as-child>
           <UiSidebarMenuButton
               size="lg"
               class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -33,7 +33,7 @@ const activeTeam = ref(props.teams[0])
               <span class="truncate text-xs">{{ activeTeam!!.plan }}</span>
             </div>
           </UiSidebarMenuButton>
-        </DropdownMenuTrigger>
+        </UiDropdownMenuTrigger>
       </UiDropdownMenu>
     </UiSidebarMenuItem>
   </UiSidebarMenu>

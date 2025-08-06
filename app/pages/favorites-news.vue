@@ -17,16 +17,6 @@ import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
 import {PlatformIcons} from '@/config/icon'
 import {getRouteConfig} from '@/config/platforms'
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from "~/components/ui/alert-dialog";
-
 // 获取路由配置
 const routeConfig = getRouteConfig('/favorites-news')!
 
@@ -129,22 +119,22 @@ const searchPlatforms = ref([])
         @news-click="handleNewsClick"
     />
     <!-- 清空收藏确认对话框 -->
-    <AlertDialog v-model:open="showClearAllDialog">
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>确认清空所有收藏</AlertDialogTitle>
-          <AlertDialogDescription>
+    <UiAlertDialog v-model:open="showClearAllDialog">
+      <UiAlertDialogContent>
+        <UiAlertDialogHeader>
+          <UiAlertDialogTitle>确认清空所有收藏</UiAlertDialogTitle>
+          <UiAlertDialogDescription>
             这个操作不可撤销。您确定要清空所有已收藏的新闻吗？清空后您需要重新收藏感兴趣的新闻。
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel @click="showClearAllDialog = false">取消</AlertDialogCancel>
-          <AlertDialogAction @click="confirmClearAll" class="bg-destructive hover:bg-destructive/90">
+          </UiAlertDialogDescription>
+        </UiAlertDialogHeader>
+        <UiAlertDialogFooter>
+          <UiAlertDialogCancel @click="showClearAllDialog = false">取消</UiAlertDialogCancel>
+          <UiAlertDialogAction @click="confirmClearAll" class="bg-destructive hover:bg-destructive/90">
             确认清空
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </UiAlertDialogAction>
+        </UiAlertDialogFooter>
+      </UiAlertDialogContent>
+    </UiAlertDialog>
 
     <UiSidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 - 带sticky和backdrop-blur效果 -->
@@ -152,7 +142,7 @@ const searchPlatforms = ref([])
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
           <UiSidebarTrigger class="-ml-1"/>
-          <Separator orientation="vertical" class="mr-2 h-4"/>
+          <UiSeparator orientation="vertical" class="mr-2 h-4"/>
           <UiBreadcrumb>
             <UiBreadcrumbList>
               <UiBreadcrumbItem class="hidden md:block">
@@ -203,7 +193,7 @@ const searchPlatforms = ref([])
             <span>搜索</span>
             <kbd
                 class="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-              {{ isMac ? '⌘K' : 'Ctrl+K' }}
+              {{ isMac ? '⌘ K' : 'Ctrl+K' }}
             </kbd>
           </UiButton>
           <!-- 搜索按钮 - 移动版 -->
