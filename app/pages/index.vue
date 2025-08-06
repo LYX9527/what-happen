@@ -5,10 +5,8 @@ import {ScrollArea} from '@/components/ui/scroll-area'
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
+  BreadcrumbPage
 } from '@/components/ui/breadcrumb'
 import {Separator} from '@/components/ui/separator'
 import {

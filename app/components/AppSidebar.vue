@@ -90,18 +90,26 @@ const data = computed(() => ({
       items: []
     }
 
-    // 为收藏相关项目添加徽章
+    // 为收藏相关项目添加徽章 - SSR 兼容版本
     if (item.path === '/favorites-news') {
       return {
         ...baseItem,
-        badge: computed(() => newsItemsCount.value > 0 ? newsItemsCount.value.toString() : undefined)
+        badge: computed(() => {
+          // 在服务端渲染时始终返回 undefined 以避免 hydration 不匹配
+          if (process.server) return undefined
+          return newsItemsCount.value > 0 ? newsItemsCount.value.toString() : undefined
+        })
       }
     }
     
     if (item.path === '/favorites-platforms') {
       return {
         ...baseItem,
-        badge: computed(() => platformsCount.value > 0 ? platformsCount.value.toString() : undefined)
+        badge: computed(() => {
+          // 在服务端渲染时始终返回 undefined 以避免 hydration 不匹配
+          if (process.server) return undefined
+          return platformsCount.value > 0 ? platformsCount.value.toString() : undefined
+        })
       }
     }
 

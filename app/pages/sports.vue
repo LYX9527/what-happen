@@ -11,6 +11,7 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
 import {Separator} from '@/components/ui/separator'
+import {VueDraggable} from 'vue-draggable-plus'
 import {
   RefreshCw,
   Globe,
@@ -54,12 +55,58 @@ const isMac = computed(() => {
   }
 })
 
+// 默认平台列表
 const defaultPlatforms = platformConfigs.map(config => ({
   platform: config.platform,
   title: config.title
 }))
 
-const sportsPlatforms = ref([...defaultPlatforms])
+// 加载已保存的排序 - SSR兼容版本
+const loadSavedOrder = () => {
+  if (process.server) {
+    return [...defaultPlatforms]
+  }
+
+  try {
+    const saved = localStorage.getItem('platform-orders-sports')
+    if (saved) {
+      const savedOrder = JSON.parse(saved) as string[]
+      const reorderedPlatforms = [] as Array<{
+        platform: string
+        title: string
+      }>
+
+      const remaining = [...defaultPlatforms]
+
+      savedOrder.forEach(platformKey => {
+        const index = remaining.findIndex(p => p.platform === platformKey)
+        if (index !== -1) {
+          reorderedPlatforms.push(remaining[index]!)
+          remaining.splice(index, 1)
+        }
+      })
+
+      return [...reorderedPlatforms, ...remaining]
+    }
+  } catch (error) {
+    console.error('加载排序失败:', error)
+  }
+  return [...defaultPlatforms]
+}
+
+// 保存排序 - SSR兼容版本
+const saveOrder = (platforms: typeof defaultPlatforms) => {
+  if (process.client) {
+    try {
+      const order = platforms.map(p => p.platform)
+      localStorage.setItem('platform-orders-sports', JSON.stringify(order))
+    } catch (error) {
+      console.error('保存排序失败:', error)
+    }
+  }
+}
+
+const sportsPlatforms = ref(loadSavedOrder())
 
 const platformsData = reactive<Record<string, {
   data: NewsItem[]
@@ -133,8 +180,16 @@ const openGlobalSearch = () => {
   }
 }
 
+// 获取平台图标
 const getPlatformIcon = (platform: string) => {
   return PlatformIcons[platform as keyof typeof PlatformIcons] || Globe
+}
+
+// 拖拽排序处理
+const onDragEnd = () => {
+  console.log(`体育赛事平台排序已更新:`, sportsPlatforms.value.map(p => p.title))
+  // 保存当前排序
+  saveOrder(sportsPlatforms.value)
 }
 
 onMounted(async () => {
@@ -235,13 +290,23 @@ onMounted(async () => {
               <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
             </div>
 
+            <!-- 操作栏 -->
             <div class="flex items-center justify-between mb-6">
               <p class="text-sm text-muted-foreground">
-                共 {{ sportsPlatforms.length }} 个体育平台
+                共 {{ sportsPlatforms.length }} 个体育平台，支持拖拽排序
               </p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            <!-- 新闻卡片网格 - 响应式网格布局 -->
+            <VueDraggable
+                v-model="sportsPlatforms"
+                :animation="200"
+                handle=".drag-handle"
+                ghostClass="opacity-50"
+                chosenClass="scale-105"
+                @end="onDragEnd"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+            >
               <NewsRankCard
                   v-for="platform in sportsPlatforms"
                   :key="`grid-card-${platform.platform}`"
@@ -251,11 +316,11 @@ onMounted(async () => {
                   :data="platformsData[platform.platform]?.data || []"
                   :loading="platformsData[platform.platform]?.loading || false"
                   :is-favorited="platforms.some(p => p.platform === platform.platform)"
-                  :show-drag-handle="false"
+                  :show-drag-handle="true"
                   @item-click="handleCardItemClick"
                   @refresh="refreshSinglePlatform(platform.platform)"
               />
-            </div>
+            </VueDraggable>
           </div>
         </ScrollArea>
       </div>
