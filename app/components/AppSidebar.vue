@@ -18,7 +18,7 @@ import {
 } from 'lucide-vue-next'
 
 import {useFavorites} from '@/composables/useFavorites'
-import { NAVIGATION_ITEMS } from '@/config/platforms'
+import { NAVIGATION_ITEMS, ROUTE_CONFIGS } from '@/config/platforms'
 
 import {
   Sidebar,
@@ -44,6 +44,13 @@ const {favoritesCount, newsItemsCount, platformsCount} = useFavorites()
 
 // 总收藏数量（用于显示徽章）
 const totalFavoritesCount = computed(() => newsItemsCount.value + platformsCount.value)
+
+// 获取路径对应的平台数量
+const getPlatformCount = (path: string): number => {
+  const routeKey = path === '/' ? 'index' : path.replace('/', '')
+  const routeConfig = ROUTE_CONFIGS[routeKey]
+  return routeConfig?.platforms?.length || 0
+}
 
 // 图标映射
 const iconMap = {
@@ -95,6 +102,15 @@ const data = computed(() => ({
       return {
         ...baseItem,
         badge: computed(() => platformsCount.value > 0 ? platformsCount.value.toString() : undefined)
+      }
+    }
+
+    // 为除了首页和收藏页面外的其他类目添加平台数量徽章
+    if (item.path !== '/' && !item.path.startsWith('/favorites')) {
+      const platformCount = getPlatformCount(item.path)
+      return {
+        ...baseItem,
+        badge: computed(() => platformCount > 0 ? platformCount.toString() : undefined)
       }
     }
 

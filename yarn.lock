@@ -2381,6 +2381,15 @@
     "@vueuse/shared" "12.8.2"
     vue "^3.5.13"
 
+"@vueuse/core@^13.6.0":
+  version "13.6.0"
+  resolved "https://registry.npmmirror.com/@vueuse/core/-/core-13.6.0.tgz#4137f63dc4cef2ff8ae74ee146d6b6070d707878"
+  integrity sha512-DJbD5fV86muVmBgS9QQPddVX7d9hWYswzlf4bIyUD2dj8GC46R1uNClZhVAmsdVts4xb2jwp1PbpuiA50Qee1A==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.21"
+    "@vueuse/metadata" "13.6.0"
+    "@vueuse/shared" "13.6.0"
+
 "@vueuse/integrations@^13.5.0":
   version "13.6.0"
   resolved "https://registry.yarnpkg.com/@vueuse/integrations/-/integrations-13.6.0.tgz#8fca948a90b1063e4f35d26a83cf6b699633fbfc"
@@ -5894,9 +5903,25 @@ reka-ui@2.3.2:
     defu "^6.1.4"
     ohash "^2.0.11"
 
-reka-ui@^2.0.0, reka-ui@^2.4.1:
+reka-ui@^2.0.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/reka-ui/-/reka-ui-2.4.1.tgz#13a1ceeb7703618fb5ed24060d968b4bc596b2c6"
+  integrity sha512-NB7DrCsODN8MH02BWtgiExygfFcuuZ5/PTn6fMgjppmFHqePvNhmSn1LEuF35nel6PFbA4v+gdj0IoGN1yZ+vw==
+  dependencies:
+    "@floating-ui/dom" "^1.6.13"
+    "@floating-ui/vue" "^1.1.6"
+    "@internationalized/date" "^3.5.0"
+    "@internationalized/number" "^3.5.0"
+    "@tanstack/vue-virtual" "^3.12.0"
+    "@vueuse/core" "^12.5.0"
+    "@vueuse/shared" "^12.5.0"
+    aria-hidden "^1.2.4"
+    defu "^6.1.4"
+    ohash "^2.0.11"
+
+reka-ui@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.npmmirror.com/reka-ui/-/reka-ui-2.4.1.tgz#13a1ceeb7703618fb5ed24060d968b4bc596b2c6"
   integrity sha512-NB7DrCsODN8MH02BWtgiExygfFcuuZ5/PTn6fMgjppmFHqePvNhmSn1LEuF35nel6PFbA4v+gdj0IoGN1yZ+vw==
   dependencies:
     "@floating-ui/dom" "^1.6.13"
