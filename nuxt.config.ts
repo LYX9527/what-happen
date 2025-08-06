@@ -4,6 +4,17 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: {enabled: true},
+
+    // 明确启用SSR
+    ssr: true,
+
+    // 客户端水合配置
+    nitro: {
+        prerender: {
+            routes: ['/']
+        }
+    },
+
     modules: ['@nuxt/ui', 'shadcn-nuxt'],
     shadcn: {
         /**

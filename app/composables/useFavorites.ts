@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import type { NewsItem } from '@/api'
 
 // 收藏项类型，包含额外的元数据
@@ -26,29 +26,40 @@ const FAVORITES_STORAGE_KEY = 'news-favorites'
 // 收藏列表
 const favorites = ref<FavoriteEntry[]>([])
 
-// 从本地存储加载收藏
+// 从本地存储加载收藏 - SSR兼容版本
 const loadFavorites = () => {
-  try {
-    const stored = localStorage.getItem(FAVORITES_STORAGE_KEY)
-    if (stored) {
-      favorites.value = JSON.parse(stored)
+  // 只在客户端执行
+  if (process.client) {
+    try {
+      const stored = localStorage.getItem(FAVORITES_STORAGE_KEY)
+      if (stored) {
+        favorites.value = JSON.parse(stored)
+      }
+    } catch (error) {
+      console.error('加载收藏失败:', error)
+      favorites.value = []
     }
-  } catch (error) {
-    console.error('加载收藏失败:', error)
-    favorites.value = []
   }
 }
 
-// 保存收藏到本地存储
+// 保存收藏到本地存储 - SSR兼容版本
 const saveFavorites = () => {
-  try {
-    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites.value))
-  } catch (error) {
-    console.error('保存收藏失败:', error)
+  // 只在客户端执行
+  if (process.client) {
+    try {
+      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites.value))
+    } catch (error) {
+      console.error('保存收藏失败:', error)
+    }
   }
 }
 
 export function useFavorites() {
+  // 在客户端初始化时加载收藏数据
+  onMounted(() => {
+    loadFavorites()
+  })
+
   // 收藏数量
   const favoritesCount = computed(() => favorites.value.length)
 

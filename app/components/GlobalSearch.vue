@@ -52,11 +52,19 @@ const search = ref('')
 // 搜索结果状态
 const selectedIndex = ref(0)
 
-// 检测是否为Mac平台
+// 检测是否为Mac平台 - SSR兼容版本
 const isMac = computed(() => {
-  return typeof navigator !== 'undefined' && 
-         navigator.platform && 
-         navigator.platform.toLowerCase().includes('mac')
+  // 服务端渲染时默认返回false
+  if (process.server) {
+    return false
+  }
+  try {
+    return typeof navigator !== 'undefined' && 
+           navigator.platform && 
+           navigator.platform.toLowerCase().includes('mac')
+  } catch (error) {
+    return false
+  }
 })
 
 // 平台分类映射
@@ -185,7 +193,9 @@ const handleSelect = (item: any) => {
   } else if (item.type === 'news') {
     // 打开新闻链接
     emit('news-click', item)
-    window.open(item.url, '_blank')
+    if (process.client && typeof window !== 'undefined') {
+      window.open(item.url, '_blank')
+    }
   }
   
   open.value = false
@@ -201,13 +211,17 @@ const handleOpenChange = (isOpen: boolean) => {
   }
 }
 
-// 生命周期
+// 生命周期 - SSR兼容版本
 onMounted(() => {
-  document.addEventListener('keydown', handleKeydown)
+  if (process.client && typeof document !== 'undefined') {
+    document.addEventListener('keydown', handleKeydown)
+  }
 })
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown)
+  if (process.client && typeof document !== 'undefined') {
+    document.removeEventListener('keydown', handleKeydown)
+  }
 })
 
 // 暴露打开方法

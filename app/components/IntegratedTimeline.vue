@@ -316,9 +316,7 @@ const getNewsContentComponent = (platformConfig: any) => {
             <TrendingUp class="h-4 w-4 text-primary-foreground"/>
           </div>
           <h2 class="text-lg font-semibold">新闻第一线</h2>
-          <Badge variant="secondary" class="text-xs">
-            {{ categoryStats.all }} 条
-          </Badge>
+
         </div>
 
         <div class="flex items-center gap-2">

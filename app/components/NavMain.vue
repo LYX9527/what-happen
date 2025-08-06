@@ -15,11 +15,11 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar
 } from '@/components/ui/sidebar'
 import {Badge} from '@/components/ui/badge'
 
 defineProps<{
-  currentFilter?: string
   items: {
     title: string
     url: string
@@ -29,87 +29,53 @@ defineProps<{
     items?: {
       title: string
       url: string
-      filter?: string
       badge?: ComputedRef<string | undefined> | string
     }[]
   }[]
 }>()
 
-const emit = defineEmits<{
-  'item-click': [filter: string]
-}>()
+const route = useRoute()
+const { state } = useSidebar()
 
-// 处理子项点击
-const handleSubItemClick = (event: Event, filter?: string) => {
-  event.preventDefault()
-  if (filter) {
-    emit('item-click', filter)
-  }
+// 检查项目是否为当前路由
+const isItemActive = (url: string) => {
+  return route.path === url
 }
 
-// 检查子项是否被选中
-const isSubItemActive = (filter?: string, currentFilter?: string) => {
-  return (filter && currentFilter && filter === currentFilter) as boolean
-}
+// 检查是否收起状态
+const isCollapsed = computed(() => state.value === 'collapsed')
 </script>
 
 <template>
   <SidebarGroup>
-
     <SidebarMenu>
-      <Collapsible
-          v-for="item in items"
-          :key="item.title"
+      <SidebarMenuItem v-for="item in items" :key="item.title">
+        <SidebarMenuButton
           as-child
-          :default-open="item.isActive"
-          class="group/collapsible"
-      >
-        <SidebarMenuItem>
-          <CollapsibleTrigger as-child>
-            <SidebarMenuButton :tooltip="item.title">
-              <component :is="item.icon" v-if="item.icon"/>
-              <span>{{ item.title }}</span>
-              <Badge
-                  v-if="item.badge && (typeof item.badge === 'string' ? item.badge : item.badge.value)"
-                  variant="secondary"
-                  class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center"
-              >
-                {{ typeof item.badge === 'string' ? item.badge : item.badge.value }}
-              </Badge>
-              <ChevronRight
-                  v-else
-                  class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"/>
-            </SidebarMenuButton>
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <SidebarMenuSub>
-              <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title">
-                <SidebarMenuSubButton as-child :is-active="isSubItemActive(subItem.filter, currentFilter)">
-                  <a
-                      :href="subItem.url"
-                      @click="handleSubItemClick($event, subItem.filter)"
-                      :class="[
-                      'flex items-center justify-between w-full',
-                      isSubItemActive(subItem.filter, currentFilter)
-                        ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-                        : ''
-                    ]"
-                  >
-                    <span>{{ subItem.title }}</span>
-                    <Badge
-                        v-if="subItem.badge && (typeof subItem.badge === 'string' ? subItem.badge : subItem.badge.value)"
-                        :variant="isSubItemActive(subItem.filter, currentFilter) ? 'default' : 'secondary'"
-                        class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center"
-                    >
-                      {{ typeof subItem.badge === 'string' ? subItem.badge : subItem.badge.value }}
-                    </Badge>
-                  </a>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            </SidebarMenuSub>
-          </CollapsibleContent>
-        </SidebarMenuItem>
-      </Collapsible>
+          :tooltip="item.title"
+          :is-active="isItemActive(item.url)"
+        >
+          <NuxtLink
+            :to="item.url"
+            :class="[
+              'flex items-center w-full',
+              isCollapsed ? 'justify-center' : 'justify-between'
+            ]"
+          >
+            <div class="flex items-center gap-2">
+              <component :is="item.icon" v-if="item.icon" class="h-4 w-4 shrink-0" />
+              <span v-if="!isCollapsed">{{ item.title }}</span>
+            </div>
+            <Badge
+              v-if="item.badge && (typeof item.badge === 'string' ? item.badge : item.badge.value) && !isCollapsed"
+              :variant="isItemActive(item.url) ? 'default' : 'secondary'"
+              class="ml-auto h-5 w-5 rounded-full p-0 text-xs justify-center shrink-0"
+            >
+              {{ typeof item.badge === 'string' ? item.badge : item.badge.value }}
+            </Badge>
+          </NuxtLink>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     </SidebarMenu>
   </SidebarGroup>
 </template>
