@@ -34,7 +34,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  'show-more': []
   'item-click': [item: NewsItem]
   'refresh': []
   'favorite': [item: NewsItem, favorited: boolean]

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive, computed, onMounted, ref, watch } from 'vue'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import {reactive, computed, onMounted, ref} from 'vue'
+import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
+import {ScrollArea} from '@/components/ui/scroll-area'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,7 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
+import {Separator} from '@/components/ui/separator'
 import {
   RefreshCw,
   Globe,
@@ -22,13 +22,13 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import { useFavorites } from '@/composables/useFavorites'
-import { Button } from '@/components/ui/button'
-import { PlatformIcons } from '@/config/icon.ts'
+import {useFavorites} from '@/composables/useFavorites'
+import {Button} from '@/components/ui/button'
+import {PlatformIcons} from '@/config/icon'
 
-import type { NewsItem } from "@/api"
-import { fetchNews as apiFetchNews } from "@/api"
-import { getRouteConfig, getPlatformConfigs } from '@/config/platforms'
+import type {NewsItem} from "@/api"
+import {fetchNews as apiFetchNews} from "@/api"
+import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
 
 // 获取路由配置
 const routeConfig = getRouteConfig('/tech')!
@@ -37,10 +37,10 @@ const routeConfig = getRouteConfig('/tech')!
 useHead({
   title: routeConfig.title,
   meta: [
-    { name: 'description', content: routeConfig.description },
-    { property: 'og:title', content: routeConfig.title },
-    { property: 'og:description', content: routeConfig.description },
-    { name: 'keywords', content: '科技资讯,技术新闻,IT新闻,科技动态' }
+    {name: 'description', content: routeConfig.description},
+    {property: 'og:title', content: routeConfig.title},
+    {property: 'og:description', content: routeConfig.description},
+    {name: 'keywords', content: '科技资讯,技术新闻,IT新闻,科技动态'}
   ]
 })
 
@@ -48,7 +48,7 @@ useHead({
 const platformConfigs = getPlatformConfigs(routeConfig.platforms)
 
 // 使用收藏功能
-const { newsItems, platforms } = useFavorites()
+const {newsItems, platforms} = useFavorites()
 
 // 全局搜索组件引用
 const globalSearchRef = ref()
@@ -134,14 +134,7 @@ const fetchPlatformData = async (platform: string) => {
 // 获取所有科技平台数据
 const fetchAllPlatformsData = async () => {
   const promises = techPlatforms.value.map(p => fetchPlatformData(p.platform))
-  const results = await Promise.allSettled(promises)
-
-  // 记录失败的平台
-  results.forEach((result, index) => {
-    if (result.status === 'rejected') {
-      console.error(`平台 ${techPlatforms.value[index].platform} 数据获取失败:`, result.reason)
-    }
-  })
+  await Promise.allSettled(promises)
 }
 
 // 刷新所有数据
@@ -160,13 +153,6 @@ const handleCardItemClick = (item: NewsItem) => {
     window.open(item.url, '_blank')
   }
 }
-
-// 处理显示更多
-const handleShowMore = (platform: string, title: string) => {
-  console.log(`显示更多: ${title}`)
-  // 这里可以跳转到详细页面或打开模态框
-}
-
 // 处理外部链接打开 - SSR兼容版本
 const openLink = () => {
   if (process.client && typeof window !== 'undefined') {
@@ -199,7 +185,7 @@ onMounted(async () => {
 
 <template>
   <SidebarProvider>
-    <AppSidebar />
+    <AppSidebar/>
     <!-- 全局搜索组件 -->
     <GlobalSearch
         ref="globalSearchRef"
@@ -229,7 +215,7 @@ onMounted(async () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        
+
         <!-- 右侧按钮区域 - 响应式适配 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <!-- 刷新按钮 - 桌面版 -->
@@ -298,7 +284,7 @@ onMounted(async () => {
               <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
               <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
             </div>
-            
+
             <!-- 操作栏 -->
             <div class="flex items-center justify-between mb-6">
               <p class="text-sm text-muted-foreground">
@@ -319,7 +305,6 @@ onMounted(async () => {
                   :is-favorited="platforms.some(p => p.platform === platform.platform)"
                   :show-drag-handle="false"
                   @item-click="handleCardItemClick"
-                  @show-more="handleShowMore(platform.platform, platform.title)"
                   @refresh="refreshSinglePlatform(platform.platform)"
               />
             </div>
@@ -328,4 +313,4 @@ onMounted(async () => {
       </div>
     </SidebarInset>
   </SidebarProvider>
-</template> 
+</template>

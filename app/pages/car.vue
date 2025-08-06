@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive, computed, onMounted, ref, watch } from 'vue'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import {reactive, computed, onMounted, ref, watch} from 'vue'
+import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
+import {ScrollArea} from '@/components/ui/scroll-area'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,7 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
+import {Separator} from '@/components/ui/separator'
 import {
   RefreshCw,
   Globe,
@@ -22,27 +22,27 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import { useFavorites } from '@/composables/useFavorites'
-import { Button } from '@/components/ui/button'
-import { PlatformIcons } from '@/config/icon.ts'
+import {useFavorites} from '@/composables/useFavorites'
+import {Button} from '@/components/ui/button'
+import {PlatformIcons} from '@/config/icon'
 
-import type { NewsItem } from "@/api"
-import { fetchNews as apiFetchNews } from "@/api"
-import { getRouteConfig, getPlatformConfigs } from '@/config/platforms'
+import type {NewsItem} from "@/api"
+import {fetchNews as apiFetchNews} from "@/api"
+import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
 
 const routeConfig = getRouteConfig('/car')!
 useHead({
   title: routeConfig.title,
   meta: [
-    { name: 'description', content: routeConfig.description },
-    { property: 'og:title', content: routeConfig.title },
-    { property: 'og:description', content: routeConfig.description },
-    { name: 'keywords', content: '汽车新闻,汽车资讯,车市动态,汽车行业' }
+    {name: 'description', content: routeConfig.description},
+    {property: 'og:title', content: routeConfig.title},
+    {property: 'og:description', content: routeConfig.description},
+    {name: 'keywords', content: '汽车新闻,汽车资讯,车市动态,汽车行业'}
   ]
 })
 
 const platformConfigs = getPlatformConfigs(routeConfig.platforms)
-const { newsItems, platforms } = useFavorites()
+const {platforms} = useFavorites()
 const globalSearchRef = ref()
 
 const isMac = computed(() => {
@@ -77,7 +77,7 @@ carPlatforms.value.forEach(platform => {
 
 const ensurePlatformState = (platform: string) => {
   if (!platformsData[platform]) {
-    platformsData[platform] = { data: [], loading: false, error: null }
+    platformsData[platform] = {data: [], loading: false, error: null}
   }
 }
 
@@ -149,7 +149,7 @@ onMounted(async () => {
 
 <template>
   <SidebarProvider>
-    <AppSidebar />
+    <AppSidebar/>
     <GlobalSearch
         ref="globalSearchRef"
         :hot-platforms="carPlatforms"
@@ -175,7 +175,7 @@ onMounted(async () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        
+
         <div class="flex items-center gap-2 ml-auto px-4">
           <Button
               variant="outline"
@@ -237,7 +237,7 @@ onMounted(async () => {
               <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
               <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
             </div>
-            
+
             <div class="flex items-center justify-between mb-6">
               <p class="text-sm text-muted-foreground">
                 共 {{ carPlatforms.length }} 个汽车平台
@@ -265,4 +265,4 @@ onMounted(async () => {
       </div>
     </SidebarInset>
   </SidebarProvider>
-</template> 
+</template>

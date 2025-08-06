@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive, computed, onMounted, ref } from 'vue'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import {reactive, computed, onMounted, ref} from 'vue'
+import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
+import {ScrollArea} from '@/components/ui/scroll-area'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,7 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
+import {Separator} from '@/components/ui/separator'
 import {
   RefreshCw,
   Globe,
@@ -23,13 +23,13 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import IntegratedTimeline from '@/components/IntegratedTimeline.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import { useFavorites } from '@/composables/useFavorites'
-import { Button } from '@/components/ui/button'
-import { PlatformIcons } from '@/config/icon.ts'
+import {useFavorites} from '@/composables/useFavorites'
+import {Button} from '@/components/ui/button'
+import {PlatformIcons} from '@/config/icon'
 
-import type { NewsItem } from "@/api"
-import { fetchNews as apiFetchNews } from "@/api"
-import { getRouteConfig, getPlatformConfigs } from '@/config/platforms'
+import type {NewsItem} from "@/api"
+import {fetchNews as apiFetchNews} from "@/api"
+import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
 
 // 获取时间线路由配置
 const routeConfig = getRouteConfig('/timeline')!
@@ -38,10 +38,10 @@ const routeConfig = getRouteConfig('/timeline')!
 useHead({
   title: '新闻聚合 - 实时新闻时间线',
   meta: [
-    { name: 'description', content: '实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态' },
-    { property: 'og:title', content: '新闻聚合 - 实时新闻时间线' },
-    { property: 'og:description', content: '实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态' },
-    { name: 'keywords', content: '新闻时间线,综合新闻,实时资讯,热点动态' }
+    {name: 'description', content: '实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态'},
+    {property: 'og:title', content: '新闻聚合 - 实时新闻时间线'},
+    {property: 'og:description', content: '实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态'},
+    {name: 'keywords', content: '新闻时间线,综合新闻,实时资讯,热点动态'}
   ]
 })
 
@@ -49,7 +49,7 @@ useHead({
 const platformConfigs = getPlatformConfigs(routeConfig.platforms)
 
 // 使用收藏功能
-const { newsItems, platforms } = useFavorites()
+const {newsItems, platforms} = useFavorites()
 
 // 全局搜索组件引用
 const globalSearchRef = ref()
@@ -167,7 +167,7 @@ onMounted(async () => {
 
 <template>
   <SidebarProvider>
-    <AppSidebar />
+    <AppSidebar/>
     <!-- 全局搜索组件 -->
     <GlobalSearch
         ref="globalSearchRef"
@@ -191,7 +191,7 @@ onMounted(async () => {
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        
+
         <!-- 右侧按钮区域 - 响应式适配 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <!-- 刷新按钮 - 桌面版 -->
@@ -258,7 +258,7 @@ onMounted(async () => {
             <!-- 页面说明 -->
             <div class="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 mb-6">
               <div class="flex items-center gap-2 mb-2">
-                <Clock class="h-5 w-5 text-blue-600" />
+                <Clock class="h-5 w-5 text-blue-600"/>
                 <h2 class="font-medium text-blue-900 dark:text-blue-100">实时新闻时间线</h2>
               </div>
               <p class="text-sm text-blue-700 dark:text-blue-300">
@@ -268,13 +268,13 @@ onMounted(async () => {
 
             <!-- 时间线组件 -->
             <IntegratedTimeline
-              :platforms-data="platformsData"
-              @news-click="handleNewsClick"
-              @refresh="refreshAllData"
+                :platforms-data="platformsData"
+                @news-click="handleNewsClick"
+                @refresh="refreshAllData"
             />
           </div>
         </ScrollArea>
       </div>
     </SidebarInset>
   </SidebarProvider>
-</template> 
+</template>

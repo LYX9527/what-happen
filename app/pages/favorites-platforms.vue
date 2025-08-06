@@ -20,7 +20,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import {
   RefreshCw,
@@ -126,13 +125,6 @@ const handleCardItemClick = (item: NewsItem) => {
     window.open(item.url, '_blank')
   }
 }
-
-// 处理显示更多
-const handleShowMore = (platform: string, title: string) => {
-  console.log(`显示更多: ${title}`)
-}
-
-
 // 处理外部链接打开 - SSR兼容版本
 const openLink = () => {
   if (process.client && typeof window !== 'undefined') {
@@ -369,7 +361,6 @@ onMounted(() => {
                   :is-favorited="true"
                   :show-drag-handle="false"
                   @item-click="handleCardItemClick"
-                  @show-more="handleShowMore(platform.platform, platform.platformTitle)"
                   @refresh="refreshSinglePlatform(platform.platform)"
               >
               </NewsRankCard>

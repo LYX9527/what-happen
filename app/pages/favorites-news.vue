@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive, computed, onMounted, ref, watch } from 'vue'
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import {reactive, computed, onMounted, ref, watch} from 'vue'
+import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
+import {ScrollArea} from '@/components/ui/scroll-area'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,7 +10,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
+import {Separator} from '@/components/ui/separator'
 import {
   RefreshCw,
   Globe,
@@ -25,12 +25,19 @@ import {
 import AppSidebar from '@/components/AppSidebar.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import { useFavorites } from '@/composables/useFavorites'
-import { Button } from '@/components/ui/button'
-import { PlatformIcons } from '@/config/icon.ts'
-import { getRouteConfig } from '@/config/platforms'
+import {useFavorites} from '@/composables/useFavorites'
+import {Button} from '@/components/ui/button'
+import {PlatformIcons} from '@/config/icon'
+import {getRouteConfig} from '@/config/platforms'
 
-import type { NewsItem } from "@/api"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from "~/components/ui/alert-dialog";
 
 // 获取路由配置
 const routeConfig = getRouteConfig('/favorites-news')!
@@ -39,14 +46,14 @@ const routeConfig = getRouteConfig('/favorites-news')!
 useHead({
   title: routeConfig.title,
   meta: [
-    { name: 'description', content: routeConfig.description },
-    { property: 'og:title', content: routeConfig.title },
-    { property: 'og:description', content: routeConfig.description }
+    {name: 'description', content: routeConfig.description},
+    {property: 'og:title', content: routeConfig.title},
+    {property: 'og:description', content: routeConfig.description}
   ]
 })
 
 // 使用收藏功能
-const { newsItems, clearFavorites, removeFromFavorites, platforms } = useFavorites()
+const {newsItems, clearFavorites, removeFromFavorites, platforms} = useFavorites()
 
 // 全局搜索组件引用
 const globalSearchRef = ref()
@@ -77,13 +84,19 @@ const handleRemoveFavorite = (item: any) => {
   removeFromFavorites(item)
 }
 
-// 清空所有收藏
+// Alert Dialog 状态控制
+const showClearAllDialog = ref(false)
+
+// 清空全部收藏 - 打开确认对话框
 const handleClearAll = () => {
-  if (confirm('确定要清空所有收藏的新闻吗？')) {
-    clearFavorites()
-  }
+  showClearAllDialog.value = true
 }
 
+// 确认清空全部收藏
+const confirmClearAll = () => {
+  clearFavorites()
+  showClearAllDialog.value = false
+}
 // 处理外部链接打开 - SSR兼容版本
 const openLink = () => {
   if (process.client && typeof window !== 'undefined') {
@@ -104,8 +117,8 @@ const getPlatformIcon = (platform: string) => {
 }
 
 // 格式化时间
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
+const formatDate = (dateString: string | number) => {
+  const date = new Date(dateString + "")
   return date.toLocaleDateString('zh-CN', {
     month: '2-digit',
     day: '2-digit'
@@ -118,7 +131,7 @@ const searchPlatforms = ref([])
 
 <template>
   <SidebarProvider>
-    <AppSidebar />
+    <AppSidebar/>
     <!-- 全局搜索组件 -->
     <GlobalSearch
         ref="globalSearchRef"
@@ -127,6 +140,24 @@ const searchPlatforms = ref([])
         @filter-change="(filter) => $router.push(`/${filter}`)"
         @news-click="handleNewsClick"
     />
+    <!-- 清空收藏确认对话框 -->
+    <AlertDialog v-model:open="showClearAllDialog">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>确认清空所有收藏</AlertDialogTitle>
+          <AlertDialogDescription>
+            这个操作不可撤销。您确定要清空所有已收藏的新闻吗？清空后您需要重新收藏感兴趣的新闻。
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel @click="showClearAllDialog = false">取消</AlertDialogCancel>
+          <AlertDialogAction @click="confirmClearAll" class="bg-destructive hover:bg-destructive/90">
+            确认清空
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
     <SidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 - 带sticky和backdrop-blur效果 -->
       <header
@@ -148,7 +179,7 @@ const searchPlatforms = ref([])
             </BreadcrumbList>
           </Breadcrumb>
         </div>
-        
+
         <!-- 右侧按钮区域 - 响应式适配 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <!-- 清空按钮 - 桌面版 -->
@@ -217,12 +248,12 @@ const searchPlatforms = ref([])
             <!-- 页面标题 -->
             <div class="mb-6">
               <div class="flex items-center gap-2">
-                <Heart class="h-6 w-6 text-red-500 fill-red-500" />
+                <Heart class="h-6 w-6 text-red-500 fill-red-500"/>
                 <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
               </div>
               <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
             </div>
-            
+
             <!-- 操作栏 -->
             <div class="flex items-center justify-between mb-6">
               <p class="text-sm text-muted-foreground">
@@ -232,15 +263,16 @@ const searchPlatforms = ref([])
 
             <!-- 收藏内容 - 列表样式 -->
             <div v-if="newsItems.length > 0" class="space-y-2">
-              <div 
-                v-for="(item, index) in newsItems" 
-                :key="`${item.platform}-${item.id}`"
-                class="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors cursor-pointer group"
-                @click="handleNewsClick(item)"
-                :title="item.title"
+              <div
+                  v-for="(item, index) in newsItems"
+                  :key="`${item.platform}-${item.id}`"
+                  class="flex items-center gap-3 p-4 rounded-lg border bg-card hover:bg-muted/50 transition-colors cursor-pointer group"
+                  @click="handleNewsClick(item)"
+                  :title="item.title"
               >
                 <!-- 序号 -->
-                <div class="flex items-center justify-center w-6 h-6 rounded-full bg-muted text-xs font-medium text-muted-foreground shrink-0">
+                <div
+                    class="flex items-center justify-center w-6 h-6 rounded-full bg-muted text-xs font-medium text-muted-foreground shrink-0">
                   {{ index + 1 }}
                 </div>
 
@@ -264,15 +296,15 @@ const searchPlatforms = ref([])
                 <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                   <!-- 取消收藏 -->
                   <Button
-                    variant="ghost"
-                    size="icon"
-                    class="h-8 w-8"
-                    @click.stop="handleRemoveFavorite(item)"
-                    title="取消收藏"
+                      variant="ghost"
+                      size="icon"
+                      class="h-8 w-8"
+                      @click.stop="handleRemoveFavorite(item)"
+                      title="取消收藏"
                   >
-                    <Star class="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                    <Star class="h-4 w-4 text-yellow-500 fill-yellow-500"/>
                   </Button>
-                  
+
                   <!-- 外部链接图标 -->
                   <ExternalLink class="w-4 h-4 text-muted-foreground"/>
                 </div>
@@ -282,7 +314,7 @@ const searchPlatforms = ref([])
             <!-- 空状态 -->
             <div v-else class="text-center py-12">
               <div class="text-muted-foreground">
-                <Heart class="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <Heart class="h-12 w-12 mx-auto mb-4 opacity-50"/>
                 <p class="text-lg font-medium">还没有收藏的新闻</p>
                 <p class="text-sm mb-4">在浏览新闻时点击收藏按钮来收藏感兴趣的内容</p>
                 <Button variant="outline" @click="$router.push('/')">
@@ -295,4 +327,4 @@ const searchPlatforms = ref([])
       </div>
     </SidebarInset>
   </SidebarProvider>
-</template> 
+</template>
