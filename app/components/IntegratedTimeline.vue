@@ -57,35 +57,7 @@ watch(activeCategory, () => {
 
 // 处理时间解析
 const parseTime = (item: NewsItem, platformKey: string): Date => {
-
-  // 如果有时间字符串，尝试解析
-  if (item.extra?.time) {
-    const timeStr = item.extra.time
-
-    // 处理相对时间格式
-    if (timeStr.includes('小时前')) {
-      const hours = parseInt(timeStr.match(/(\d+)小时前/)?.[1] || '0')
-      return new Date(Date.now() - hours * 60 * 60 * 1000)
-    }
-    if (timeStr.includes('分钟前')) {
-      const minutes = parseInt(timeStr.match(/(\d+)分钟前/)?.[1] || '0')
-      return new Date(Date.now() - minutes * 60 * 1000)
-    }
-    if (timeStr.includes('天前')) {
-      const days = parseInt(timeStr.match(/(\d+)天前/)?.[1] || '0')
-      return new Date(Date.now() - days * 24 * 60 * 60 * 1000)
-    }
-
-    // 尝试直接解析时间
-    const parsed = dayjs(timeStr).toDate()
-    if (!isNaN(parsed.getTime())) {
-      return parsed
-    }
-  }
-
-  // 如果都没有，使用当前时间减去一个随机偏移
-  const randomOffset = Math.floor(Math.random() * 24 * 60 * 60 * 1000) // 24小时内随机
-  return new Date(Date.now() - randomOffset)
+  return dayjs(item.extra?.date).toDate()
 }
 
 // 格式化显示时间

@@ -12,7 +12,6 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import IntegratedTimeline from '@/components/IntegratedTimeline.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import {useFavorites} from '@/composables/useFavorites'
 import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
@@ -21,7 +20,7 @@ import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
 import type {TimelinePlatform} from "~/components/IntegratedTimeline.vue";
 
 // 获取时间线路由配置
-const routeConfig = getRouteConfig('/timeline')!
+const routeConfig = getRouteConfig('/')!
 
 // 设置页面SEO
 useHead({
@@ -83,8 +82,6 @@ const timelinePlatformConfigs = computed(() => {
   })
 })
 
-// 使用收藏功能
-const {platforms} = useFavorites()
 
 // 全局搜索组件引用
 const globalSearchRef = ref()

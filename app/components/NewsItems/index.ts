@@ -17,15 +17,10 @@ export {default as MusicItem} from './MusicItem.vue'
 export const NewsItemComponents = {
     // GitHub 相关
     github: 'GitHubNewsItem',
+
     // 股票走势
     hotstock: 'StockNewsItem',
 
-
-    gelonghui: 'StockNewsItem',
-    wallstreetcn_live: 'StockNewsItem',
-    wallstreetcn_news: 'StockNewsItem',
-    wallstreetcn_hot: 'StockNewsItem',
-    cls_telegraph: 'StockNewsItem',
 
 
     // 热搜
@@ -37,6 +32,7 @@ export const NewsItemComponents = {
     toutiao: 'HotSearchItem',
     b_hot_search: 'HotSearchItem',
     dcd_hot: 'HotSearchItem',
+    wallstreetcn_hot: 'HotSearchItem',
 
     // 时间线新闻
     _36kr: 'TimelineNewsItem',
@@ -52,9 +48,12 @@ export const NewsItemComponents = {
     kaopu: 'TimelineNewsItem',
     jin10: 'TimelineNewsItem',
     pcbeta_windows: 'TimelineNewsItem',
-    nowcoder: 'TimelineNewsItem',
     jqka: 'TimelineNewsItem',
     dcd_news: 'TimelineNewsItem',
+    cls_telegraph: 'TimelineNewsItem',
+    gelonghui: 'TimelineNewsItem',
+    wallstreetcn_live: 'TimelineNewsItem',
+    wallstreetcn_news: 'TimelineNewsItem',
 
     // 文章阅读
     juejin: "ArticleReadItem",
@@ -80,6 +79,8 @@ export const NewsItemComponents = {
 
     // 普通新闻项
     hupu: 'NormalNewsItem',
+    _51cto: 'NormalNewsItem',
+    nowcoder: 'NormalNewsItem',
 
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Star, ExternalLink} from 'lucide-vue-next'
+import {Star} from 'lucide-vue-next'
 import {Button} from '@/components/ui/button'
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
 import type {NewsItem} from "@/api"
@@ -25,22 +25,28 @@ const {isFavorited, toggleFavorite} = useFavorites()
 
 // 获取相对时间显示
 const getRelativeTime = (item: NewsItem) => {
-  // 如果有具体的时间信息，使用它
-  if (item.extra?.time) {
-    return item.extra.time
-  }
+  // 如果有时间戳
+  if (item.extra?.date) {
+    const now = Date.now()
+    const itemTime = typeof item.extra.date === 'number' ? item.extra.date : parseInt(item.extra.date)
+    const diff = now - itemTime
 
-  // 否则根据索引模拟相对时间
-  const minutes = props.index * 5 + Math.floor(Math.random() * 15)
-  if (minutes < 60) {
-    return `${minutes}分钟前`
+    const minutes = Math.floor(diff / (1000 * 60))
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+
+    if (minutes < 1) return '刚刚'
+    if (minutes < 60) return `${minutes}分钟前`
+    if (hours < 24) return `${hours}小时前`
+    if (days < 7) return `${days}天前`
+
+    // 超过一周显示具体日期
+    const date = new Date(itemTime)
+    return date.toLocaleDateString('zh-CN', {
+      month: 'short',
+      day: 'numeric'
+    })
   }
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) {
-    return `${hours}小时前`
-  }
-  const days = Math.floor(hours / 24)
-  return `${days}天前`
 }
 
 // 处理点击
