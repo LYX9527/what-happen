@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import {Badge} from '@/components/ui/badge'
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
 import type {NewsItem} from '@/api'
 
 // Props
@@ -37,24 +35,24 @@ const handleClick = () => {
   <div class="flex-1 min-w-0" @click="handleClick">
     <!-- 平台和分类标签 -->
     <div class="flex items-center gap-2 mb-1">
-      <Badge
+      <UiBadge
           variant="outline"
           class="text-xs px-1.5 py-0 h-5"
       >
         {{ platformConfig.title }}
-      </Badge>
-      <Badge
+      </UiBadge>
+      <UiBadge
           v-if="showCategory"
           variant="secondary"
           class="text-xs px-1.5 py-0 h-5"
       >
         {{ platformConfig.category }}
-      </Badge>
+      </UiBadge>
     </div>
 
     <!-- 新闻标题 -->
     <TooltipProvider>
-      <Tooltip>
+      <UiTooltip>
         <TooltipTrigger asChild>
           <h3 :class="titleClass">
             {{ item.title }}
@@ -63,13 +61,13 @@ const handleClick = () => {
         <TooltipContent>
           <p class="max-w-sm">{{ item.title }}</p>
         </TooltipContent>
-      </Tooltip>
+      </UiTooltip>
     </TooltipProvider>
 
     <!-- 额外信息 -->
     <div v-if="item.extra?.hover || item.extra?.desc" class="mt-1">
       <TooltipProvider v-if="item.extra?.hover">
-        <Tooltip>
+        <UiTooltip>
           <TooltipTrigger asChild>
             <p :class="extraClass">
               {{ item.extra.hover || item.extra.desc }}
@@ -78,7 +76,7 @@ const handleClick = () => {
           <TooltipContent>
             <p class="max-w-md">{{ item.extra.hover }}</p>
           </TooltipContent>
-        </Tooltip>
+        </UiTooltip>
       </TooltipProvider>
       <p v-else :class="extraClass">
         {{ item.extra.desc }}

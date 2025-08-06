@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
+    "gsap": "^3.13.0",
     "lucide-vue-next": "^0.536.0",
     "nuxt": "^4.0.1",
     "reka-ui": "^2.4.1",

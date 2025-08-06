@@ -1,23 +1,12 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
-import {ScrollArea} from '@/components/ui/scroll-area'
-import {Button} from '@/components/ui/button'
-import {Badge} from '@/components/ui/badge'
-import {Skeleton} from '@/components/ui/skeleton'
-import {
-  RefreshCw,
-  Star,
-  Newspaper,
-  TrendingUp,
-  Expand,
-  Minimize
-} from 'lucide-vue-next'
+import {Expand, Minimize, Newspaper, RefreshCw, Star, TrendingUp} from 'lucide-vue-next'
 import type {NewsItem} from '@/api'
 import {useFavorites} from '@/composables/useFavorites'
 import {toast} from 'vue-sonner'
 import TimelineNewsContent from '@/components/TimelineNewsContent.vue'
 import FinanceNewsContent from '@/components/FinanceNewsContent.vue'
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion'
+import dayjs from "dayjs";
 
 // 时间线平台配置
 const TIMELINE_PLATFORMS = [
@@ -107,7 +96,7 @@ const parseTime = (item: NewsItem, platformKey: string): Date => {
     }
 
     // 尝试直接解析时间
-    const parsed = new Date(timeStr)
+    const parsed = dayjs(timeStr).toDate()
     if (!isNaN(parsed.getTime())) {
       return parsed
     }
@@ -170,11 +159,9 @@ const allIntegratedNews = computed(() => {
 // 整合并排序所有时间线新闻（用于显示）
 const integratedNews = computed(() => {
   // 根据分类筛选
-  let filteredNews = activeCategory.value === 'all'
+  return activeCategory.value === 'all'
       ? allIntegratedNews.value
       : allIntegratedNews.value.filter(item => item.platformConfig.category === activeCategory.value)
-
-  return filteredNews
 })
 
 // 按时间分组的新闻数据
@@ -236,7 +223,7 @@ const categoryStats = computed(() => {
   const stats: Record<string, number> = {all: 0}
 
   allIntegratedNews.value.forEach(item => {
-    stats.all++
+    stats.all!!++
     const category = item.platformConfig.category
     stats[category] = (stats[category] || 0) + 1
   })
@@ -318,7 +305,7 @@ const getNewsContentComponent = (platformConfig: any) => {
         </div>
 
         <div class="flex items-center gap-2">
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="toggleAllTimeGroups"
@@ -327,9 +314,9 @@ const getNewsContentComponent = (platformConfig: any) => {
           >
             <component :is="isAllExpanded ? Minimize : Expand" class="w-3.5 h-3.5"/>
             {{ isAllExpanded ? '全部收起' : '全部展开' }}
-          </Button>
+          </UiButton>
 
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="handleRefresh"
@@ -338,13 +325,13 @@ const getNewsContentComponent = (platformConfig: any) => {
           >
             <RefreshCw :class="['w-3.5 h-3.5', isLoading && 'animate-spin']"/>
             刷新
-          </Button>
+          </UiButton>
         </div>
       </div>
 
       <!-- 分类筛选 -->
       <div class="flex items-center gap-1 overflow-x-auto pb-1">
-        <Button
+        <UiButton
             v-for="category in categories"
             :key="category"
             :variant="activeCategory === category ? 'default' : 'ghost'"
@@ -353,30 +340,30 @@ const getNewsContentComponent = (platformConfig: any) => {
             class="flex-shrink-0 h-7 text-xs"
         >
           {{ category === 'all' ? '全部' : category }}
-          <Badge
+          <UiBadge
               v-if="categoryStats[category]"
               variant="secondary"
               class="ml-1.5 h-4 text-xs px-1"
           >
             {{ categoryStats[category] }}
-          </Badge>
-        </Button>
+          </UiBadge>
+        </UiButton>
       </div>
     </div>
 
     <!-- 时间线内容 -->
     <div class="flex-1 overflow-hidden">
-      <ScrollArea class="h-full">
+      <UiScrollArea class="h-full">
         <div class="px-4 py-2">
           <!-- 加载状态 -->
           <div v-if="isLoading && groupedNewsByTime.length === 0" class="space-y-3">
             <div v-for="i in 8" :key="i" class="flex items-start gap-3 py-2">
-              <Skeleton class="w-12 h-4 rounded"/>
+              <UiSkeleton class="w-12 h-4 rounded"/>
               <div class="flex-1 space-y-2">
-                <Skeleton class="h-4 w-3/4"/>
-                <Skeleton class="h-3 w-1/2"/>
+                <UiSkeleton class="h-4 w-3/4"/>
+                <UiSkeleton class="h-3 w-1/2"/>
               </div>
-              <Skeleton class="w-16 h-4 rounded-full"/>
+              <UiSkeleton class="w-16 h-4 rounded-full"/>
             </div>
           </div>
 
@@ -389,13 +376,13 @@ const getNewsContentComponent = (platformConfig: any) => {
 
           <!-- 时间线分组列表 -->
           <div v-else>
-            <Accordion
+            <UiAccordion
                 type="multiple"
                 v-model="expandedTimeGroups"
                 class="space-y-4"
             >
               <AccordionItem
-                  v-for="(timeGroup, groupIndex) in groupedNewsByTime"
+                  v-for="(timeGroup) in groupedNewsByTime"
                   :key="timeGroup.timeKey"
                   :value="timeGroup.timeKey"
                   class="border rounded-lg bg-card"
@@ -414,7 +401,7 @@ const getNewsContentComponent = (platformConfig: any) => {
                     <div class="flex items-center gap-1 flex-1 min-w-0">
                       <div class="flex -space-x-1 overflow-hidden">
                         <div
-                            v-for="(platform, index) in [...new Set(timeGroup.items.map(item => item.platformConfig))].slice(0, 5)"
+                            v-for="(platform) in [...new Set(timeGroup.items.map(item => item.platformConfig))].slice(0, 5)"
                             :key="platform.key"
                             :class="['w-4 h-4 rounded-full border border-background flex-shrink-0', platform.color]"
                             :title="platform.title"
@@ -431,9 +418,9 @@ const getNewsContentComponent = (platformConfig: any) => {
                     </div>
 
                     <div class="flex items-center gap-2 flex-shrink-0">
-                      <Badge variant="secondary" class="text-xs">
+                      <UiBadge variant="secondary" class="text-xs">
                         {{ timeGroup.items.length }} 条
-                      </Badge>
+                      </UiBadge>
                     </div>
                   </div>
                 </AccordionTrigger>
@@ -470,7 +457,7 @@ const getNewsContentComponent = (platformConfig: any) => {
 
                         <!-- 操作按钮 -->
                         <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button
+                          <UiButton
                               variant="ghost"
                               size="sm"
                               :class="[
@@ -480,17 +467,17 @@ const getNewsContentComponent = (platformConfig: any) => {
                               @click="handleFavorite($event, item)"
                           >
                             <Star class="w-3.5 h-3.5" :fill="isFavorited(item) ? 'currentColor' : 'none'"/>
-                          </Button>
+                          </UiButton>
                         </div>
                       </div>
                     </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
+            </UiAccordion>
           </div>
         </div>
-      </ScrollArea>
+      </UiScrollArea>
     </div>
   </div>
 </template>

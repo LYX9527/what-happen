@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import {Badge} from '@/components/ui/badge'
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
-import {TrendingUp, TrendingDown, DollarSign} from 'lucide-vue-next'
+import {TrendingUp, TrendingDown} from 'lucide-vue-next'
 import type {NewsItem} from '@/api'
 
 // Props
@@ -47,24 +45,24 @@ const financeInfo = getFinanceInfo(props.item)
   <div class="flex-1 min-w-0" @click="handleClick">
     <!-- 平台标签 -->
     <div class="flex items-center gap-2 mb-1">
-      <Badge
+      <UiBadge
           variant="outline"
           class="text-xs px-1.5 py-0 h-5 flex items-center gap-1"
       >
         {{ platformConfig.title }}
-      </Badge>
-      <Badge
+      </UiBadge>
+      <UiBadge
           variant="secondary"
           class="text-xs px-1.5 py-0 h-5"
       >
         {{ platformConfig.category }}
-      </Badge>
+      </UiBadge>
     </div>
 
     <!-- 新闻标题和财经信息 -->
     <div class="flex items-start justify-between gap-2">
       <TooltipProvider>
-        <Tooltip>
+        <UiTooltip>
           <TooltipTrigger asChild>
             <h3 class="text-sm font-medium text-foreground group-hover:text-foreground/80 transition-colors line-clamp-2 leading-relaxed flex-1">
               {{ item.title }}
@@ -73,7 +71,7 @@ const financeInfo = getFinanceInfo(props.item)
           <TooltipContent>
             <p class="max-w-sm">{{ item.title }}</p>
           </TooltipContent>
-        </Tooltip>
+        </UiTooltip>
       </TooltipProvider>
 
       <!-- 财经数据 -->
@@ -102,7 +100,7 @@ const financeInfo = getFinanceInfo(props.item)
     <!-- 额外信息 -->
     <div v-if="item.extra?.hover || item.extra?.desc" class="mt-1">
       <TooltipProvider v-if="item.extra?.hover">
-        <Tooltip>
+        <UiTooltip>
           <TooltipTrigger asChild>
             <p class="text-xs text-muted-foreground line-clamp-1">
               {{ item.extra.hover || item.extra.desc }}
@@ -111,7 +109,7 @@ const financeInfo = getFinanceInfo(props.item)
           <TooltipContent>
             <p class="max-w-md">{{ item.extra.hover }}</p>
           </TooltipContent>
-        </Tooltip>
+        </UiTooltip>
       </TooltipProvider>
       <p v-else class="text-xs text-muted-foreground line-clamp-1">
         {{ item.extra.desc }}

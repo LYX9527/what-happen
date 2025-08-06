@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
 import {RefreshCw, Globe, Star, GripVertical} from 'lucide-vue-next'
-import {Button} from '@/components/ui/button'
-import {ScrollArea} from '@/components/ui/scroll-area'
 import {toast} from 'vue-sonner'
 import type {NewsItem} from "@/api"
 import {useFavorites} from '@/composables/useFavorites'
@@ -162,7 +160,7 @@ const displayItems = computed(() => {
 
       <div class="flex items-center gap-1">
         <!-- 收藏整个平台按钮 -->
-        <Button
+        <UiButton
             variant="ghost"
             size="sm"
             class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
@@ -177,10 +175,10 @@ const displayItems = computed(() => {
               v-else
               class="w-3 h-3 hover:text-yellow-500"
           />
-        </Button>
+        </UiButton>
 
         <!-- 单个刷新按钮 -->
-        <Button
+        <UiButton
             variant="ghost"
             size="sm"
             class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
@@ -188,10 +186,10 @@ const displayItems = computed(() => {
             @click="handleRefresh"
         >
           <RefreshCw :class="['w-3 h-3 transition-transform duration-300', { 'animate-spin': localRefreshing }]"/>
-        </Button>
+        </UiButton>
 
         <!-- 拖拽手柄 -->
-        <Button
+        <UiButton
             v-if="showDragHandle"
             variant="ghost"
             size="sm"
@@ -199,7 +197,7 @@ const displayItems = computed(() => {
             title="拖拽排序"
         >
           <GripVertical class="w-3 h-3"/>
-        </Button>
+        </UiButton>
       </div>
     </div>
 
@@ -215,7 +213,7 @@ const displayItems = computed(() => {
       </div>
 
       <!-- 榜单列表 -->
-      <ScrollArea v-else-if="displayItems.length > 0" class="h-full">
+      <UiScrollArea v-else-if="displayItems.length > 0" class="h-full">
         <div class="p-1.5 space-y-0.5">
           <component
               v-for="(item, index) in displayItems"
@@ -228,7 +226,7 @@ const displayItems = computed(() => {
               @item-click="handleItemClick"
           />
         </div>
-      </ScrollArea>
+      </UiScrollArea>
 
       <!-- 空状态 -->
       <div v-else class="flex items-center justify-center h-full text-muted-foreground">

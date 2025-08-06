@@ -20,12 +20,6 @@ import {
 import {useFavorites} from '@/composables/useFavorites'
 import {NAVIGATION_ITEMS, ROUTE_CONFIGS} from '@/config/platforms'
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarRail,
-} from '@/components/ui/sidebar'
 import TeamSwitcher from "@/components/TeamSwitcher.vue";
 import NavMain from "@/components/NavMain.vue";
 
@@ -38,10 +32,8 @@ const props = withDefaults(defineProps<AppSidebarProps>(), {
 })
 
 // 收藏功能
-const {favoritesCount, newsItemsCount, platformsCount} = useFavorites()
+const {newsItemsCount, platformsCount} = useFavorites()
 
-// 总收藏数量（用于显示徽章）
-const totalFavoritesCount = computed(() => newsItemsCount.value + platformsCount.value)
 
 // 获取路径对应的平台数量
 const getPlatformCount = (path: string): number => {
@@ -126,13 +118,13 @@ const data = computed(() => ({
 </script>
 
 <template>
-  <Sidebar v-bind="props">
-    <SidebarHeader>
+  <UiSidebar v-bind="props">
+    <UiSidebarHeader>
       <TeamSwitcher :teams="data.teams"/>
-    </SidebarHeader>
-    <SidebarContent>
+    </UiSidebarHeader>
+    <UiSidebarContent>
       <NavMain :items="data.navMain"/>
-    </SidebarContent>
-    <SidebarRail/>
-  </Sidebar>
+    </UiSidebarContent>
+    <UiSidebarRail/>
+  </UiSidebar>
 </template>
