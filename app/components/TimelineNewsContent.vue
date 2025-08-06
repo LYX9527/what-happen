@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import type { NewsItem } from '@/api'
+import {Badge} from '@/components/ui/badge'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
+import type {NewsItem} from '@/api'
 
 // Props
 interface Props {
@@ -38,15 +38,15 @@ const handleClick = () => {
     <!-- 平台和分类标签 -->
     <div class="flex items-center gap-2 mb-1">
       <Badge
-        variant="outline"
-        class="text-xs px-1.5 py-0 h-5"
+          variant="outline"
+          class="text-xs px-1.5 py-0 h-5"
       >
         {{ platformConfig.title }}
       </Badge>
       <Badge
-        v-if="showCategory"
-        variant="secondary"
-        class="text-xs px-1.5 py-0 h-5"
+          v-if="showCategory"
+          variant="secondary"
+          class="text-xs px-1.5 py-0 h-5"
       >
         {{ platformConfig.category }}
       </Badge>

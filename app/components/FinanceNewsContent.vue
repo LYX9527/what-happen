@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Badge } from '@/components/ui/badge'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { TrendingUp, TrendingDown, DollarSign } from 'lucide-vue-next'
-import type { NewsItem } from '@/api'
+import {Badge} from '@/components/ui/badge'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
+import {TrendingUp, TrendingDown, DollarSign} from 'lucide-vue-next'
+import type {NewsItem} from '@/api'
 
 // Props
 interface Props {
@@ -48,14 +48,14 @@ const financeInfo = getFinanceInfo(props.item)
     <!-- 平台标签 -->
     <div class="flex items-center gap-2 mb-1">
       <Badge
-        variant="outline"
-        class="text-xs px-1.5 py-0 h-5 flex items-center gap-1"
+          variant="outline"
+          class="text-xs px-1.5 py-0 h-5 flex items-center gap-1"
       >
         {{ platformConfig.title }}
       </Badge>
       <Badge
-        variant="secondary"
-        class="text-xs px-1.5 py-0 h-5"
+          variant="secondary"
+          class="text-xs px-1.5 py-0 h-5"
       >
         {{ platformConfig.category }}
       </Badge>
@@ -79,7 +79,7 @@ const financeInfo = getFinanceInfo(props.item)
       <!-- 财经数据 -->
       <div v-if="financeInfo.hasInfo" class="flex items-center gap-1 flex-shrink-0">
         <span
-          :class="[
+            :class="[
             'text-xs font-medium flex items-center gap-0.5',
             financeInfo.isPositive ? 'text-green-600 dark:text-green-400' :
             financeInfo.isNegative ? 'text-red-600 dark:text-red-400' :
@@ -87,12 +87,12 @@ const financeInfo = getFinanceInfo(props.item)
           ]"
         >
           <TrendingUp
-            v-if="financeInfo.isPositive"
-            class="w-3 h-3"
+              v-if="financeInfo.isPositive"
+              class="w-3 h-3"
           />
           <TrendingDown
-            v-else-if="financeInfo.isNegative"
-            class="w-3 h-3"
+              v-else-if="financeInfo.isNegative"
+              class="w-3 h-3"
           />
           {{ financeInfo.info }}
         </span>

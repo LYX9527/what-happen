@@ -1,14 +1,5 @@
 <script setup lang="ts">
 import {reactive, computed, onMounted, ref} from 'vue'
-import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
-import {ScrollArea} from '@/components/ui/scroll-area'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage
-} from '@/components/ui/breadcrumb'
-import {Separator} from '@/components/ui/separator'
 import {
   RefreshCw,
   Globe,
@@ -22,7 +13,6 @@ import GlobalSearch from '@/components/GlobalSearch.vue'
 import IntegratedTimeline from '@/components/IntegratedTimeline.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
-import {Button} from '@/components/ui/button'
 import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
@@ -47,7 +37,7 @@ useHead({
 const platformConfigs = getPlatformConfigs(routeConfig.platforms)
 
 // 使用收藏功能
-const {newsItems, platforms} = useFavorites()
+const {platforms} = useFavorites()
 
 // 全局搜索组件引用
 const globalSearchRef = ref()
@@ -164,7 +154,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <SidebarProvider>
+  <UiSidebarProvider>
     <AppSidebar/>
     <!-- 全局搜索组件 -->
     <GlobalSearch
@@ -174,26 +164,26 @@ onMounted(async () => {
         @filter-change="(filter) => $router.push(`/${filter}`)"
         @news-click="handleNewsClick"
     />
-    <SidebarInset class="flex flex-col h-screen">
+    <UiSidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 - 带sticky和backdrop-blur效果 -->
       <header
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1"/>
+          <UiSidebarTrigger class="-ml-1"/>
           <Separator orientation="vertical" class="mr-2 h-4"/>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbPage class="text-foreground font-medium">新闻第一线</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <UiBreadcrumb>
+            <UiBreadcrumbList>
+              <UiBreadcrumbItem>
+                <UiBreadcrumbPage class="text-foreground font-medium">新闻第一线</UiBreadcrumbPage>
+              </UiBreadcrumbItem>
+            </UiBreadcrumbList>
+          </UiBreadcrumb>
         </div>
 
         <!-- 右侧按钮区域 - 响应式适配 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <!-- 刷新按钮 - 桌面版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="refreshAllData"
@@ -201,19 +191,19 @@ onMounted(async () => {
           >
             <RefreshCw class="w-4 h-4"/>
             刷新全部
-          </Button>
+          </UiButton>
           <!-- 刷新按钮 - 移动版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="icon"
               @click="refreshAllData"
               class="sm:hidden h-8 w-8"
           >
             <RefreshCw class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
           <!-- 搜索按钮 - 桌面版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="openGlobalSearch"
@@ -225,25 +215,25 @@ onMounted(async () => {
                 class="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
               {{ isMac ? '⌘K' : 'Ctrl+K' }}
             </kbd>
-          </Button>
+          </UiButton>
           <!-- 搜索按钮 - 移动版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="icon"
               @click="openGlobalSearch"
               class="sm:hidden h-8 w-8"
           >
             <Search class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
-          <Button
+          <UiButton
               variant="ghost"
               size="icon"
               class="h-8 w-8"
               @click="openLink"
           >
             <Github class="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors"/>
-          </Button>
+          </UiButton>
           <ThemeToggle/>
         </div>
       </header>
@@ -251,7 +241,7 @@ onMounted(async () => {
 
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">
-        <ScrollArea class="h-full">
+        <UiScrollArea class="h-full">
           <div class="p-4">
             <!-- 页面说明 -->
             <div class="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 mb-6">
@@ -271,8 +261,8 @@ onMounted(async () => {
                 @refresh="refreshAllData"
             />
           </div>
-        </ScrollArea>
+        </UiScrollArea>
       </div>
-    </SidebarInset>
-  </SidebarProvider>
+    </UiSidebarInset>
+  </UiSidebarProvider>
 </template>

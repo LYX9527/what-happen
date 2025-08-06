@@ -1,18 +1,7 @@
 <script setup lang="ts">
-import {reactive, computed, onMounted, ref, watch} from 'vue'
-import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
-import {ScrollArea} from '@/components/ui/scroll-area'
+import {computed, ref} from 'vue'
+import dayjs from 'dayjs'
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
-import {Separator} from '@/components/ui/separator'
-import {
-  RefreshCw,
   Globe,
   Github,
   Search,
@@ -26,7 +15,6 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
-import {Button} from '@/components/ui/button'
 import {PlatformIcons} from '@/config/icon'
 import {getRouteConfig} from '@/config/platforms'
 
@@ -53,7 +41,7 @@ useHead({
 })
 
 // 使用收藏功能
-const {newsItems, clearFavorites, removeFromFavorites, platforms} = useFavorites()
+const {newsItems, clearFavorites, removeFromFavorites} = useFavorites()
 
 // 全局搜索组件引用
 const globalSearchRef = ref()
@@ -118,7 +106,7 @@ const getPlatformIcon = (platform: string) => {
 
 // 格式化时间
 const formatDate = (dateString: string | number) => {
-  const date = new Date(dateString + "")
+  const date = dayjs(dateString).toDate()
   return date.toLocaleDateString('zh-CN', {
     month: '2-digit',
     day: '2-digit'
@@ -130,7 +118,7 @@ const searchPlatforms = ref([])
 </script>
 
 <template>
-  <SidebarProvider>
+  <UiSidebarProvider>
     <AppSidebar/>
     <!-- 全局搜索组件 -->
     <GlobalSearch
@@ -158,32 +146,32 @@ const searchPlatforms = ref([])
       </AlertDialogContent>
     </AlertDialog>
 
-    <SidebarInset class="flex flex-col h-screen">
+    <UiSidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 - 带sticky和backdrop-blur效果 -->
       <header
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1"/>
+          <UiSidebarTrigger class="-ml-1"/>
           <Separator orientation="vertical" class="mr-2 h-4"/>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="/" class="text-muted-foreground">
+          <UiBreadcrumb>
+            <UiBreadcrumbList>
+              <UiBreadcrumbItem class="hidden md:block">
+                <UiBreadcrumbLink href="/" class="text-muted-foreground">
                   首页
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block"/>
-              <BreadcrumbItem>
-                <BreadcrumbPage class="text-foreground font-medium">{{ routeConfig.title }}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+                </UiBreadcrumbLink>
+              </UiBreadcrumbItem>
+              <UiBreadcrumbSeparator class="hidden md:block"/>
+              <UiBreadcrumbItem>
+                <UiBreadcrumbPage class="text-foreground font-medium">{{ routeConfig.title }}</UiBreadcrumbPage>
+              </UiBreadcrumbItem>
+            </UiBreadcrumbList>
+          </UiBreadcrumb>
         </div>
 
         <!-- 右侧按钮区域 - 响应式适配 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <!-- 清空按钮 - 桌面版 -->
-          <Button
+          <UiButton
               v-if="newsItems.length > 0"
               variant="destructive"
               size="sm"
@@ -192,9 +180,9 @@ const searchPlatforms = ref([])
           >
             <Trash2 class="w-4 h-4"/>
             清空全部
-          </Button>
+          </UiButton>
           <!-- 清空按钮 - 移动版 -->
-          <Button
+          <UiButton
               v-if="newsItems.length > 0"
               variant="destructive"
               size="icon"
@@ -202,10 +190,10 @@ const searchPlatforms = ref([])
               class="sm:hidden h-8 w-8"
           >
             <Trash2 class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
           <!-- 搜索按钮 - 桌面版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="openGlobalSearch"
@@ -217,25 +205,25 @@ const searchPlatforms = ref([])
                 class="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
               {{ isMac ? '⌘K' : 'Ctrl+K' }}
             </kbd>
-          </Button>
+          </UiButton>
           <!-- 搜索按钮 - 移动版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="icon"
               @click="openGlobalSearch"
               class="sm:hidden h-8 w-8"
           >
             <Search class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
-          <Button
+          <UiButton
               variant="ghost"
               size="icon"
               class="h-8 w-8"
               @click="openLink"
           >
             <Github class="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors"/>
-          </Button>
+          </UiButton>
           <ThemeToggle/>
         </div>
       </header>
@@ -243,19 +231,19 @@ const searchPlatforms = ref([])
 
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">
-        <ScrollArea class="h-full">
+        <UiScrollArea class="h-full">
           <div class="p-4">
             <!-- 页面标题 -->
             <div class="mb-6">
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 ml-5">
                 <Heart class="h-6 w-6 text-red-500 fill-red-500"/>
                 <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
               </div>
-              <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
+              <p class="text-muted-foreground mt-2 ml-5">{{ routeConfig.description }}</p>
             </div>
 
             <!-- 操作栏 -->
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 ml-5">
               <p class="text-sm text-muted-foreground">
                 共收藏了 {{ newsItems.length }} 条新闻
               </p>
@@ -295,7 +283,7 @@ const searchPlatforms = ref([])
                 <!-- 操作按钮 -->
                 <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                   <!-- 取消收藏 -->
-                  <Button
+                  <UiButton
                       variant="ghost"
                       size="icon"
                       class="h-8 w-8"
@@ -303,7 +291,7 @@ const searchPlatforms = ref([])
                       title="取消收藏"
                   >
                     <Star class="h-4 w-4 text-yellow-500 fill-yellow-500"/>
-                  </Button>
+                  </UiButton>
 
                   <!-- 外部链接图标 -->
                   <ExternalLink class="w-4 h-4 text-muted-foreground"/>
@@ -317,14 +305,14 @@ const searchPlatforms = ref([])
                 <Heart class="h-12 w-12 mx-auto mb-4 opacity-50"/>
                 <p class="text-lg font-medium">还没有收藏的新闻</p>
                 <p class="text-sm mb-4">在浏览新闻时点击收藏按钮来收藏感兴趣的内容</p>
-                <Button variant="outline" @click="$router.push('/')">
+                <UiButton variant="outline" @click="$router.push('/')">
                   去首页看看
-                </Button>
+                </UiButton>
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </UiScrollArea>
       </div>
-    </SidebarInset>
-  </SidebarProvider>
+    </UiSidebarInset>
+  </UiSidebarProvider>
 </template>

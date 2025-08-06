@@ -9,8 +9,6 @@ import {
   Star,
   Newspaper,
   TrendingUp,
-  ChevronUp,
-  ChevronDown,
   Expand,
   Minimize
 } from 'lucide-vue-next'

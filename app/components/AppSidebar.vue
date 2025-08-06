@@ -18,18 +18,16 @@ import {
 } from 'lucide-vue-next'
 
 import {useFavorites} from '@/composables/useFavorites'
-import { NAVIGATION_ITEMS, ROUTE_CONFIGS } from '@/config/platforms'
+import {NAVIGATION_ITEMS, ROUTE_CONFIGS} from '@/config/platforms'
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
 import TeamSwitcher from "@/components/TeamSwitcher.vue";
 import NavMain from "@/components/NavMain.vue";
-import NavUser from "@/components/NavUser.vue";
 
 interface AppSidebarProps extends SidebarProps {
   // 使用新的路由结构，不需要额外props
@@ -101,7 +99,7 @@ const data = computed(() => ({
         })
       }
     }
-    
+
     if (item.path === '/favorites-platforms') {
       return {
         ...baseItem,
@@ -135,9 +133,6 @@ const data = computed(() => ({
     <SidebarContent>
       <NavMain :items="data.navMain"/>
     </SidebarContent>
-    <!--    <SidebarFooter>-->
-    <!--      <NavUser :user="data.user"/>-->
-    <!--    </SidebarFooter>-->
     <SidebarRail/>
   </Sidebar>
 </template>

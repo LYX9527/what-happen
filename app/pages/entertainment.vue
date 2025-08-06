@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import {reactive, computed, onMounted, ref, watch} from 'vue'
-import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
-import {ScrollArea} from '@/components/ui/scroll-area'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
-import {Separator} from '@/components/ui/separator'
+import {reactive, computed, onMounted, ref} from 'vue'
 import {VueDraggable} from 'vue-draggable-plus'
 import {
   RefreshCw,
@@ -24,7 +13,6 @@ import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
-import {Button} from '@/components/ui/button'
 import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
@@ -43,7 +31,7 @@ useHead({
 })
 
 const platformConfigs = getPlatformConfigs(routeConfig.platforms)
-const {newsItems, platforms} = useFavorites()
+const {platforms} = useFavorites()
 const globalSearchRef = ref()
 
 const isMac = computed(() => {
@@ -200,7 +188,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <SidebarProvider>
+  <UiSidebarProvider>
     <AppSidebar/>
     <GlobalSearch
         ref="globalSearchRef"
@@ -209,27 +197,27 @@ onMounted(async () => {
         @filter-change="(filter) => $router.push(`/${filter}`)"
         @news-click="handleCardItemClick"
     />
-    <SidebarInset class="flex flex-col h-screen">
+    <UiSidebarInset class="flex flex-col h-screen">
       <header
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1"/>
+          <UiSidebarTrigger class="-ml-1"/>
           <Separator orientation="vertical" class="mr-2 h-4"/>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="/" class="text-muted-foreground">首页</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block"/>
-              <BreadcrumbItem>
-                <BreadcrumbPage class="text-foreground font-medium">{{ routeConfig.title }}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <UiBreadcrumb>
+            <UiBreadcrumbList>
+              <UiBreadcrumbItem class="hidden md:block">
+                <UiBreadcrumbLink href="/" class="text-muted-foreground">首页</UiBreadcrumbLink>
+              </UiBreadcrumbItem>
+              <UiBreadcrumbSeparator class="hidden md:block"/>
+              <UiBreadcrumbItem>
+                <UiBreadcrumbPage class="text-foreground font-medium">{{ routeConfig.title }}</UiBreadcrumbPage>
+              </UiBreadcrumbItem>
+            </UiBreadcrumbList>
+          </UiBreadcrumb>
         </div>
 
         <div class="flex items-center gap-2 ml-auto px-4">
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="refreshAllData"
@@ -237,17 +225,17 @@ onMounted(async () => {
           >
             <RefreshCw class="w-4 h-4"/>
             刷新全部
-          </Button>
-          <Button
+          </UiButton>
+          <UiButton
               variant="outline"
               size="icon"
               @click="refreshAllData"
               class="sm:hidden h-8 w-8"
           >
             <RefreshCw class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="openGlobalSearch"
@@ -259,39 +247,39 @@ onMounted(async () => {
                 class="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
               {{ isMac ? '⌘K' : 'Ctrl+K' }}
             </kbd>
-          </Button>
-          <Button
+          </UiButton>
+          <UiButton
               variant="outline"
               size="icon"
               @click="openGlobalSearch"
               class="sm:hidden h-8 w-8"
           >
             <Search class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
-          <Button
+          <UiButton
               variant="ghost"
               size="icon"
               class="h-8 w-8"
               @click="openLink"
           >
             <Github class="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors"/>
-          </Button>
+          </UiButton>
           <ThemeToggle/>
         </div>
       </header>
       <Separator/>
 
       <div class="flex-1 overflow-hidden bg-muted/20">
-        <ScrollArea class="h-full">
+        <UiScrollArea class="h-full">
           <div class="p-4">
             <div class="mb-6">
-              <h1 class="text-3xl font-bold tracking-tight">{{ routeConfig.title }}</h1>
-              <p class="text-muted-foreground mt-2">{{ routeConfig.description }}</p>
+              <h1 class="text-3xl font-bold tracking-tight ml-5">{{ routeConfig.title }}</h1>
+              <p class="text-muted-foreground mt-2 ml-5">{{ routeConfig.description }}</p>
             </div>
 
             <!-- 操作栏 -->
-            <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center justify-between mb-6 ml-5">
               <p class="text-sm text-muted-foreground">
                 共 {{ entertainmentPlatforms.length }} 个娱乐平台，支持拖拽排序
               </p>
@@ -322,8 +310,8 @@ onMounted(async () => {
               />
             </VueDraggable>
           </div>
-        </ScrollArea>
+        </UiScrollArea>
       </div>
-    </SidebarInset>
-  </SidebarProvider>
+    </UiSidebarInset>
+  </UiSidebarProvider>
 </template>

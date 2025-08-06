@@ -1,26 +1,5 @@
 <script setup lang="ts">
 import {reactive, computed, onMounted, ref, watch} from 'vue'
-import {SidebarInset, SidebarProvider, SidebarTrigger} from '@/components/ui/sidebar'
-import {ScrollArea} from '@/components/ui/scroll-area'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
-import {Separator} from '@/components/ui/separator'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import {
   RefreshCw,
   Globe,
@@ -35,7 +14,6 @@ import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
-import {Button} from '@/components/ui/button'
 import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
@@ -194,7 +172,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <SidebarProvider>
+  <UiSidebarProvider>
     <AppSidebar/>
     <!-- 全局搜索组件 -->
     <GlobalSearch
@@ -206,48 +184,48 @@ onMounted(() => {
     />
 
     <!-- 清空收藏确认对话框 -->
-    <AlertDialog v-model:open="showClearAllDialog">
+    <UiAlertDialog v-model:open="showClearAllDialog">
       <AlertDialogContent>
-        <AlertDialogHeader>
+        <UiAlertDialogHeader>
           <AlertDialogTitle>确认清空所有收藏</AlertDialogTitle>
           <AlertDialogDescription>
             这个操作不可撤销。您确定要清空所有已收藏的平台吗？清空后您需要重新收藏感兴趣的平台。
           </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
+        </UiAlertDialogHeader>
+        <UiAlertDialogFooter>
           <AlertDialogCancel @click="showClearAllDialog = false">取消</AlertDialogCancel>
           <AlertDialogAction @click="confirmClearAll" class="bg-destructive hover:bg-destructive/90">
             确认清空
           </AlertDialogAction>
-        </AlertDialogFooter>
+        </UiAlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialog>
-    <SidebarInset class="flex flex-col h-screen">
+    </UiAlertDialog>
+    <UiSidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 - 带sticky和backdrop-blur效果 -->
       <header
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
-          <SidebarTrigger class="-ml-1"/>
+          <UiSidebarTrigger class="-ml-1"/>
           <Separator orientation="vertical" class="mr-2 h-4"/>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem class="hidden md:block">
-                <BreadcrumbLink href="/" class="text-muted-foreground">
+          <UiBreadcrumb>
+            <UiBreadcrumbList>
+              <UiBreadcrumbItem class="hidden md:block">
+                <UiBreadcrumbLink href="/" class="text-muted-foreground">
                   首页
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator class="hidden md:block"/>
-              <BreadcrumbItem>
-                <BreadcrumbPage class="text-foreground font-medium">{{ routeConfig.title }}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+                </UiBreadcrumbLink>
+              </UiBreadcrumbItem>
+              <UiBreadcrumbSeparator class="hidden md:block"/>
+              <UiBreadcrumbItem>
+                <UiBreadcrumbPage class="text-foreground font-medium">{{ routeConfig.title }}</UiBreadcrumbPage>
+              </UiBreadcrumbItem>
+            </UiBreadcrumbList>
+          </UiBreadcrumb>
         </div>
 
         <!-- 右侧按钮区域 - 响应式适配 -->
         <div class="flex items-center gap-2 ml-auto px-4">
           <!-- 刷新按钮 - 桌面版 -->
-          <Button
+          <UiButton
               v-if="platforms.length > 0"
               variant="outline"
               size="sm"
@@ -256,9 +234,9 @@ onMounted(() => {
           >
             <RefreshCw class="w-4 h-4"/>
             刷新全部
-          </Button>
+          </UiButton>
           <!-- 刷新按钮 - 移动版 -->
-          <Button
+          <UiButton
               v-if="platforms.length > 0"
               variant="outline"
               size="icon"
@@ -266,10 +244,10 @@ onMounted(() => {
               class="sm:hidden h-8 w-8"
           >
             <RefreshCw class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
           <!-- 清空按钮 - 桌面版 -->
-          <Button
+          <UiButton
               v-if="platforms.length > 0"
               variant="destructive"
               size="sm"
@@ -278,9 +256,9 @@ onMounted(() => {
           >
             <Trash2 class="w-4 h-4"/>
             清空全部
-          </Button>
+          </UiButton>
           <!-- 清空按钮 - 移动版 -->
-          <Button
+          <UiButton
               v-if="platforms.length > 0"
               variant="destructive"
               size="icon"
@@ -288,10 +266,10 @@ onMounted(() => {
               class="sm:hidden h-8 w-8"
           >
             <Trash2 class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
           <!-- 搜索按钮 - 桌面版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="sm"
               @click="openGlobalSearch"
@@ -303,25 +281,25 @@ onMounted(() => {
                 class="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
               {{ isMac ? '⌘K' : 'Ctrl+K' }}
             </kbd>
-          </Button>
+          </UiButton>
           <!-- 搜索按钮 - 移动版 -->
-          <Button
+          <UiButton
               variant="outline"
               size="icon"
               @click="openGlobalSearch"
               class="sm:hidden h-8 w-8"
           >
             <Search class="w-4 h-4"/>
-          </Button>
+          </UiButton>
 
-          <Button
+          <UiButton
               variant="ghost"
               size="icon"
               class="h-8 w-8"
               @click="openLink"
           >
             <Github class="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors"/>
-          </Button>
+          </UiButton>
           <ThemeToggle/>
         </div>
       </header>
@@ -329,7 +307,7 @@ onMounted(() => {
 
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">
-        <ScrollArea class="h-full">
+        <UiScrollArea class="h-full">
           <div class="p-4">
             <!-- 页面标题 -->
             <div class="mb-6">
@@ -372,14 +350,14 @@ onMounted(() => {
                 <Bookmark class="h-12 w-12 mx-auto mb-4 opacity-50"/>
                 <p class="text-lg font-medium">还没有收藏的平台</p>
                 <p class="text-sm mb-4">在浏览各个平台时点击收藏按钮来收藏感兴趣的平台</p>
-                <Button variant="outline" @click="$router.push('/')">
+                <UiButton variant="outline" @click="$router.push('/')">
                   去首页看看
-                </Button>
+                </UiButton>
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </UiScrollArea>
       </div>
-    </SidebarInset>
-  </SidebarProvider>
+    </UiSidebarInset>
+  </UiSidebarProvider>
 </template>
