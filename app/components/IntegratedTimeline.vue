@@ -254,32 +254,51 @@ const getNewsContentComponent = (platformConfig: any) => {
             <TrendingUp class="h-4 w-4 text-primary-foreground"/>
           </div>
           <h2 class="text-lg font-semibold">新闻第一线</h2>
-          <UiBadge variant="secondary" class="text-xs">
-            {{ categoryStats.all }} 条
-          </UiBadge>
         </div>
 
         <div class="flex items-center gap-2">
+          <!-- 展开/收起按钮 - 桌面版 -->
           <UiButton
               variant="outline"
               size="sm"
               @click="toggleAllTimeGroups"
               :disabled="groupedNewsByTime.length === 0"
-              class="gap-1.5"
+              class="gap-1.5 hidden sm:flex h-8"
           >
             <component :is="isAllExpanded ? Minimize : Expand" class="w-3.5 h-3.5"/>
             {{ isAllExpanded ? '全部收起' : '全部展开' }}
           </UiButton>
+          <!-- 展开/收起按钮 - 移动版 -->
+          <UiButton
+              variant="outline"
+              size="icon"
+              @click="toggleAllTimeGroups"
+              :disabled="groupedNewsByTime.length === 0"
+              class="sm:hidden h-8 w-8"
+          >
+            <component :is="isAllExpanded ? Minimize : Expand" class="w-3.5 h-3.5"/>
+          </UiButton>
 
+          <!-- 刷新按钮 - 桌面版 -->
           <UiButton
               variant="outline"
               size="sm"
               @click="handleRefresh"
               :disabled="isLoading"
-              class="gap-1.5"
+              class="gap-1.5 hidden sm:flex h-8"
           >
             <RefreshCw :class="['w-3.5 h-3.5', isLoading && 'animate-spin']"/>
             刷新
+          </UiButton>
+          <!-- 刷新按钮 - 移动版 -->
+          <UiButton
+              variant="outline"
+              size="icon"
+              @click="handleRefresh"
+              :disabled="isLoading"
+              class="sm:hidden h-8 w-8"
+          >
+            <RefreshCw :class="['w-3.5 h-3.5', isLoading && 'animate-spin']"/>
           </UiButton>
         </div>
       </div>
