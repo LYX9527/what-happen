@@ -214,7 +214,7 @@ onMounted(async () => {
           class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
           <UiSidebarTrigger class="-ml-1"/>
-          <Separator orientation="vertical" class="mr-2 h-4"/>
+          <UiSeparator orientation="vertical" class="mr-2 h-4"/>
           <UiBreadcrumb>
             <UiBreadcrumbList>
               <UiBreadcrumbItem>
@@ -271,7 +271,7 @@ onMounted(async () => {
           <ThemeToggle/>
         </div>
       </header>
-      <Separator/>
+      <UiSeparator/>
 
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">

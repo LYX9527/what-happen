@@ -268,7 +268,7 @@ onMounted(async () => {
           <ThemeToggle/>
         </div>
       </header>
-      <Separator/>
+      <UiSeparator/>
 
       <div class="flex-1 overflow-hidden bg-muted/20">
         <UiScrollArea class="h-full">

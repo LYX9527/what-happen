@@ -217,7 +217,7 @@ const searchPlatforms = ref([])
           <ThemeToggle/>
         </div>
       </header>
-      <Separator/>
+      <UiSeparator/>
 
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">
