@@ -328,7 +328,7 @@ const getNewsContentComponent = (platformConfig: any) => {
     <!-- 时间线内容 -->
     <div class="flex-1 overflow-hidden">
       <UiScrollArea class="h-full">
-        <div class="px-4 py-2">
+        <div class=" py-2">
           <!-- 加载状态 -->
           <div v-if="isLoading && groupedNewsByTime.length === 0" class="space-y-3">
             <div v-for="i in 8" :key="i" class="flex items-start gap-3 py-2">

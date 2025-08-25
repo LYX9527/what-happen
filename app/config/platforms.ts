@@ -3,7 +3,8 @@ export interface PlatformConfig {
     platform: string
     title: string
     category: string
-    description?: string
+    description?: string,
+    component?: string // 可选的自定义组件名称
 }
 
 export interface RouteConfig {
@@ -16,57 +17,102 @@ export interface RouteConfig {
 
 // 所有可用平台配置
 export const PLATFORMS: Record<string, PlatformConfig> = {
-    weibo: {platform: 'weibo', title: '微博热搜', category: 'hot'},
-    baidu: {platform: 'baidu', title: '百度热搜', category: 'hot'},
-    douyin: {platform: 'douyin', title: '抖音热搜', category: 'hot'},
-    toutiao: {platform: 'toutiao', title: '今日头条', category: 'hot'},
-    zhihu: {platform: 'zhihu', title: '知乎热榜', category: 'hot'},
-    kuaishou: {platform: 'kuaishou', title: '快手热搜', category: 'hot'},
+    // 热搜榜
+    weibo: {platform: 'weibo', title: '微博热搜', category: 'hot', component: 'HotSearchItem'},
+    baidu: {platform: 'baidu', title: '百度热搜', category: 'hot', component: 'HotSearchItem'},
+    kuaishou: {platform: 'kuaishou', title: '快手热搜', category: 'hot', component: 'HotSearchItem'},
+    douyin: {platform: 'douyin', title: '抖音热搜', category: 'hot', component: 'HotSearchItem'},
+    zhihu: {platform: 'zhihu', title: '知乎热榜', category: 'hot', component: 'HotSearchItem'},
+    toutiao: {platform: 'toutiao', title: '今日头条', category: 'hot', component: 'HotSearchItem'},
+    b_hot_search: {
+        platform: 'b_hot_search',
+        title: '哔哩哔哩热搜',
+        category: 'entertainment',
+        component: 'HotSearchItem'
+    },
+    dcd_hot: {platform: 'dcd_hot', title: '懂车帝热搜', category: 'car', component: 'HotSearchItem'},
+    wallstreetcn_hot: {
+        platform: 'wallstreetcn_hot',
+        title: '华尔街见闻热榜',
+        category: 'finance',
+        component: 'HotSearchItem'
+    },
 
-    github: {platform: 'github', title: 'GitHub趋势', category: 'tech'},
-    '_36kr': {platform: '_36kr', title: '36氪', category: 'tech'},
-    ithome: {platform: 'ithome', title: 'IT之家', category: 'tech'},
-    solidot: {platform: 'solidot', title: '奇客Solidot', category: 'tech'},
-    v2ex: {platform: 'v2ex', title: 'V2EX', category: 'tech'},
-    coolapk: {platform: 'coolapk', title: '酷安', category: 'tech'},
-    juejin: {platform: 'juejin', title: '稀土掘金', category: 'tech'},
-    sspai: {platform: 'sspai', title: '少数派', category: 'tech'},
-    csdn: {platform: 'csdn', title: 'CSDN', category: 'tech'},
-    nowcoder: {platform: 'nowcoder', title: '牛客网', category: 'tech'},
-    pcbeta_windows: {platform: 'pcbeta_windows', title: '远景论坛', category: 'tech'},
-    '_51cto': {platform: '_51cto', title: '51CTO', category: 'tech'},
-    kaopu: {platform: 'kaopu', title: '靠谱', category: 'tech'},
-    fishpi: {platform: 'fishpi', title: '摸鱼派', category: 'tech'},
+    // github相关
+    github: {platform: 'github', title: 'GitHub趋势', category: 'tech', component: 'GitHubNewsItem'},
 
-    gelonghui: {platform: 'gelonghui', title: '格隆汇', category: 'finance'},
-    wallstreetcn_live: {platform: 'wallstreetcn_live', title: '华尔街见闻直播', category: 'finance'},
-    wallstreetcn_news: {platform: 'wallstreetcn_news', title: '华尔街见闻新闻', category: 'finance'},
-    wallstreetcn_hot: {platform: 'wallstreetcn_hot', title: '华尔街见闻热榜', category: 'finance'},
-    hotstock: {platform: 'hotstock', title: '雪球热股', category: 'finance'},
-    cls_telegraph: {platform: 'cls_telegraph', title: '财联社', category: 'finance'},
-    jqka: {platform: 'jqka', title: '同花顺要闻', category: 'finance'},
-    jin10: {platform: 'jin10', title: '金十数据', category: 'finance'},
+    // 时间线
+    _36kr: {platform: '_36kr', title: '36氪', category: 'tech', component: 'TimelineNewsItem'},
+    ithome: {platform: 'ithome', title: 'IT之家', category: 'tech', component: 'TimelineNewsItem'},
+    thepaper: {platform: 'thepaper', title: '澎湃新闻', category: 'social', component: 'TimelineNewsItem'},
+    solidot: {platform: 'solidot', title: '奇客Solidot', category: 'tech', component: 'TimelineNewsItem'},
+    v2ex: {platform: 'v2ex', title: 'V2EX', category: 'tech', component: 'TimelineNewsItem'},
+    coolapk: {platform: 'coolapk', title: '酷安', category: 'tech', component: 'TimelineNewsItem'},
+    cankaoxiaoxi: {platform: 'cankaoxiaoxi', title: '参考消息', category: 'social', component: 'TimelineNewsItem'},
+    zaobao: {platform: 'zaobao', title: '联合早报', category: 'social', component: 'TimelineNewsItem'},
+    sputniknewscn: {
+        platform: 'sputniknewscn',
+        title: '俄罗斯卫星通讯社',
+        category: 'social',
+        component: 'TimelineNewsItem'
+    },
+    tieba: {platform: 'tieba', title: '百度贴吧', category: 'social', component: 'TimelineNewsItem'},
+    kaopu: {platform: 'kaopu', title: '靠谱', category: 'social', component: 'TimelineNewsItem'},
+    jin10: {platform: 'jin10', title: '金十数据', category: 'tech', component: 'TimelineNewsItem'},
+    pcbeta_windows: {platform: 'pcbeta_windows', title: '远景论坛', category: 'tech', component: 'TimelineNewsItem'},
+    jqka: {platform: 'jqka', title: '同花顺要闻', category: 'finance', component: 'TimelineNewsItem'},
+    dcd_news: {platform: 'dcd_news', title: '懂车帝资讯', category: 'car', component: 'TimelineNewsItem'},
+    cls_telegraph: {platform: 'cls_telegraph', title: '财联社', category: 'finance', component: 'TimelineNewsItem'},
+    gelonghui: {platform: 'gelonghui', title: '格隆汇', category: 'finance', component: 'TimelineNewsItem'},
+    wallstreetcn_live: {
+        platform: 'wallstreetcn_live',
+        title: '华尔街见闻直播',
+        category: 'finance',
+        component: 'TimelineNewsItem'
+    },
+    wallstreetcn_news: {
+        platform: 'wallstreetcn_news',
+        title: '华尔街见闻新闻',
+        category: 'finance',
+        component: 'TimelineNewsItem'
+    },
 
-    thepaper: {platform: 'thepaper', title: '澎湃新闻', category: 'social'},
-    cankaoxiaoxi: {platform: 'cankaoxiaoxi', title: '参考消息', category: 'social'},
-    zaobao: {platform: 'zaobao', title: '联合早报', category: 'social'},
-    sputniknewscn: {platform: 'sputniknewscn', title: '俄罗斯卫星通讯社', category: 'social'},
-    tieba: {platform: 'tieba', title: '百度贴吧', category: 'social'},
 
-    douban: {platform: 'douban', title: '豆瓣热影', category: 'entertainment'},
-    bd_tv: {platform: 'bd_tv', title: '百度热剧', category: 'entertainment'},
-    kugou: {platform: 'kugou', title: '酷狗音乐飙升榜', category: 'entertainment'},
-    qq_music: {platform: 'qq_music', title: 'QQ音乐流行榜', category: 'entertainment'},
+    // 文章阅读
+    juejin: {platform: 'juejin', title: '稀土掘金', category: 'tech', component: 'ArticleReadItem'},
+    sspai: {platform: 'sspai', title: '少数派', category: 'tech', component: 'ArticleReadItem'},
+    csdn: {platform: 'csdn', title: 'CSDN', category: 'tech', component: 'ArticleReadItem'},
+    fishpi: {platform: 'fishpi', title: '摸鱼派', category: 'tech', component: 'ArticleReadItem'},
 
-    hupu_lol: {platform: 'hupu_lol', title: '英雄联盟比赛', category: 'sports'},
-    hupu: {platform: 'hupu', title: '虎扑', category: 'sports'},
+    // 电影榜单
+    douban: {platform: 'douban', title: '豆瓣热影', category: 'entertainment', component: 'HotMovieItem'},
+    bd_tv: {platform: 'bd_tv', title: '百度热剧', category: 'entertainment', component: 'HotTVShowItem'},
 
-    dcd_hot: {platform: 'dcd_hot', title: '懂车帝热搜', category: 'car'},
-    dcd_news: {platform: 'dcd_news', title: '懂车帝资讯', category: 'car'},
+    // 比赛相关
+    hupu_lol: {platform: 'hupu_lol', title: '英雄联盟比赛', category: 'sports', component: 'MatchItem'},
 
-    b_hot_search: {platform: 'b_hot_search', title: '哔哩哔哩热搜', category: 'entertainment'},
-    b_hot_video: {platform: 'b_hot_video', title: '哔哩哔哩视频', category: 'entertainment'},
-    b_rank: {platform: 'b_rank', title: '哔哩哔哩排行榜', category: 'entertainment'},
+    // 音乐榜单
+    kugou: {platform: 'kugou', title: '酷狗音乐飙升榜', category: 'entertainment', component: 'MusicItem'},
+    qq_music: {platform: 'qq_music', title: 'QQ音乐流行榜', category: 'entertainment', component: 'MusicItem'},
+
+    // 股票走势
+    hotstock: {platform: 'hotstock', title: '雪球热股', category: 'finance', component: 'StockNewsItem'},//
+
+    // 视频列表
+    b_hot_video: {
+        platform: 'b_hot_video',
+        title: '哔哩哔哩视频',
+        category: 'entertainment',
+        component: 'VideoListItem'
+    },
+    b_rank: {platform: 'b_rank', title: '哔哩哔哩排行榜', category: 'entertainment', component: 'VideoListItem'},
+
+    // 普通新闻项
+    _51cto: {platform: '_51cto', title: '51CTO', category: 'tech', component: 'NormalNewsItem'},
+    nowcoder: {platform: 'nowcoder', title: '牛客网', category: 'tech', component: 'NormalNewsItem'},
+    hupu: {platform: 'hupu', title: '虎扑', category: 'social', component: 'NormalNewsItem'},
+
+
 }
 
 // 路由配置
@@ -76,8 +122,8 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/hot',
         title: '热搜榜',
         description: '各大平台热搜内容聚合',
-        platforms: ['weibo', 'baidu', 'douyin', 'toutiao', 'zhihu', 'kuaishou'],
-        category: 'hot'
+        category: 'hot',
+        platforms: getPlatformsByCategory("hot")
     },
 
     // 科技资讯
@@ -85,7 +131,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/tech',
         title: '科技资讯',
         description: '科技行业最新资讯和趋势',
-        platforms: ['github', '_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk', 'juejin', 'sspai', 'csdn', "_51cto", "jin10", "nowcoder", "pcbeta_windows","fishpi"],
+        platforms: getPlatformsByCategory("tech"),
         category: 'tech'
     },
 
@@ -94,7 +140,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/finance',
         title: '财经新闻',
         description: '金融市场和经济动态',
-        platforms: ['gelonghui', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph', 'jqka'],
+        platforms: getPlatformsByCategory("finance"),
         category: 'finance'
     },
 
@@ -103,7 +149,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/social',
         title: '社会新闻',
         description: '社会热点和时事新闻',
-        platforms: ['thepaper', 'cankaoxiaoxi', 'zaobao', 'sputniknewscn', 'hupu', "kaopu", "tieba"],
+        platforms: getPlatformsByCategory("social"),
         category: 'social'
     },
 
@@ -112,7 +158,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/entertainment',
         title: '娱乐资讯',
         description: '影视、音乐、游戏等娱乐内容',
-        platforms: ['douban', 'bd_tv', 'kugou', 'qq_music', 'b_hot_search', 'b_hot_video', 'b_rank'],
+        platforms: getPlatformsByCategory("entertainment"),
         category: 'entertainment'
     },
 
@@ -121,7 +167,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/sports',
         title: '体育赛事',
         description: '体育比赛和相关资讯',
-        platforms: ['hupu_lol'],
+        platforms: getPlatformsByCategory("sports"),
         category: 'sports'
     },
 
@@ -130,7 +176,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/car',
         title: '汽车资讯',
         description: '汽车行业新闻和资讯',
-        platforms: ['dcd_hot', 'dcd_news'],
+        platforms: getPlatformsByCategory("car"),
         category: 'car'
     },
 
@@ -176,8 +222,8 @@ export function getPlatformConfigs(platformKeys: string[]): PlatformConfig[] {
 }
 
 // 获取分类下的所有平台
-export function getPlatformsByCategory(category: string): PlatformConfig[] {
-    return Object.values(PLATFORMS).filter(platform => platform.category === category)
+export function getPlatformsByCategory(category: string): string[] {
+    return Object.values(PLATFORMS).filter(platform => platform.category === category).map(p => p.platform)
 }
 
 // 导航菜单配置
@@ -193,3 +239,8 @@ export const NAVIGATION_ITEMS = [
     {path: '/favorites-news', title: '收藏新闻', icon: 'Heart'},
     {path: '/favorites-platforms', title: '收藏平台', icon: 'Bookmark'},
 ]
+
+// 根据平台类型映射对应的新闻项组件
+export const NewsItemComponents: Record<string, string> = Object.fromEntries(
+    Object.entries(PLATFORMS).map(([key, cfg]) => [key, cfg.component ?? 'NormalNewsItem'])
+)

@@ -36,4 +36,4 @@ export {default as CSDN} from './csdn.vue'
 export {default as Sspai} from './sspai.vue'
 export {default as Jqka} from './jqka.vue'
 export {default as Dongchedi} from './dongchedi.vue'
-
+export {default as Fishpi} from './fishpi.vue'
