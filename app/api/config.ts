@@ -1,6 +1,6 @@
 // API 配置
 export const API_CONFIG = {
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://tools.yltfspace.com/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:10010',
   timeout: 10000,
 }
 

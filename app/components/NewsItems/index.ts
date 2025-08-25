@@ -59,6 +59,7 @@ export const NewsItemComponents = {
     juejin: "ArticleReadItem",
     csdn: "ArticleReadItem",
     sspai: "ArticleReadItem",
+    fishpi: "ArticleReadItem",
 
     // 视频列表
     b_hot_video: 'VideoListItem',

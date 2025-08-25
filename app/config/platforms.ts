@@ -36,6 +36,7 @@ export const PLATFORMS: Record<string, PlatformConfig> = {
     pcbeta_windows: {platform: 'pcbeta_windows', title: '远景论坛', category: 'tech'},
     '_51cto': {platform: '_51cto', title: '51CTO', category: 'tech'},
     kaopu: {platform: 'kaopu', title: '靠谱', category: 'tech'},
+    fishpi: {platform: 'fishpi', title: '摸鱼派', category: 'tech'},
 
     gelonghui: {platform: 'gelonghui', title: '格隆汇', category: 'finance'},
     wallstreetcn_live: {platform: 'wallstreetcn_live', title: '华尔街见闻直播', category: 'finance'},
@@ -84,7 +85,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/tech',
         title: '科技资讯',
         description: '科技行业最新资讯和趋势',
-        platforms: ['github', '_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk', 'juejin', 'sspai', 'csdn', "_51cto", "jin10", "nowcoder", "pcbeta_windows"],
+        platforms: ['github', '_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk', 'juejin', 'sspai', 'csdn', "_51cto", "jin10", "nowcoder", "pcbeta_windows","fishpi"],
         category: 'tech'
     },
 
