@@ -182,7 +182,7 @@ VITE_API_BASE_URL=http://localhost:10010  # Backend API URL
 
 ### Customizing News Sources
 
-Edit `src/pages/dashboard/index.vue` to modify platform configurations:
+Edit `app/pages/dashboard/index.vue` to modify platform configurations:
 
 ```typescript
 const platformIcons = {
@@ -197,7 +197,7 @@ const platformIcons = {
 ### Project Structure
 
 ```
-src/
+app/
 ├── api/           # API interfaces and configuration
 ├── components/    # Reusable Vue components
 │   ├── ui/        # Base UI components
@@ -211,10 +211,10 @@ src/
 
 ### Adding New News Sources
 
-1. **Create platform icon component** in `src/components/icon/`
+1. **Create platform icon component** in `app/components/icon/`
 2. **Add platform configuration** in dashboard
-3. **Create custom news item component** if needed in `src/components/NewsItems/`
-4. **Update API integration** in `src/api/news.ts`
+3. **Create custom news item component** if needed in `app/components/NewsItems/`
+4. **Update API integration** in `app/api/news.ts`
 
 ### Component Guidelines
 

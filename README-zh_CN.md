@@ -181,7 +181,7 @@ VITE_API_BASE_URL=http://localhost:10010  # 后端API地址
 
 ### 自定义新闻源
 
-编辑 `src/pages/dashboard/index.vue` 修改平台配置：
+编辑 `app/pages/dashboard/index.vue` 修改平台配置：
 
 ```typescript
 const platformIcons = {
@@ -196,7 +196,7 @@ const platformIcons = {
 ### 项目结构
 
 ```
-src/
+app/
 ├── api/           # API接口和配置
 ├── components/    # 可复用Vue组件
 │   ├── ui/        # 基础UI组件
@@ -210,10 +210,10 @@ src/
 
 ### 添加新闻源
 
-1. **创建平台图标组件** 在 `src/components/icon/` 目录
+1. **创建平台图标组件** 在 `app/components/icon/` 目录
 2. **添加平台配置** 在dashboard中配置
-3. **创建自定义新闻项组件**（如需要）在 `src/components/NewsItems/`
-4. **更新API集成** 在 `src/api/news.ts` 中配置
+3. **创建自定义新闻项组件**（如需要）在 `app/components/NewsItems/`
+4. **更新API集成** 在 `app/api/news.ts` 中配置
 
 ### 组件开发规范
 
