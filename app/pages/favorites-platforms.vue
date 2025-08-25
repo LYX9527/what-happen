@@ -61,7 +61,7 @@ const platformsData = reactive<Record<string, {
 }>>({})
 
 // 获取单个平台数据
-const fetchPlatformData = async (platform: string) => {
+const fetchPlatformData = async (platform: string, timestamp?: number) => {
   if (!platform || !platformsData[platform]) return
 
   const state = platformsData[platform]
@@ -69,7 +69,7 @@ const fetchPlatformData = async (platform: string) => {
   state.error = null
 
   try {
-    const result = await apiFetchNews(platform)
+    const result = await apiFetchNews(platform, timestamp)
     if (result && Array.isArray(result)) {
       state.data = result
     } else {
@@ -94,7 +94,7 @@ const refreshAllData = () => {
 
 // 刷新单个平台数据
 const refreshSinglePlatform = (platform: string) => {
-  fetchPlatformData(platform)
+  fetchPlatformData(platform, new Date().getTime())
 }
 
 // 处理卡片点击 - SSR兼容版本

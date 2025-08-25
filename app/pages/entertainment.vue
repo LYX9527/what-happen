@@ -116,7 +116,7 @@ const ensurePlatformState = (platform: string) => {
   }
 }
 
-const fetchPlatformData = async (platform: string) => {
+const fetchPlatformData = async (platform: string, timestamp?: number) => {
   if (!platform) return
   ensurePlatformState(platform)
   const state = platformsData[platform]
@@ -125,7 +125,7 @@ const fetchPlatformData = async (platform: string) => {
   state.loading = true
   state.error = null
   try {
-    const result = await apiFetchNews(platform)
+    const result = await apiFetchNews(platform, timestamp)
     if (result && Array.isArray(result)) {
       state.data = result
     } else {
@@ -147,7 +147,7 @@ const fetchAllPlatformsData = async () => {
 }
 
 const refreshAllData = () => fetchAllPlatformsData()
-const refreshSinglePlatform = (platform: string) => fetchPlatformData(platform)
+const refreshSinglePlatform = (platform: string) => fetchPlatformData(platform, new Date().getTime())
 
 const handleCardItemClick = (item: NewsItem) => {
   if (process.client && typeof window !== 'undefined') {

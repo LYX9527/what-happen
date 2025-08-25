@@ -124,6 +124,9 @@ export async function fetchPlatforms(): Promise<Platform[]> {
 /**
  * 获取指定平台的新闻数据
  */
-export async function fetchNews(platform: string): Promise<NewsItem[]> {
+export async function fetchNews(platform: string, timestamp?: number): Promise<NewsItem[]> {
+    if (timestamp) {
+        return request<NewsItem[]>(`${API_ENDPOINTS.news}?platform=${platform}&_t=${timestamp}`)
+    }
     return request<NewsItem[]>(`${API_ENDPOINTS.news}?platform=${platform}`)
 }

@@ -119,7 +119,7 @@ platformConfigs.forEach(config => {
 })
 
 // 获取单个平台数据
-const fetchPlatformData = async (platform: string) => {
+const fetchPlatformData = async (platform: string, timestamp?: number) => {
   if (!platformsData[platform]) return
 
   const state = platformsData[platform]
@@ -127,7 +127,7 @@ const fetchPlatformData = async (platform: string) => {
   state.error = null
 
   try {
-    const result = await apiFetchNews(platform)
+    const result = await apiFetchNews(platform, timestamp)
     if (result && Array.isArray(result)) {
       state.data = result
     } else {
