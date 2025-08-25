@@ -24,7 +24,7 @@ const routeConfig = getRouteConfig('/')!
 
 // 设置页面SEO
 useHead({
-  title: '新闻聚合 - 实时新闻时间线',
+  title: '今天发生了什么? - 实时新闻时间线',
   meta: [
     {name: 'description', content: '实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态'},
     {property: 'og:title', content: '新闻聚合 - 实时新闻时间线'},
@@ -145,8 +145,52 @@ const fetchPlatformData = async (platform: string, timestamp?: number) => {
 
 // 获取所有平台数据
 const fetchAllPlatformsData = async () => {
-  const promises = platformConfigs.map(config => fetchPlatformData(config.platform))
-  await Promise.allSettled(promises)
+  // 1) 启动阶段：统一设置所有平台为 loading，清空错误，但先不写入数据
+  platformConfigs.forEach(cfg => {
+    const s = platformsData[cfg.platform]
+    if (s) {
+      s.loading = true
+      s.error = null
+    }
+  })
+
+  try {
+    // 2) 并发请求所有平台，收集结果但不立刻写回 reactive
+    const results = await Promise.allSettled(
+        platformConfigs.map(cfg => apiFetchNews(cfg.platform))
+    )
+
+    // 3) 组装一个暂存快照
+    const staged: Record<string, { data: NewsItem[]; error: string | null }> = {}
+    results.forEach((res, idx) => {
+      const platform = platformConfigs[idx]!.platform
+      if (res.status === 'fulfilled') {
+        const val = res.value
+        if (Array.isArray(val)) {
+          staged[platform] = {data: val, error: null}
+        } else {
+          staged[platform] = {data: [], error: '数据格式错误'}
+        }
+      } else {
+        const err = (res.reason && (res.reason.message || String(res.reason))) || '网络请求失败'
+        staged[platform] = {data: [], error: err}
+      }
+    })
+
+    // 4) 提交阶段：在同一事件循环中批量写入，避免逐个平台的频繁渲染
+    for (const platform in staged) {
+      const s = platformsData[platform]
+      if (!s) continue
+      s.data = staged[platform]!.data
+      s.error = staged[platform]!.error
+    }
+  } finally {
+    // 5) 统一关闭所有平台的 loading
+    platformConfigs.forEach(cfg => {
+      const s = platformsData[cfg.platform]
+      if (s) s.loading = false
+    })
+  }
 }
 
 // 处理新闻点击

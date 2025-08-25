@@ -66,7 +66,7 @@ const data = computed(() => ({
   },
   teams: [
     {
-      name: '新闻聚合中心',
+      name: '今天发生了什么？',
       logo: Home,
       plan: '专业版',
     }
