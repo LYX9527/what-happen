@@ -61,9 +61,12 @@ useEventListener('keydown', (event: KeyboardEvent) => {
   }
 })
 
-// We add a state so that we can do data-state="expanded" or "collapsed".
-// This makes it easier to style the sidebar with Tailwind classes.
-const state = computed(() => open.value ? 'expanded' : 'collapsed')
+// 统一状态：在移动端使用 openMobile 来决定展开/收起，避免 H5 打开抽屉时仍被判定为 collapsed
+const state = computed(() => {
+  return isMobile.value
+    ? (openMobile.value ? 'expanded' : 'collapsed')
+    : (open.value ? 'expanded' : 'collapsed')
+})
 
 provideSidebarContext({
   state,

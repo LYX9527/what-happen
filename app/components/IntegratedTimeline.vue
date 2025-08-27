@@ -84,8 +84,8 @@ const formatDisplayTime = (item: NewsItem): string => {
   })
 }
 
-// 统一分桶：<60分钟按分钟；<24小时按小时；<7天按天；否则按具体日期
-const getGroupBucket = (date: Date): { key: string; display: string } => {
+// 统一分桶（仅返回稳定 key）：<60分钟按分钟；<24小时按小时；<7天按天；否则按具体日期
+const getGroupBucket = (date: Date): string => {
   const now = new Date()
   const diff = now.getTime() - date.getTime()
 
@@ -94,19 +94,54 @@ const getGroupBucket = (date: Date): { key: string; display: string } => {
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
   if (minutes < 60) {
-    const display = minutes < 1 ? '刚刚' : `${minutes}分钟前`
-    return { key: dayjs(date).format('YYYY-MM-DD HH:mm'), display }
+    return dayjs(date).format('YYYY-MM-DD HH:mm')
   }
   if (hours < 24) {
-    return { key: dayjs(date).format('YYYY-MM-DD HH'), display: `${hours}小时前` }
+    return dayjs(date).format('YYYY-MM-DD HH')
   }
   if (days < 7) {
-    return { key: `days-ago-${days}` as string, display: `${days}天前` }
+    return `days-ago-${days}`
   }
-  return {
-    key: `date-${dayjs(date).format('YYYY-MM-DD')}`,
-    display: date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+  return `date-${dayjs(date).format('YYYY-MM-DD')}`
+}
+
+// 根据分组 key 动态计算显示文案，避免旧分组长时间停留为“刚刚”
+const formatGroupDisplayFromKey = (key: string): string => {
+  const now = new Date()
+  // 天数桶
+  if (key.startsWith('days-ago-')) {
+    const n = parseInt(key.slice('days-ago-'.length), 10)
+    if (!isNaN(n)) return `${n}天前`
   }
+  // 具体日期
+  if (key.startsWith('date-')) {
+    const d = dayjs(key.slice(5), 'YYYY-MM-DD').toDate()
+    return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+  }
+  // 分钟桶
+  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(key)) {
+    const d = dayjs(key, 'YYYY-MM-DD HH:mm').toDate()
+    const diff = now.getTime() - d.getTime()
+    const minutes = Math.floor(diff / (1000 * 60))
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    if (minutes < 1) return '刚刚'
+    if (minutes < 60) return `${minutes}分钟前`
+    if (hours < 24) return `${hours}小时前`
+    if (days < 7) return `${days}天前`
+    return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+  }
+  // 小时桶
+  if (/^\d{4}-\d{2}-\d{2} \d{2}$/.test(key)) {
+    const d = dayjs(key, 'YYYY-MM-DD HH').toDate()
+    const diff = now.getTime() - d.getTime()
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    if (hours < 24) return `${hours}小时前`
+    if (days < 7) return `${days}天前`
+    return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+  }
+  return key
 }
 
 // 获取所有未筛选的新闻数据（用于统计）
@@ -159,15 +194,15 @@ const groupedNewsByTime = computed(() => {
   }> = []
 
   integratedNews.value.forEach(item => {
-    const bucket = getGroupBucket(item.parsedTime)
+    const bucketKey = getGroupBucket(item.parsedTime)
 
     // 查找是否已有相同桶的分组
-    let existingGroup = groups.find(group => group.timeKey === bucket.key)
+    let existingGroup = groups.find(group => group.timeKey === bucketKey)
 
     if (!existingGroup) {
       existingGroup = {
-        timeKey: bucket.key,
-        displayTime: bucket.display,
+        timeKey: bucketKey,
+        displayTime: formatGroupDisplayFromKey(bucketKey),
         items: []
       }
       groups.push(existingGroup)
