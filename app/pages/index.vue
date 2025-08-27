@@ -16,7 +16,7 @@ import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews} from "@/api"
-import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
+import {getRouteConfig, getPlatformConfigs, getCategoryLabel} from '@/config/platforms'
 import type {TimelinePlatform} from "~/components/IntegratedTimeline.vue";
 
 // 获取时间线路由配置
@@ -56,16 +56,7 @@ const timelinePlatformConfigs = computed(() => {
 
   return platformConfigs.map(config => {
     // 根据平台确定分类
-    let category = '其他'
-    if (['_36kr', 'ithome', 'solidot', 'v2ex', 'coolapk', 'juejin', 'sspai', 'csdn', 'nowcoder', 'pcbeta_windows', '_51cto', 'kaopu'].includes(config.platform)) {
-      category = '科技'
-    } else if (['thepaper', 'cankaoxiaoxi', 'zaobao', 'sputniknewscn', 'tieba'].includes(config.platform)) {
-      category = '社会'
-    } else if (['jin10', 'jqka', 'gelonghui', 'wallstreetcn_live', 'wallstreetcn_news', 'wallstreetcn_hot', 'hotstock', 'cls_telegraph'].includes(config.platform)) {
-      category = '财经'
-    } else if (['dcd_hot', 'dcd_news'].includes(config.platform)) {
-      category = '汽车'
-    }
+    let category = getCategoryLabel(config.platform)
 
     // 分配颜色
     const colors = categoryColors[category as keyof typeof categoryColors] || categoryColors['其他']
@@ -118,30 +109,6 @@ platformConfigs.forEach(config => {
   }
 })
 
-// 获取单个平台数据
-const fetchPlatformData = async (platform: string, timestamp?: number) => {
-  if (!platformsData[platform]) return
-
-  const state = platformsData[platform]
-  state.loading = true
-  state.error = null
-
-  try {
-    const result = await apiFetchNews(platform, timestamp)
-    if (result && Array.isArray(result)) {
-      state.data = result
-    } else {
-      state.data = []
-      state.error = '数据格式错误'
-    }
-  } catch (err: any) {
-    state.error = err.message || '网络请求失败'
-    state.data = []
-    console.error(`获取${platform}数据失败:`, err)
-  } finally {
-    state.loading = false
-  }
-}
 
 // 获取所有平台数据
 const fetchAllPlatformsData = async () => {

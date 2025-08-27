@@ -17,6 +17,7 @@ export interface NewsItem {
         info?: string
         hover?: string
         date?: string
+        dateStr?: string
         rank?: number
         icon?: {
             url: string

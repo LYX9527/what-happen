@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
-import {Expand, Minimize, Newspaper, RefreshCw, Star, TrendingUp} from 'lucide-vue-next'
+import {Expand, Minimize, RefreshCw, Star, TrendingUp} from 'lucide-vue-next'
 import type {NewsItem} from '@/api'
 import {useFavorites} from '@/composables/useFavorites'
 import {toast} from 'vue-sonner'
@@ -56,12 +56,16 @@ watch(activeCategory, () => {
 
 
 // 处理时间解析
-const parseTime = (item: NewsItem, platformKey: string): Date => {
+const parseTime = (item: NewsItem): Date => {
   return dayjs(item.extra?.date).toDate()
 }
 
 // 格式化显示时间
-const formatDisplayTime = (date: Date): string => {
+const formatDisplayTime = (item: NewsItem): string => {
+  if (item.extra?.dateStr) {
+    return item.extra.dateStr
+  }
+  const date = parseTime(item)
   const now = new Date()
   const diff = now.getTime() - date.getTime()
 
@@ -97,7 +101,7 @@ const allIntegratedNews = computed(() => {
           ...item,
           platformKey: platformConfig.key,
           platformConfig,
-          parsedTime: parseTime(item, platformConfig.key)
+          parsedTime: parseTime(item)
         })
       })
     }
@@ -130,7 +134,7 @@ const groupedNewsByTime = computed(() => {
   }> = []
 
   integratedNews.value.forEach(item => {
-    const displayTime = formatDisplayTime(item.parsedTime)
+    const displayTime = formatDisplayTime(item)
 
     // 查找是否已有相同时间的分组
     let existingGroup = groups.find(group => group.displayTime === displayTime)
@@ -339,13 +343,6 @@ const getNewsContentComponent = (platformConfig: any) => {
               </div>
               <UiSkeleton class="w-16 h-4 rounded-full"/>
             </div>
-          </div>
-
-          <!-- 空状态 -->
-          <div v-else-if="groupedNewsByTime.length === 0" class="text-center py-12">
-            <Newspaper class="w-12 h-12 mx-auto text-muted-foreground mb-4"/>
-            <h3 class="text-lg font-medium text-muted-foreground mb-2">暂无新闻</h3>
-            <p class="text-sm text-muted-foreground">{{ hasErrors ? '加载失败，请尝试刷新' : '等待数据加载中...' }}</p>
           </div>
 
           <!-- 时间线分组列表 -->

@@ -7,6 +7,7 @@ export interface PlatformConfig {
     component?: string // 可选的自定义组件名称
 }
 
+// 路由配置
 export interface RouteConfig {
     path: string
     title: string
@@ -37,7 +38,9 @@ export const PLATFORMS: Record<string, PlatformConfig> = {
         category: 'finance',
         component: 'HotSearchItem'
     },
-
+    autohome_hot: {platform: 'autohome_hot', title: '汽车之家热搜', category: 'car', component: 'HotSearchItem'},
+    autohome_article: {platform: 'autohome_article', title: '汽车之家热文', category: 'car', component: 'HotSearchItem'},
+    autohome_video: {platform: 'autohome_video', title: '汽车之家视频', category: 'car', component: 'HotSearchItem'},
     // github相关
     github: {platform: 'github', title: 'GitHub趋势', category: 'tech', component: 'GitHubNewsItem'},
 
@@ -62,6 +65,7 @@ export const PLATFORMS: Record<string, PlatformConfig> = {
     pcbeta_windows: {platform: 'pcbeta_windows', title: '远景论坛', category: 'tech', component: 'TimelineNewsItem'},
     jqka: {platform: 'jqka', title: '同花顺要闻', category: 'finance', component: 'TimelineNewsItem'},
     dcd_news: {platform: 'dcd_news', title: '懂车帝资讯', category: 'car', component: 'TimelineNewsItem'},
+    autohome: {platform: 'autohome', title: '汽车之家资讯', category: 'car', component: 'TimelineNewsItem'},
     cls_telegraph: {platform: 'cls_telegraph', title: '财联社', category: 'finance', component: 'TimelineNewsItem'},
     gelonghui: {platform: 'gelonghui', title: '格隆汇', category: 'finance', component: 'TimelineNewsItem'},
     wallstreetcn_live: {
@@ -202,10 +206,7 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         path: '/',
         title: '新闻第一线',
         description: '多平台新闻资讯聚合展示',
-        platforms: ['_36kr', 'ithome', 'thepaper', 'solidot', 'v2ex', 'coolapk',
-            'cankaoxiaoxi', 'zaobao', 'sputniknewscn', 'tieba', 'kaopu',
-            'jin10', 'pcbeta_windows', 'jqka', 'dcd_news', 'cls_telegraph',
-            'gelonghui', 'wallstreetcn_live', 'wallstreetcn_news'],
+        platforms: getPlatformsByComponent("TimelineNewsItem"),
         category: 'index'
     }
 }
@@ -224,6 +225,28 @@ export function getPlatformConfigs(platformKeys: string[]): PlatformConfig[] {
 // 获取分类下的所有平台
 export function getPlatformsByCategory(category: string): string[] {
     return Object.values(PLATFORMS).filter(platform => platform.category === category).map(p => p.platform)
+}
+// 获取指定组件的所有平台
+export function getPlatformsByComponent(component: string): string[] {
+    return Object.values(PLATFORMS).filter(platform => platform.component === component).map(p => p.platform)
+}
+
+// 根据平台名称获取分类中文
+export function getCategoryLabel(platform: string): string {
+    const category = PLATFORMS[platform]?.category
+    if (!category) return '其他'
+    switch (category) {
+        case 'tech':
+            return '科技'
+        case 'finance':
+            return '财经'
+        case 'social':
+            return '社会'
+        case 'car':
+            return '汽车'
+        default:
+            return '其他'
+    }
 }
 
 // 导航菜单配置

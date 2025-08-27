@@ -2,7 +2,7 @@ import {
     WeiBo, Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
     ItHome, Jin10, nowcoder, PcBeta, Solidot,
     TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
-    Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic, CSDN, Sspai, Jqka, _51Cto, Dongchedi, Fishpi
+    Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic, CSDN, Sspai, Jqka, _51Cto, Dongchedi, Fishpi, AutoHome
 } from "@/components/icon";
 import {Coffee, DollarSign, Radio, Github} from 'lucide-vue-next'
 // 平台图标映射
@@ -51,5 +51,9 @@ export const PlatformIcons = {
     _51cto: _51Cto,
     dcd_hot: Dongchedi,
     dcd_news: Dongchedi,
-    fishpi: Fishpi
+    fishpi: Fishpi,
+    autohome: AutoHome,
+    autohome_hot: AutoHome,
+    autohome_article: AutoHome,
+    autohome_video: AutoHome,
 }

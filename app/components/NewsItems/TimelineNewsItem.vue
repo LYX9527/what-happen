@@ -47,6 +47,9 @@ const getRelativeTime = (item: NewsItem) => {
       day: 'numeric'
     })
   }
+  if (item.extra?.dateStr){
+    return item.extra.dateStr
+  }
 }
 
 // 处理点击
