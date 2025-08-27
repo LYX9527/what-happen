@@ -111,8 +111,42 @@ platformConfigs.forEach(config => {
 
 
 // 获取所有平台数据
+// SWR + 微批提交：保留旧数据、逐个平台返回即入队，动画帧/16ms 批量落地
+const activeRunId = ref<symbol | null>(null)
+const pendingUpdates = new Map<string, { data?: NewsItem[]; error?: string | null; loading?: boolean }>()
+let flushScheduled = false
+
+const flushNow = () => {
+  const runId = activeRunId.value
+  flushScheduled = false
+  pendingUpdates.forEach((upd, platform) => {
+    // 若期间发起了新的刷新，则忽略过期提交
+    if (activeRunId.value !== runId) return
+    const state = platformsData[platform]
+    if (!state) return
+    if (upd.data !== undefined) state.data = upd.data
+    if (upd.error !== undefined) state.error = upd.error
+    if (upd.loading !== undefined) state.loading = upd.loading
+    pendingUpdates.delete(platform)
+  })
+}
+
+const scheduleFlush = () => {
+  if (flushScheduled) return
+  flushScheduled = true
+  if (process.client && typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+    window.requestAnimationFrame(flushNow)
+  } else {
+    setTimeout(flushNow, 16)
+  }
+}
+
 const fetchAllPlatformsData = async () => {
-  // 1) 启动阶段：统一设置所有平台为 loading，清空错误，但先不写入数据
+  // 运行令牌，用于防止过期请求写回
+  const runId = Symbol('fetchAllPlatformsData')
+  activeRunId.value = runId
+
+  // 启动阶段：标记 loading，清空错误，但保留旧数据（SWR）
   platformConfigs.forEach(cfg => {
     const s = platformsData[cfg.platform]
     if (s) {
@@ -121,42 +155,32 @@ const fetchAllPlatformsData = async () => {
     }
   })
 
-  try {
-    // 2) 并发请求所有平台，收集结果但不立刻写回 reactive
-    const results = await Promise.allSettled(
-        platformConfigs.map(cfg => apiFetchNews(cfg.platform))
-    )
+  const requests = platformConfigs.map(cfg => {
+    const platform = cfg.platform
+    return apiFetchNews(platform)
+        .then(val => {
+          // 忽略过期的批次
+          if (activeRunId.value !== runId) return
+          if (Array.isArray(val)) {
+            pendingUpdates.set(platform, {data: val, error: null, loading: false})
+          } else {
+            pendingUpdates.set(platform, {error: '数据格式错误', loading: false})
+          }
+          scheduleFlush()
+        })
+        .catch(reason => {
+          if (activeRunId.value !== runId) return
+          const err = (reason && (reason.message || String(reason))) || '网络请求失败'
+          // 失败时仅更新 error 与 loading，保留旧数据避免闪屏
+          pendingUpdates.set(platform, {error: err, loading: false})
+          scheduleFlush()
+        })
+  })
 
-    // 3) 组装一个暂存快照
-    const staged: Record<string, { data: NewsItem[]; error: string | null }> = {}
-    results.forEach((res, idx) => {
-      const platform = platformConfigs[idx]!.platform
-      if (res.status === 'fulfilled') {
-        const val = res.value
-        if (Array.isArray(val)) {
-          staged[platform] = {data: val, error: null}
-        } else {
-          staged[platform] = {data: [], error: '数据格式错误'}
-        }
-      } else {
-        const err = (res.reason && (res.reason.message || String(res.reason))) || '网络请求失败'
-        staged[platform] = {data: [], error: err}
-      }
-    })
-
-    // 4) 提交阶段：在同一事件循环中批量写入，避免逐个平台的频繁渲染
-    for (const platform in staged) {
-      const s = platformsData[platform]
-      if (!s) continue
-      s.data = staged[platform]!.data
-      s.error = staged[platform]!.error
-    }
-  } finally {
-    // 5) 统一关闭所有平台的 loading
-    platformConfigs.forEach(cfg => {
-      const s = platformsData[cfg.platform]
-      if (s) s.loading = false
-    })
+  // 等待全部完成，确保尾批也能落地
+  await Promise.allSettled(requests)
+  if (activeRunId.value === runId) {
+    flushNow()
   }
 }
 

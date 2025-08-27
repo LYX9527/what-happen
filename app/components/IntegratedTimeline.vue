@@ -84,6 +84,27 @@ const formatDisplayTime = (item: NewsItem): string => {
   })
 }
 
+// 按分钟桶计算分组显示时间，避免出现多个“刚刚”
+const formatGroupDisplayTime = (minuteKey: string): string => {
+  const date = dayjs(minuteKey, 'YYYY-MM-DD HH:mm').toDate()
+  const now = new Date()
+  const diff = now.getTime() - date.getTime()
+
+  const minutes = Math.floor(diff / (1000 * 60))
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+
+  if (minutes < 1) return '刚刚'
+  if (minutes < 60) return `${minutes}分钟前`
+  if (hours < 24) return `${hours}小时前`
+  if (days < 7) return `${days}天前`
+
+  return date.toLocaleDateString('zh-CN', {
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
 // 获取所有未筛选的新闻数据（用于统计）
 const allIntegratedNews = computed(() => {
   const allNews: Array<NewsItem & {
@@ -121,7 +142,7 @@ const integratedNews = computed(() => {
       : allIntegratedNews.value.filter(item => item.platformConfig.category === activeCategory.value)
 })
 
-// 按时间分组的新闻数据
+// 按时间分组的新闻数据（使用稳定的分钟桶作为分组 key，避免抖动）
 const groupedNewsByTime = computed(() => {
   const groups: Array<{
     timeKey: string
@@ -134,15 +155,16 @@ const groupedNewsByTime = computed(() => {
   }> = []
 
   integratedNews.value.forEach(item => {
-    const displayTime = formatDisplayTime(item)
+    // 使用分钟粒度的稳定 key，避免相对时间改变导致 key 抖动
+    const minuteKey = dayjs(item.parsedTime).format('YYYY-MM-DD HH:mm')
 
-    // 查找是否已有相同时间的分组
-    let existingGroup = groups.find(group => group.displayTime === displayTime)
+    // 查找是否已有相同分钟桶的分组
+    let existingGroup = groups.find(group => group.timeKey === minuteKey)
 
     if (!existingGroup) {
       existingGroup = {
-        timeKey: `${displayTime}-${Date.now()}`,
-        displayTime,
+        timeKey: minuteKey,
+        displayTime: formatGroupDisplayTime(minuteKey),
         items: []
       }
       groups.push(existingGroup)
@@ -166,6 +188,18 @@ const isLoading = computed(() => {
   return props.platformConfigs.some(platform =>
       props.platformsData[platform.key]?.loading
   )
+})
+
+// 全局刷新提示（非阻塞）：加载开始显示，结束后更新为已完成
+const LOADING_TOAST_ID = 'global-refresh'
+watch(isLoading, (val) => {
+  if (!process.client) return
+  if (val) {
+    toast.loading('正在刷新数据…', { id: LOADING_TOAST_ID })
+  } else {
+    // 刷新完成后更新该条 toast
+    toast.success('数据已更新', { id: LOADING_TOAST_ID, duration: 1500 })
+  }
 })
 
 // 错误状态
@@ -398,7 +432,7 @@ const getNewsContentComponent = (platformConfig: any) => {
 
                 <!-- 该时间段的新闻列表 -->
                 <UiAccordionContent class="px-4 pb-4 pt-0">
-                  <div class="space-y-1 ml-2 animate-in fade-in duration-200">
+                  <TransitionGroup name="news" tag="div" class="space-y-1 ml-2">
                     <div
                         v-for="(item, itemIndex) in timeGroup.items"
                         :key="`${item.platformKey}-${item.id}`"
@@ -442,7 +476,7 @@ const getNewsContentComponent = (platformConfig: any) => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </TransitionGroup>
                 </UiAccordionContent>
               </UiAccordionItem>
             </UiAccordion>
@@ -452,5 +486,20 @@ const getNewsContentComponent = (platformConfig: any) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* 新闻条目插入/移除过渡动画 */
+.news-enter-from, .news-leave-to {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.985);
+}
+.news-enter-active, .news-leave-active {
+  transition: opacity 450ms ease-in-out,
+              transform 450ms ease-in-out;
+}
+.news-move {
+  transition: transform 450ms ease-in-out;
+}
+</style>
 
 
