@@ -1,24 +1,44 @@
+# 2025.08.27 更新记录
+
+## 1. 新增平台
+
+- [x] 汽车之家
+
+## 2. 优化代码
+
+- 优化部分平台的API集成
+- 优化配置文件结构
+
 # 2025.08.25 更新记录
+
 ## 1. 新增平台
+
 - [x] 摸鱼派
+
 ## 2. 修复已知bug
+
 - 手机端padding异常
+
 # 2025.08.05 更新记录
+
 ## 1. 新增平台
+
 - [x] 51CTO
 - [x] 懂车帝
   ![](public/51cto-dcd-timeline.png)
+
 ## 2. 新增时间线
+
 ![](public/first-time.png)
 
-
 # 2025.08.04 更新记录
+
 ## 1. 新增平台
+
 - [x] CSDN
 - [x] 少数派
 - [x] 同花顺要闻
-![](public/csdn-sspai-jqka.png)
-
+  ![](public/csdn-sspai-jqka.png)
 
 # 2025.08.03 更新记录
 
@@ -28,8 +48,7 @@
 - [x] 百度热影
 - [x] 百度比赛资讯(LOL)
 - [x] 音乐榜单
-![](public/db-bd-lol-music.png)
-
+  ![](public/db-bd-lol-music.png)
 
 # 2025.08.01 更新记录
 
