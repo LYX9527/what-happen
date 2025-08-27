@@ -84,9 +84,8 @@ const formatDisplayTime = (item: NewsItem): string => {
   })
 }
 
-// 按分钟桶计算分组显示时间，避免出现多个“刚刚”
-const formatGroupDisplayTime = (minuteKey: string): string => {
-  const date = dayjs(minuteKey, 'YYYY-MM-DD HH:mm').toDate()
+// 统一分桶：<60分钟按分钟；<24小时按小时；<7天按天；否则按具体日期
+const getGroupBucket = (date: Date): { key: string; display: string } => {
   const now = new Date()
   const diff = now.getTime() - date.getTime()
 
@@ -94,15 +93,20 @@ const formatGroupDisplayTime = (minuteKey: string): string => {
   const hours = Math.floor(diff / (1000 * 60 * 60))
   const days = Math.floor(diff / (1000 * 60 * 60 * 24))
 
-  if (minutes < 1) return '刚刚'
-  if (minutes < 60) return `${minutes}分钟前`
-  if (hours < 24) return `${hours}小时前`
-  if (days < 7) return `${days}天前`
-
-  return date.toLocaleDateString('zh-CN', {
-    month: 'short',
-    day: 'numeric'
-  })
+  if (minutes < 60) {
+    const display = minutes < 1 ? '刚刚' : `${minutes}分钟前`
+    return { key: dayjs(date).format('YYYY-MM-DD HH:mm'), display }
+  }
+  if (hours < 24) {
+    return { key: dayjs(date).format('YYYY-MM-DD HH'), display: `${hours}小时前` }
+  }
+  if (days < 7) {
+    return { key: `days-ago-${days}` as string, display: `${days}天前` }
+  }
+  return {
+    key: `date-${dayjs(date).format('YYYY-MM-DD')}`,
+    display: date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+  }
 }
 
 // 获取所有未筛选的新闻数据（用于统计）
@@ -155,16 +159,15 @@ const groupedNewsByTime = computed(() => {
   }> = []
 
   integratedNews.value.forEach(item => {
-    // 使用分钟粒度的稳定 key，避免相对时间改变导致 key 抖动
-    const minuteKey = dayjs(item.parsedTime).format('YYYY-MM-DD HH:mm')
+    const bucket = getGroupBucket(item.parsedTime)
 
-    // 查找是否已有相同分钟桶的分组
-    let existingGroup = groups.find(group => group.timeKey === minuteKey)
+    // 查找是否已有相同桶的分组
+    let existingGroup = groups.find(group => group.timeKey === bucket.key)
 
     if (!existingGroup) {
       existingGroup = {
-        timeKey: minuteKey,
-        displayTime: formatGroupDisplayTime(minuteKey),
+        timeKey: bucket.key,
+        displayTime: bucket.display,
         items: []
       }
       groups.push(existingGroup)

@@ -246,21 +246,21 @@ onMounted(async () => {
     <UiSidebarInset class="flex flex-col h-screen">
       <!-- 面包屑导航 - 带sticky和backdrop-blur效果 -->
       <header
-          class="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          class="sticky top-0 z-50 flex h-12 sm:h-16 shrink-0 items-center gap-1.5 sm:gap-2 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="flex items-center gap-2 px-4">
           <UiSidebarTrigger class="-ml-1"/>
           <UiSeparator orientation="vertical" class="mr-2 h-4"/>
           <UiBreadcrumb>
             <UiBreadcrumbList>
               <UiBreadcrumbItem>
-                <UiBreadcrumbPage class="text-foreground font-medium">新闻第一线</UiBreadcrumbPage>
+                <UiBreadcrumbPage class="text-foreground font-medium text-sm sm:text-base">新闻第一线</UiBreadcrumbPage>
               </UiBreadcrumbItem>
             </UiBreadcrumbList>
           </UiBreadcrumb>
         </div>
 
         <!-- 右侧按钮区域 - 响应式适配 -->
-        <div class="flex items-center gap-2 ml-auto px-4">
+        <div class="flex items-center gap-1.5 sm:gap-2 ml-auto px-3 sm:px-4">
           <!-- 刷新按钮 - 移动版 -->
           <UiButton
               variant="outline"
@@ -311,16 +311,17 @@ onMounted(async () => {
       <!-- 可滚动的主内容区域 -->
       <div class="flex-1 overflow-hidden bg-muted/20">
         <UiScrollArea class="h-full">
-          <div class="p-4">
-            <!-- 页面说明 -->
-            <div class="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 mb-6">
-              <div class="flex items-center gap-2 mb-2">
-                <Clock class="h-5 w-5 text-blue-600"/>
-                <h2 class="font-medium text-blue-900 dark:text-blue-100">实时新闻时间线</h2>
+          <div class="p-3 sm:p-4">
+            <!-- 页面说明：移动端精简为紧凑横条，桌面端显示完整卡片 -->
+            <div class="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-2.5 sm:p-4 mb-3 sm:mb-6">
+              <div class="flex items-center gap-2">
+                <Clock class="h-4 w-4 sm:h-5 sm:w-5 text-blue-600"/>
+                <div class="flex-1 min-w-0">
+                  <h2 class="font-medium text-blue-900 dark:text-blue-100 text-sm sm:text-base leading-tight">实时新闻时间线</h2>
+                  <p class="hidden sm:block text-sm text-blue-700 dark:text-blue-300 mt-1">按时间顺序展示各大平台的最新资讯，让您第一时间了解热点动态</p>
+                  <p class="sm:hidden text-xs text-blue-700 dark:text-blue-300 truncate">实时聚合最新资讯，按时间线快速浏览</p>
+                </div>
               </div>
-              <p class="text-sm text-blue-700 dark:text-blue-300">
-                按时间顺序展示各大平台的最新资讯，让您第一时间了解热点动态
-              </p>
             </div>
 
             <!-- 时间线组件 -->
