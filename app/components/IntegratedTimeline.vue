@@ -144,6 +144,33 @@ const formatGroupDisplayFromKey = (key: string): string => {
   return key
 }
 
+// 解析分组 key 为具体 Date（用于兜底格式化）
+const parseGroupKeyToDate = (key: string): Date | null => {
+  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(key)) return dayjs(key, 'YYYY-MM-DD HH:mm').toDate()
+  if (/^\d{4}-\d{2}-\d{2} \d{2}$/.test(key)) return dayjs(key, 'YYYY-MM-DD HH').toDate()
+  if (key.startsWith('date-')) return dayjs(key.slice(5), 'YYYY-MM-DD').toDate()
+  if (key.startsWith('days-ago-')) {
+    const n = parseInt(key.slice('days-ago-'.length), 10)
+    if (!isNaN(n)) return dayjs().subtract(n, 'day').toDate()
+  }
+  return null
+}
+
+// 不返回“刚刚”的相对时间文案（最小为 1 分钟前），用于去重时的兜底
+const formatGroupDisplayNoJustNow = (key: string): string => {
+  const d = parseGroupKeyToDate(key)
+  if (!d) return key
+  const now = new Date()
+  const diff = Math.max(0, now.getTime() - d.getTime())
+  const minutes = Math.floor(diff / (1000 * 60))
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  if (minutes < 60) return `${Math.max(1, minutes)}分钟前`
+  if (hours < 24) return `${hours}小时前`
+  if (days < 7) return `${days}天前`
+  return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+}
+
 // 获取所有未筛选的新闻数据（用于统计）
 const allIntegratedNews = computed(() => {
   const allNews: Array<NewsItem & {
@@ -211,7 +238,21 @@ const groupedNewsByTime = computed(() => {
     existingGroup.items.push(item)
   })
 
-  return groups
+  // 合并同名分组：同一个 displayTime 只保留一个，合并其 items
+  const mergedMap = new Map<string, typeof groups[number]>()
+  const mergedOrder: string[] = []
+  groups.forEach(group => {
+    const key = group.displayTime
+    const exist = mergedMap.get(key)
+    if (!exist) {
+      mergedMap.set(key, { ...group, items: [...group.items] })
+      mergedOrder.push(key)
+    } else {
+      exist.items.push(...group.items)
+    }
+  })
+
+  return mergedOrder.map(k => mergedMap.get(k)!)
 })
 // 初始化展开前3个时间组
 watch(groupedNewsByTime, (newGroups, oldGroups) => {
