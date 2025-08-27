@@ -312,17 +312,7 @@ onMounted(async () => {
       <div class="flex-1 overflow-hidden bg-muted/20">
         <UiScrollArea class="h-full">
           <div class="p-3 sm:p-4">
-            <!-- 页面说明：移动端精简为紧凑横条，桌面端显示完整卡片 -->
-            <div class="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-2.5 sm:p-4 mb-3 sm:mb-6">
-              <div class="flex items-center gap-2">
-                <Clock class="h-4 w-4 sm:h-5 sm:w-5 text-blue-600"/>
-                <div class="flex-1 min-w-0">
-                  <h2 class="font-medium text-blue-900 dark:text-blue-100 text-sm sm:text-base leading-tight">实时新闻时间线</h2>
-                  <p class="hidden sm:block text-sm text-blue-700 dark:text-blue-300 mt-1">按时间顺序展示各大平台的最新资讯，让您第一时间了解热点动态</p>
-                  <p class="sm:hidden text-xs text-blue-700 dark:text-blue-300 truncate">实时聚合最新资讯，按时间线快速浏览</p>
-                </div>
-              </div>
-            </div>
+            <!-- 顶部说明区域移除，改由下方标题区的大图标承担视觉重点 -->
 
             <!-- 时间线组件 -->
             <IntegratedTimeline

@@ -291,10 +291,10 @@ const getNewsContentComponent = (platformConfig: any) => {
         class="flex-shrink-0 px-4 py-3 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <div class="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-            <TrendingUp class="h-4 w-4 text-primary-foreground"/>
+          <div class="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-md bg-primary">
+            <TrendingUp class="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground"/>
           </div>
-          <h2 class="text-lg font-semibold">新闻第一线</h2>
+          <h2 class="text-lg sm:text-xl font-semibold">新闻第一线</h2>
         </div>
 
         <div class="flex items-center gap-2">

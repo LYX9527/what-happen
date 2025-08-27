@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
   open?: boolean
   class?: HTMLAttributes['class']
 }>(), {
-  defaultOpen: true,
+  defaultOpen: false,
   open: undefined,
 })
 
@@ -21,8 +21,16 @@ const emits = defineEmits<{
 const isMobile = useMediaQuery('(max-width: 768px)')
 const openMobile = ref(false)
 
+// SSR 友好的 cookie 恢复：使用 useCookie 在首屏就拿到上次展开状态，避免刷新错位
+const cookieRef = useCookie<string | boolean | null>(SIDEBAR_COOKIE_NAME)
+const cookieOpenValue = (cookieRef?.value === true || cookieRef?.value === 'true')
+  ? true
+  : (cookieRef?.value === false || cookieRef?.value === 'false')
+    ? false
+    : null
+
 const open = useVModel(props, 'open', emits, {
-  defaultValue: props.defaultOpen ?? false,
+  defaultValue: (cookieOpenValue ?? props.defaultOpen ?? false) as boolean,
   passive: (props.open === undefined) as false,
 }) as Ref<boolean>
 
@@ -33,6 +41,8 @@ function setOpen(value: boolean) {
   if (process.client && typeof document !== 'undefined') {
     document.cookie = `${SIDEBAR_COOKIE_NAME}=${open.value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
   }
+  // 同步到 useCookie，确保 SSR 下一次可恢复
+  try { cookieRef.value = String(open.value) } catch {}
 }
 
 function setOpenMobile(value: boolean) {
