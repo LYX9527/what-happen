@@ -1,7 +1,7 @@
 <div align="center">
 
 <h1>
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=35&pause=1000&color=4FC08D&center=true&vCenter=true&width=600&lines=今天发生了什么?;Nuxt+%2B+TypeScript" alt="Typing SVG">
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=35&pause=1000&color=4FC08D&center=true&vCenter=true&width=600&lines=今日时事;Nuxt+%2B+TypeScript" alt="Typing SVG">
 </h1>
 
 **现代化新闻聚合平台**
@@ -27,7 +27,7 @@
 
 ## 项目介绍
 
-What Happen 是一个综合性的新闻聚合平台，整合了来自社交媒体、科技资讯、金融市场和娱乐等多个热门源的信息。采用现代化的Web技术构建，为用户提供简洁、直观的界面，让您轻松掌握全球动态。
+今日时事 是一个综合性的新闻聚合平台，整合了来自社交媒体、科技资讯、金融市场和娱乐等多个热门源的信息。采用现代化的Web技术构建，为用户提供简洁、直观的界面，让您轻松掌握全球动态。
 
 ### 核心特性
 
