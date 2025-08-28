@@ -22,11 +22,12 @@ import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
 
 const routeConfig = getRouteConfig('/car')!
 useHead({
-  title: routeConfig.title,
+  title: routeConfig.title + " | 今日时事",
   meta: [
     {name: 'description', content: routeConfig.description},
     {property: 'og:title', content: routeConfig.title},
     {property: 'og:description', content: routeConfig.description},
+    {property: "og:url", content: 'https://news.yltfspace.com' + routeConfig.path},
     {name: 'keywords', content: '汽车新闻,汽车资讯,车市动态,汽车行业'}
   ]
 })

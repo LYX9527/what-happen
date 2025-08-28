@@ -25,15 +25,19 @@ const isStringLogo = (logo: TeamItem['logo']): logo is string => typeof logo ===
         <UiDropdownMenuTrigger as-child>
           <UiSidebarMenuButton
               size="lg"
-              class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex items-center justify-center"
+              class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground justify-center"
           >
-            <img v-if="isStringLogo(activeTeam!!.logo)" :src="activeTeam!!.logo" alt="logo"
-                 class="size-10 object-contain ml-4" />
+            <div v-if="isStringLogo(activeTeam!!.logo)"
+                 class="flex aspect-square size-8 items-center justify-center rounded-lg"
+
+            >
+              <img :src="activeTeam!!.logo" alt="logo" class="size-8 object-contain"/>
+            </div>
             <div v-else
                  class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               <component :is="activeTeam!!.logo" class="size-4"/>
             </div>
-            <div class="grid flex-1 ml-5 text-left text-sm leading-tight">
+            <div class="grid ml-3 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
               <span class="truncate font-zt text-[20px] font-semibold">
                 {{ activeTeam!!.name }}
               </span>

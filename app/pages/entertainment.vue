@@ -21,11 +21,12 @@ import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
 
 const routeConfig = getRouteConfig('/entertainment')!
 useHead({
-  title: routeConfig.title,
+  title: routeConfig.title + " | 今日时事",
   meta: [
     {name: 'description', content: routeConfig.description},
     {property: 'og:title', content: routeConfig.title},
     {property: 'og:description', content: routeConfig.description},
+    {property: "og:url", content: 'https://news.yltfspace.com' + routeConfig.path},
     {name: 'keywords', content: '娱乐新闻,娱乐资讯,影视资讯,明星动态'}
   ]
 })

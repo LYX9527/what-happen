@@ -21,11 +21,12 @@ import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
 
 const routeConfig = getRouteConfig('/social')!
 useHead({
-  title: routeConfig.title,
+  title: routeConfig.title + " | 今日时事",
   meta: [
     {name: 'description', content: routeConfig.description},
     {property: 'og:title', content: routeConfig.title},
     {property: 'og:description', content: routeConfig.description},
+    {property: "og:url", content: 'https://news.yltfspace.com' + routeConfig.path},
     {name: 'keywords', content: '社会新闻,社会动态,民生资讯,社会热点'}
   ]
 })

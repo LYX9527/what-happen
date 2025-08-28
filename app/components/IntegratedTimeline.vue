@@ -365,7 +365,7 @@ const getNewsContentComponent = (platformConfig: any) => {
     <!-- 头部控制栏 -->
     <div
         class="flex-shrink-0 px-4 py-3 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-2">
           <div class="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-md bg-primary">
             <TrendingUp class="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground"/>
@@ -421,7 +421,7 @@ const getNewsContentComponent = (platformConfig: any) => {
       </div>
 
       <!-- 分类筛选 -->
-      <div class="flex items-center gap-1 overflow-x-auto pb-1">
+      <div class="flex items-center gap-1 overflow-x-auto pb-2">
         <UiButton
             v-for="category in categories"
             :key="category"

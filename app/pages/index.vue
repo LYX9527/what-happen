@@ -24,12 +24,14 @@ const routeConfig = getRouteConfig('/')!
 
 // 设置页面SEO
 useHead({
-  title: '今天发生了什么? - 实时新闻时间线',
+  title: '今日时事 - 新闻第一线',
   meta: [
-    {name: 'description', content: '实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态'},
-    {property: 'og:title', content: '新闻聚合 - 实时新闻时间线'},
-    {property: 'og:description', content: '实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态'},
-    {name: 'keywords', content: '新闻时间线,综合新闻,实时资讯,热点动态'}
+    {name: 'description', content: '今日时事为您实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态，包含头条、百度、知乎、V2EX、微博、贴吧、豆瓣、天涯、虎扑、Github、抖音、懂车帝...追踪全网热点、简单高效阅读'},
+    {property: 'og:title', content: '今日时事 - 新闻第一线'},
+    {property: 'og:description', content: '今日时事为您实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态，包含头条、百度、知乎、V2EX、微博、贴吧、豆瓣、天涯、虎扑、Github、抖音、懂车帝...追踪全网热点、简单高效阅读'},
+    {property: "og:url", content: 'https://news.yltfspace.com'},
+    {property: "og:type", content: 'website'},
+    {name: 'keywords', content: '今日时事,新闻时间线,综合新闻,实时资讯,热点动态,新闻第一线,YltfSpace'}
   ]
 })
 
@@ -252,9 +254,10 @@ onMounted(async () => {
           <UiSeparator orientation="vertical" class="mr-2 h-4"/>
           <UiBreadcrumb>
             <UiBreadcrumbList>
-              <UiBreadcrumbItem>
-                <UiBreadcrumbPage class="text-foreground font-medium text-sm sm:text-base">新闻第一线</UiBreadcrumbPage>
+              <UiBreadcrumbItem class="hidden md:block">
+                <UiBreadcrumbLink href="/" class="text-muted-foreground">首页</UiBreadcrumbLink>
               </UiBreadcrumbItem>
+
             </UiBreadcrumbList>
           </UiBreadcrumb>
         </div>

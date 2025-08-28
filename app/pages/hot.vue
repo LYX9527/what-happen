@@ -24,11 +24,13 @@ const routeConfig = getRouteConfig('/hot')!
 
 // 设置页面SEO
 useHead({
-  title: routeConfig.title,
+  title: routeConfig.title + " | 今日时事",
   meta: [
     {name: 'description', content: routeConfig.description},
     {property: 'og:title', content: routeConfig.title},
-    {property: 'og:description', content: routeConfig.description}
+    {property: 'og:description', content: routeConfig.description},
+    {property: "og:url", content: 'https://news.yltfspace.com' + routeConfig.path},
+    {name: 'keywords', content: '热门新闻,热点新闻,新闻排行,新闻聚合,今日热点,新闻第一线,微博热搜,知乎热榜,抖音热搜,快手热搜'}
   ]
 })
 
