@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Zt';
+  src: url('~/assets/fonts/zt.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pmzd';
+  src: url('~/assets/fonts/pmzd.ttf') format('truetype');
+  font-display: swap;
+}
+
+.font-zt {
+  font-size-adjust: from-font;
+  font-family: 'Pmzd', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+}
+
+

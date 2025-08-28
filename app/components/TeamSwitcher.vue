@@ -25,10 +25,10 @@ const isStringLogo = (logo: TeamItem['logo']): logo is string => typeof logo ===
         <UiDropdownMenuTrigger as-child>
           <UiSidebarMenuButton
               size="lg"
-              class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground flex items-center justify-center"
           >
             <img v-if="isStringLogo(activeTeam!!.logo)" :src="activeTeam!!.logo" alt="logo"
-                 class="size-10 object-contain"/>
+                 class="size-10 object-contain ml-4" />
             <div v-else
                  class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               <component :is="activeTeam!!.logo" class="size-4"/>
@@ -45,19 +45,3 @@ const isStringLogo = (logo: TeamItem['logo']): logo is string => typeof logo ===
     </UiSidebarMenuItem>
   </UiSidebarMenu>
 </template>
-<style>
-@font-face {
-  font-family: 'Zt';
-  src: url('~/assets/fonts/zt.ttf') format('truetype');
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Pmzd';
-  src: url('~/assets/fonts/pmzd.ttf') format('truetype');
-  font-display: swap;
-}
-
-.font-zt {
-  font-family: 'Pmzd', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-}
-</style>

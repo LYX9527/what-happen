@@ -27,7 +27,7 @@ export default defineNuxtConfig({
          */
         componentDir: './components/ui'
     },
-    css: ['~/assets/css/tailwind.css'],
+    css: ['~/assets/css/tailwind.css', '~/assets/css/base.css'],
     vite: {
         plugins: [
             tailwindcss(),
