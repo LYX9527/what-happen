@@ -22,6 +22,7 @@ import {NAVIGATION_ITEMS, ROUTE_CONFIGS} from '@/config/platforms'
 
 import TeamSwitcher from "@/components/TeamSwitcher.vue";
 import NavMain from "@/components/NavMain.vue";
+import logoPng from '@/assets/512.png'
 
 interface AppSidebarProps extends SidebarProps {
   // 使用新的路由结构，不需要额外props
@@ -66,9 +67,8 @@ const data = computed(() => ({
   },
   teams: [
     {
-      name: '今天发生了什么？',
-      logo: Home,
-      plan: '专业版',
+      name: '今 日 时 事',
+      logo: logoPng,
     }
   ],
   navMain: NAVIGATION_ITEMS.map(item => {
