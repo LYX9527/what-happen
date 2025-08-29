@@ -138,7 +138,7 @@ const ensurePlatformState = (platform: string) => {
 }
 
 // 获取单个平台数据
-const fetchPlatformData = async (platform: string, timestamp?: number) => {
+const fetchPlatformData = async (platform: string, timestamp?: number, order?: 'asc' | 'desc') => {
   if (!platform) return
 
   ensurePlatformState(platform)
@@ -150,7 +150,7 @@ const fetchPlatformData = async (platform: string, timestamp?: number) => {
   state.error = null
 
   try {
-    const result = await apiFetchNews(platform, timestamp)
+    const result = await apiFetchNews(platform, timestamp, order)
     if (result && Array.isArray(result)) {
       state.data = result
     } else {
@@ -178,8 +178,8 @@ const refreshAllData = () => {
 }
 
 // 刷新单个平台数据
-const refreshSinglePlatform = (platform: string) => {
-  fetchPlatformData(platform, new Date().getTime())
+const refreshSinglePlatform = (platform: string, order?: 'asc' | 'desc') => {
+  fetchPlatformData(platform, new Date().getTime(), order)
 }
 
 // 处理卡片点击 - SSR兼容版本
@@ -357,7 +357,7 @@ onMounted(async () => {
                   :is-favorited="platforms.some(p => p.platform === platform.platform)"
                   :show-drag-handle="true"
                   @item-click="handleCardItemClick"
-                  @refresh="refreshSinglePlatform(platform.platform)"
+                  @refresh="(order) => refreshSinglePlatform(platform.platform, order)"
               />
             </VueDraggable>
           </div>

@@ -129,9 +129,9 @@ export async function fetchPlatforms(): Promise<Platform[]> {
 /**
  * 获取指定平台的新闻数据
  */
-export async function fetchNews(platform: string, timestamp?: number): Promise<NewsItem[]> {
-    if (timestamp) {
-        return request<NewsItem[]>(`${API_ENDPOINTS.news}?platform=${platform}&_t=${timestamp}`)
-    }
-    return request<NewsItem[]>(`${API_ENDPOINTS.news}?platform=${platform}`)
+export async function fetchNews(platform: string, timestamp?: number, order?: 'asc' | 'desc'): Promise<NewsItem[]> {
+    const params: string[] = [`platform=${encodeURIComponent(platform)}`]
+    if (order) params.push(`order=${order}`)
+    if (timestamp) params.push(`_t=${timestamp}`)
+    return request<NewsItem[]>(`${API_ENDPOINTS.news}?${params.join('&')}`)
 }

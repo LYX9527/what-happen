@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
-import {RefreshCw, Globe, Star, GripVertical} from 'lucide-vue-next'
+import {RefreshCw, Globe, Star, GripVertical, TrendingUp, TrendingDown} from 'lucide-vue-next'
 import {toast} from 'vue-sonner'
 import type {NewsItem} from "@/api"
 import {useFavorites} from '@/composables/useFavorites'
@@ -33,7 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   'item-click': [item: NewsItem]
-  'refresh': []
+  // 当为涨跌幅榜时，携带 order 参数（desc=涨，asc=跌）
+  'refresh': [order?: 'asc' | 'desc']
   'favorite': [item: NewsItem, favorited: boolean]
 }>()
 
@@ -77,9 +78,12 @@ const getPlatformIcon = () => {
   return Globe
 }
 
+// 组件键名（字符串），用来判断类型
+const componentKey = computed(() => getNewsItemComponent(props.platform || 'normal'))
+
 // 根据平台获取对应的新闻项组件
 const newsItemComponent = computed(() => {
-  const componentName = getNewsItemComponent(props.platform || 'normal')
+  const componentName = componentKey.value
   switch (componentName) {
     case 'GitHubNewsItem':
       return GitHubNewsItem
@@ -108,12 +112,25 @@ const newsItemComponent = computed(() => {
   }
 })
 
+// 是否为涨跌幅榜
+const isLeaderboard = computed(() => componentKey.value === 'StockLeaderboardItem')
+
+// 涨/跌切换状态（默认显示“涨”）
+const order = ref<'asc' | 'desc'>('desc')
+
+// 切换不同的榜（涨/跌）时，自动发起请求
+watch(order, (val) => {
+  if (isLeaderboard.value) {
+    emit('refresh', val)
+  }
+})
+
 const handleItemClick = (item: NewsItem) => {
   emit('item-click', item)
 }
 
 const handleRefresh = () => {
-  emit('refresh')
+  emit('refresh', isLeaderboard.value ? order.value : undefined)
 }
 
 // 处理收藏整个平台
@@ -161,6 +178,7 @@ const displayItems = computed(() => {
       </div>
 
       <div class="flex items-center gap-1">
+
         <!-- 收藏整个平台按钮 -->
         <UiButton
             variant="ghost"
@@ -178,7 +196,27 @@ const displayItems = computed(() => {
               class="w-3 h-3 hover:text-yellow-500"
           />
         </UiButton>
-
+        <!-- 仅在涨跌幅榜显示涨跌切换 -->
+        <div v-if="isLeaderboard" class="flex items-center justify-center">
+          <UiButton
+              variant="ghost"
+              size="sm"
+              class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
+              :class="order === 'desc' ? 'text-red-600 dark:text-red-400' : 'text-muted-foreground'"
+              @click="order = 'desc'"
+          >
+            <TrendingUp class="w-3 h-3 mr-1"/>
+          </UiButton>
+          <UiButton
+              variant="ghost"
+              size="sm"
+              class="text-muted-foreground hover:text-foreground h-6 w-6 p-0"
+              :class="order === 'asc' ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'"
+              @click="order = 'asc'"
+          >
+            <TrendingDown class="w-3 h-3"/>
+          </UiButton>
+        </div>
         <!-- 单个刷新按钮 -->
         <UiButton
             variant="ghost"
