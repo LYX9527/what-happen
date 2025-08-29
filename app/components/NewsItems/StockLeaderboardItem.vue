@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { TrendingUp, TrendingDown, Minus } from 'lucide-vue-next'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import type { NewsItem } from '@/api'
+import {TrendingUp, TrendingDown, Minus} from 'lucide-vue-next'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
+import type {NewsItem} from '@/api'
 
 interface Props {
   item: NewsItem
@@ -44,9 +44,9 @@ const formatMarketCap = (value?: string | number) => {
 
   const abs = Math.abs(num)
   const units = [
-    { base: 1e12, suffix: '万亿' },
-    { base: 1e8, suffix: '亿' },
-    { base: 1e4, suffix: '万' },
+    {base: 1e12, suffix: '万亿'},
+    {base: 1e8, suffix: '亿'},
+    {base: 1e4, suffix: '万'},
   ]
   for (const u of units) {
     if (abs >= u.base) {
@@ -61,8 +61,8 @@ const formatMarketCap = (value?: string | number) => {
 
 <template>
   <div
-    class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-muted/50 transition-colors cursor-pointer group"
-    @click="handleClick"
+      class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-muted/50 transition-colors cursor-pointer group"
+      @click="handleClick"
   >
     <!-- 排名 -->
     <div class="flex items-center justify-center w-5 h-4 text-xs font-mono shrink-0">
@@ -89,18 +89,49 @@ const formatMarketCap = (value?: string | number) => {
 
         <div class="flex items-center gap-1 shrink-0">
           <!-- 当前价 -->
-          <span class="bg-muted/60 text-foreground" :class="badgeBase"> {{ item.extra?.current }}</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span class="bg-muted/60 text-foreground" :class="badgeBase"> {{ item.extra?.current }}</span>
+              </TooltipTrigger>
+              <TooltipContent>当前价</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <!-- 涨跌额 -->
-          <span :class="[badgeBase, getColorByPercent(item.extra?.percent)]">{{ item.extra?.change }}</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span :class="[badgeBase, getColorByPercent(item.extra?.percent)]">{{ item.extra?.change }}</span>
+              </TooltipTrigger>
+              <TooltipContent>涨跌额</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <!-- 涨跌幅 -->
-          <span :class="[badgeBase, getColorByPercent(item.extra?.percent)]">{{ item.extra?.percent }}%</span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span :class="[badgeBase, getColorByPercent(item.extra?.percent)]">{{ item.extra?.percent }}%</span>
+              </TooltipTrigger>
+              <TooltipContent>涨跌幅</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <!-- 图标 -->
-          <component :is="getIconByPercent(item.extra?.percent)" :class="['w-2.5 h-2.5', getColorByPercent(item.extra?.percent)]" />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <component :is="getIconByPercent(item.extra?.percent)"
+                           :class="['w-2.5 h-2.5', getColorByPercent(item.extra?.percent)]"/>
+              </TooltipTrigger>
+              <TooltipContent>趋势</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
       <div class="mt-0.5 text-[10px] text-muted-foreground">
-        市值 {{ formatMarketCap(item.extra?.market_capital) }}
+        市值<span class="ml-1 underline-offset-2 decoration-muted-foreground/50">{{
+          formatMarketCap(item.extra?.market_capital)
+        }}</span>
       </div>
     </div>
   </div>
