@@ -3,6 +3,7 @@ import {NewsItemComponents} from "~/config/platforms";
 
 export {default as GitHubNewsItem} from './GitHubNewsItem.vue'
 export {default as StockNewsItem} from './StockNewsItem.vue'
+export {default as StockLeaderboardItem} from './StockLeaderboardItem.vue'
 export {default as NormalNewsItem} from './NormalNewsItem.vue'
 export {default as TimelineNewsItem} from './TimelineNewsItem.vue'
 export {default as HotSearchItem} from './HotSearchItem.vue'

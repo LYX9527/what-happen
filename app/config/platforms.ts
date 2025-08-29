@@ -101,6 +101,15 @@ export const PLATFORMS: Record<string, PlatformConfig> = {
 
     // 股票走势
     hotstock: {platform: 'hotstock', title: '雪球热股', category: 'finance', component: 'StockNewsItem'},//
+    stock_sha : {platform: 'stock_sha', title: '沪A 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    stock_shb : {platform: 'stock_shb', title: '沪B 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    stock_sza : {platform: 'stock_sza', title: '深A 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    stock_szb : {platform: 'stock_szb', title: '深B 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    stock_cyb : {platform: 'stock_cyb', title: '创业板 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    stock_zxb : {platform: 'stock_zxb', title: '中小板 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    stock_hk : {platform: 'stock_hk', title: '港股 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    stock_us : {platform: 'stock_us', title: '美股 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+
 
     // 视频列表
     b_hot_video: {

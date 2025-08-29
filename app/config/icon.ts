@@ -56,4 +56,12 @@ export const PlatformIcons = {
     autohome_hot: AutoHome,
     autohome_article: AutoHome,
     autohome_video: AutoHome,
+    stock_sha: Hotstock,
+    stock_shb: Hotstock,
+    stock_sza: Hotstock,
+    stock_szb: Hotstock,
+    stock_cyb: Hotstock,
+    stock_zxb: Hotstock,
+    stock_hk: Hotstock,
+    stock_us: Hotstock,
 }

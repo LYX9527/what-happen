@@ -50,6 +50,10 @@ export interface NewsItem {
             content: string
             avatar: string
         }
+        current?: number
+        percent?: string
+        change?: string
+        market_capital?: string
     }
 }
 

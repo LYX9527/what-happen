@@ -36,11 +36,15 @@ export default defineNuxtConfig({
     app:{
         head:{
             link:[
-                {
-                    rel: 'icon',
-                    type: 'image/png',
-                    href: '/512.png'
-                },
+                { rel: 'icon', type: 'image/png', sizes: '16x16', href: 'https://cdn.yltfspace.com/16.png' },
+                { rel: 'icon', type: 'image/png', sizes: '32x32', href: 'https://cdn.yltfspace.com/32.png' },
+                { rel: 'icon', type: 'image/png', sizes: '64x64', href: 'https://cdn.yltfspace.com/64.png' },
+                { rel: 'icon', type: 'image/png', sizes: '256x256', href: 'https://cdn.yltfspace.com/256.png' },
+                { rel: 'icon', type: 'image/png', sizes: '512x512', href: 'https://cdn.yltfspace.com/512.png' },
+                { rel: 'apple-touch-icon', sizes: '120x120', href: 'https://cdn.yltfspace.com/512.png' },
+                { rel: 'apple-touch-icon', sizes: '152x152', href: 'https://cdn.yltfspace.com/512.png' },
+                { rel: 'apple-touch-icon', sizes: '167x167', href: 'https://cdn.yltfspace.com/512.png' },
+                { rel: 'apple-touch-icon', sizes: '180x180', href: 'https://cdn.yltfspace.com/512.png' },
             ]
         }
     }
