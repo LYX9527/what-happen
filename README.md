@@ -1,10 +1,12 @@
 <div align="center">
 
 <h1>
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=35&pause=1000&color=4FC08D&center=true&vCenter=true&width=600&lines=What%20Happen?;Nuxt+%2B+TypeScript" alt="Typing SVG">
+  <img src="public/256.png" alt="">
 </h1>
 
-**A Modern News Aggregation Platform**
+*What Happen*
+
+**A Modern And Minimalist News Aggregation Platform**
 
 *Stay informed with real-time news from multiple sources*
 
@@ -24,11 +26,15 @@
 
 ![浅色模式](public/screen.png)
 ![深色模式](public/screen-dark.png)
+![hot](public/hot.png)
+![finance](public/finance.png)
+![tech](public/tech.png)
+![favorites](public/favorites.png)
 
 
 ## Overview
 
-What Happen is a comprehensive news aggregation platform that brings together information from multiple popular sources including social media, tech news, financial markets, and entertainment. Built with modern web technologies, it provides a clean, intuitive interface for staying updated with what's happening around the world.
+《What Happen》 is a comprehensive news aggregation platform that brings together information from multiple popular sources including social media, tech news, financial markets, and entertainment. Built with modern web technologies, it provides a clean, intuitive interface for staying updated with what's happening around the world.
 
 ### Key Features
 
@@ -79,7 +85,7 @@ What Happen is a comprehensive news aggregation platform that brings together in
 
 ## Tech Stack
 
-- **Frontend Framework**: Vue 3 + TypeScript
+- **Frontend Framework**: Nuxt 4 + TypeScript
 - **Build Tool**: Vite 6.x
 - **Styling**: TailwindCSS 4.x
 - **UI Components**: Reka UI (shadcn/ui for Vue)
@@ -254,8 +260,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Changelog
 
-### Version 0.1.0 (Current)
-- Initial release with basic news aggregation
+### Version 1.0.0(Current)
 - Support for 30+ news platforms
 - Responsive design and dark mode
 - Favorites and filtering system

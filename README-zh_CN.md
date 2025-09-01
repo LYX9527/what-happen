@@ -1,10 +1,12 @@
 <div align="center">
 
 <h1>
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=35&pause=1000&color=4FC08D&center=true&vCenter=true&width=600&lines=今日时事;Nuxt+%2B+TypeScript" alt="Typing SVG">
+  <img src="public/256.png" alt="">
 </h1>
 
-**现代化新闻聚合平台**
+*《今日时事》*
+
+**一个现代化简约的新闻聚合平台**
 
 *实时聚合多源资讯，掌握天下动态*
 
@@ -24,10 +26,14 @@
 
 ![浅色模式](public/screen.png)
 ![深色模式](public/screen-dark.png)
+![hot](public/hot.png)
+![finance](public/finance.png)
+![tech](public/tech.png)
+![favorites](public/favorites.png)
 
 ## 项目介绍
 
-今日时事 是一个综合性的新闻聚合平台，整合了来自社交媒体、科技资讯、金融市场和娱乐等多个热门源的信息。采用现代化的Web技术构建，为用户提供简洁、直观的界面，让您轻松掌握全球动态。
+《今日时事》 是一个综合性的新闻聚合平台，整合了来自社交媒体、科技资讯、金融市场和娱乐等多个热门源的信息。采用现代化的Web技术构建，为用户提供简洁、直观的界面，让您轻松掌握全球动态。
 
 ### 核心特性
 
@@ -78,7 +84,7 @@
 
 ## 技术栈
 
-- **前端框架**: Vue 3 + TypeScript
+- **前端框架**: Nuxt 4 + TypeScript
 - **构建工具**: Vite 6.x
 - **样式方案**: TailwindCSS 4.x
 - **UI组件**: Reka UI (Vue版shadcn/ui)
@@ -253,8 +259,7 @@ app/
 
 ## 更新日志
 
-### 版本 0.1.0 (当前版本)
-- 首次发布，支持基础新闻聚合功能
+### 版本 1.0.0 (当前版本)
 - 支持30+新闻平台
 - 响应式设计和暗色模式
 - 收藏和筛选系统
@@ -266,7 +271,7 @@ app/
 
 <div align="center">
 
-**Made with ❤️ by the What Happen Team**
+**Made with ❤️ by the 《今日时事》 Team**
 
 *保持知情，保持连接*
 
