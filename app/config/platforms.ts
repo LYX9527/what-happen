@@ -1,10 +1,20 @@
 // 平台配置文件
+import {
+    WeiBo, Baidu, DouYin, ThePaper, TouTiao, _36kr, Blbl, CankaoXiaoxi,
+    ItHome, Jin10, nowcoder, PcBeta, Solidot,
+    TieBa, V2ex, WallStreetCN, Hotstock, Zaobao, Kaopu, Kuaishou, Zhihu,
+    Coolapk, Hupu, Juejin, Douban, LoL, KuGou, QQMusic, CSDN, Sspai, Jqka, _51Cto, Dongchedi, Fishpi, AutoHome, FIFA,
+    Valorant, Sports, Kog, CBA, NBA, Game
+} from "@/components/icon";
+import {DollarSign, Radio, Github} from 'lucide-vue-next'
+
 export interface PlatformConfig {
     platform: string
     title: string
     category: string
     description?: string,
     component?: string // 可选的自定义组件名称
+    icon?: typeof Game | typeof Github
 }
 
 // 路由配置
@@ -19,96 +29,254 @@ export interface RouteConfig {
 // 所有可用平台配置
 export const PLATFORMS: Record<string, PlatformConfig> = {
     // 热搜榜
-    weibo: {platform: 'weibo', title: '微博热搜', category: 'hot', component: 'HotSearchItem'},
-    baidu: {platform: 'baidu', title: '百度热搜', category: 'hot', component: 'HotSearchItem'},
-    kuaishou: {platform: 'kuaishou', title: '快手热搜', category: 'hot', component: 'HotSearchItem'},
-    douyin: {platform: 'douyin', title: '抖音热搜', category: 'hot', component: 'HotSearchItem'},
-    zhihu: {platform: 'zhihu', title: '知乎热榜', category: 'hot', component: 'HotSearchItem'},
-    toutiao: {platform: 'toutiao', title: '今日头条', category: 'hot', component: 'HotSearchItem'},
+    weibo: {platform: 'weibo', title: '微博热搜', category: 'hot', component: 'HotSearchItem', icon: WeiBo},
+    baidu: {platform: 'baidu', title: '百度热搜', category: 'hot', component: 'HotSearchItem', icon: Baidu},
+    kuaishou: {platform: 'kuaishou', title: '快手热搜', category: 'hot', component: 'HotSearchItem', icon: Kuaishou},
+    douyin: {platform: 'douyin', title: '抖音热搜', category: 'hot', component: 'HotSearchItem', icon: DouYin},
+    zhihu: {platform: 'zhihu', title: '知乎热榜', category: 'hot', component: 'HotSearchItem', icon: Zhihu},
+    toutiao: {platform: 'toutiao', title: '今日头条', category: 'hot', component: 'HotSearchItem', icon: TouTiao},
     b_hot_search: {
         platform: 'b_hot_search',
         title: '哔哩哔哩热搜',
         category: 'entertainment',
-        component: 'HotSearchItem'
+        component: 'HotSearchItem',
+        icon: Blbl
     },
-    dcd_hot: {platform: 'dcd_hot', title: '懂车帝热搜', category: 'car', component: 'HotSearchItem'},
+    dcd_hot: {platform: 'dcd_hot', title: '懂车帝热搜', category: 'car', component: 'HotSearchItem', icon: Dongchedi},
     wallstreetcn_hot: {
         platform: 'wallstreetcn_hot',
         title: '华尔街见闻热榜',
         category: 'finance',
-        component: 'HotSearchItem'
+        component: 'HotSearchItem',
+        icon: WallStreetCN
     },
-    autohome_hot: {platform: 'autohome_hot', title: '汽车之家热搜', category: 'car', component: 'HotSearchItem'},
-    autohome_article: {platform: 'autohome_article', title: '汽车之家热文', category: 'car', component: 'HotSearchItem'},
-    autohome_video: {platform: 'autohome_video', title: '汽车之家视频', category: 'car', component: 'HotSearchItem'},
+    autohome_hot: {
+        platform: 'autohome_hot',
+        title: '汽车之家热搜',
+        category: 'car',
+        component: 'HotSearchItem',
+        icon: AutoHome
+    },
+    autohome_article: {
+        platform: 'autohome_article',
+        title: '汽车之家热文',
+        category: 'car',
+        component: 'HotSearchItem',
+        icon: AutoHome
+    },
+    autohome_video: {
+        platform: 'autohome_video',
+        title: '汽车之家视频',
+        category: 'car',
+        component: 'HotSearchItem',
+        icon: AutoHome
+    },
     // github相关
-    github: {platform: 'github', title: 'GitHub趋势', category: 'tech', component: 'GitHubNewsItem'},
+    github: {platform: 'github', title: 'GitHub趋势', category: 'tech', component: 'GitHubNewsItem', icon: Github},
 
     // 时间线
-    _36kr: {platform: '_36kr', title: '36氪', category: 'tech', component: 'TimelineNewsItem'},
-    ithome: {platform: 'ithome', title: 'IT之家', category: 'tech', component: 'TimelineNewsItem'},
-    thepaper: {platform: 'thepaper', title: '澎湃新闻', category: 'social', component: 'TimelineNewsItem'},
-    solidot: {platform: 'solidot', title: '奇客Solidot', category: 'tech', component: 'TimelineNewsItem'},
-    v2ex: {platform: 'v2ex', title: 'V2EX', category: 'tech', component: 'TimelineNewsItem'},
-    coolapk: {platform: 'coolapk', title: '酷安', category: 'tech', component: 'TimelineNewsItem'},
-    cankaoxiaoxi: {platform: 'cankaoxiaoxi', title: '参考消息', category: 'social', component: 'TimelineNewsItem'},
-    zaobao: {platform: 'zaobao', title: '联合早报', category: 'social', component: 'TimelineNewsItem'},
+    _36kr: {platform: '_36kr', title: '36氪', category: 'tech', component: 'TimelineNewsItem', icon: _36kr},
+    ithome: {platform: 'ithome', title: 'IT之家', category: 'tech', component: 'TimelineNewsItem', icon: ItHome},
+    thepaper: {
+        platform: 'thepaper',
+        title: '澎湃新闻',
+        category: 'social',
+        component: 'TimelineNewsItem',
+        icon: ThePaper
+    },
+    solidot: {
+        platform: 'solidot',
+        title: '奇客Solidot',
+        category: 'tech',
+        component: 'TimelineNewsItem',
+        icon: Solidot
+    },
+    v2ex: {platform: 'v2ex', title: 'V2EX', category: 'tech', component: 'TimelineNewsItem', icon: V2ex},
+    coolapk: {platform: 'coolapk', title: '酷安', category: 'tech', component: 'TimelineNewsItem', icon: Coolapk},
+    cankaoxiaoxi: {
+        platform: 'cankaoxiaoxi',
+        title: '参考消息',
+        category: 'social',
+        component: 'TimelineNewsItem',
+        icon: CankaoXiaoxi
+    },
+    zaobao: {platform: 'zaobao', title: '联合早报', category: 'social', component: 'TimelineNewsItem', icon: Zaobao},
     sputniknewscn: {
         platform: 'sputniknewscn',
         title: '俄罗斯卫星通讯社',
         category: 'social',
-        component: 'TimelineNewsItem'
+        component: 'TimelineNewsItem',
+        icon: Radio
     },
-    tieba: {platform: 'tieba', title: '百度贴吧', category: 'social', component: 'TimelineNewsItem'},
-    kaopu: {platform: 'kaopu', title: '靠谱', category: 'social', component: 'TimelineNewsItem'},
-    jin10: {platform: 'jin10', title: '金十数据', category: 'tech', component: 'TimelineNewsItem'},
-    pcbeta_windows: {platform: 'pcbeta_windows', title: '远景论坛', category: 'tech', component: 'TimelineNewsItem'},
-    jqka: {platform: 'jqka', title: '同花顺要闻', category: 'finance', component: 'TimelineNewsItem'},
-    dcd_news: {platform: 'dcd_news', title: '懂车帝资讯', category: 'car', component: 'TimelineNewsItem'},
-    autohome: {platform: 'autohome', title: '汽车之家资讯', category: 'car', component: 'TimelineNewsItem'},
-    cls_telegraph: {platform: 'cls_telegraph', title: '财联社', category: 'finance', component: 'TimelineNewsItem'},
-    gelonghui: {platform: 'gelonghui', title: '格隆汇', category: 'finance', component: 'TimelineNewsItem'},
+    tieba: {platform: 'tieba', title: '百度贴吧', category: 'social', component: 'TimelineNewsItem', icon: TieBa},
+    kaopu: {platform: 'kaopu', title: '靠谱', category: 'social', component: 'TimelineNewsItem', icon: Kaopu},
+    jin10: {platform: 'jin10', title: '金十数据', category: 'tech', component: 'TimelineNewsItem', icon: Jin10},
+    pcbeta_windows: {
+        platform: 'pcbeta_windows',
+        title: '远景论坛',
+        category: 'tech',
+        component: 'TimelineNewsItem',
+        icon: PcBeta
+    },
+    jqka: {platform: 'jqka', title: '同花顺要闻', category: 'finance', component: 'TimelineNewsItem', icon: Jqka},
+    dcd_news: {
+        platform: 'dcd_news',
+        title: '懂车帝资讯',
+        category: 'car',
+        component: 'TimelineNewsItem',
+        icon: Dongchedi
+    },
+    autohome: {
+        platform: 'autohome',
+        title: '汽车之家资讯',
+        category: 'car',
+        component: 'TimelineNewsItem',
+        icon: AutoHome
+    },
+    cls_telegraph: {
+        platform: 'cls_telegraph',
+        title: '财联社',
+        category: 'finance',
+        component: 'TimelineNewsItem',
+        icon: DollarSign
+    },
+    gelonghui: {
+        platform: 'gelonghui',
+        title: '格隆汇',
+        category: 'finance',
+        component: 'TimelineNewsItem',
+        icon: DollarSign
+    },
     wallstreetcn_live: {
         platform: 'wallstreetcn_live',
         title: '华尔街见闻直播',
         category: 'finance',
-        component: 'TimelineNewsItem'
+        component: 'TimelineNewsItem',
+        icon: WallStreetCN
     },
     wallstreetcn_news: {
         platform: 'wallstreetcn_news',
         title: '华尔街见闻新闻',
         category: 'finance',
-        component: 'TimelineNewsItem'
+        component: 'TimelineNewsItem',
+        icon: WallStreetCN
     },
 
 
     // 文章阅读
-    juejin: {platform: 'juejin', title: '稀土掘金', category: 'tech', component: 'ArticleReadItem'},
-    sspai: {platform: 'sspai', title: '少数派', category: 'tech', component: 'ArticleReadItem'},
-    csdn: {platform: 'csdn', title: 'CSDN', category: 'tech', component: 'ArticleReadItem'},
-    fishpi: {platform: 'fishpi', title: '摸鱼派', category: 'tech', component: 'ArticleReadItem'},
+    juejin: {platform: 'juejin', title: '稀土掘金', category: 'tech', component: 'ArticleReadItem', icon: Juejin},
+    sspai: {platform: 'sspai', title: '少数派', category: 'tech', component: 'ArticleReadItem', icon: Sspai},
+    csdn: {platform: 'csdn', title: 'CSDN', category: 'tech', component: 'ArticleReadItem', icon: CSDN},
+    fishpi: {platform: 'fishpi', title: '摸鱼派', category: 'tech', component: 'ArticleReadItem', icon: Fishpi},
 
     // 电影榜单
-    douban: {platform: 'douban', title: '豆瓣热影', category: 'entertainment', component: 'HotMovieItem'},
-    bd_tv: {platform: 'bd_tv', title: '百度热剧', category: 'entertainment', component: 'HotTVShowItem'},
+    douban: {platform: 'douban', title: '豆瓣热影', category: 'entertainment', component: 'HotMovieItem', icon: Douban},
+    bd_tv: {platform: 'bd_tv', title: '百度热剧', category: 'entertainment', component: 'HotTVShowItem', icon: Baidu},
 
     // 比赛相关
-    hupu_lol: {platform: 'hupu_lol', title: '英雄联盟比赛', category: 'sports', component: 'MatchItem'},
+    hupu_lol: {platform: 'hupu_lol', title: '英雄联盟比赛', category: 'sports', component: 'MatchItem', icon: LoL},
+    hupu_fifa: {platform: 'hupu_fifa', title: '国际足球比赛', category: 'sports', component: 'MatchItem', icon: FIFA},
+    hupu_nba: {platform: 'hupu_nba', title: 'NBA比赛', category: 'sports', component: 'MatchItem', icon: NBA},
+    hupu_cba: {platform: 'hupu_cba', title: 'CBA比赛', category: 'sports', component: 'MatchItem', icon: CBA},
+    hupu_csl: {platform: 'hupu_csl', title: '中国足球比赛', category: 'sports', component: 'MatchItem', icon: Sports},
+    hupu_kog: {platform: 'hupu_kog', title: '王者荣耀比赛', category: 'sports', component: 'MatchItem', icon: Kog},
+    hupu_valorant: {
+        platform: 'hupu_valorant',
+        title: '无畏契约比赛',
+        category: 'sports',
+        component: 'MatchItem',
+        icon: Valorant
+    },
+    hupu_ewcsports: {
+        platform: 'hupu_ewcsports',
+        title: 'CS2比赛',
+        category: 'sports',
+        component: 'MatchItem',
+        icon: Game
+    },
+    hupu_sports: {
+        platform: 'hupu_sports',
+        title: '综合体育比赛',
+        category: 'sports',
+        component: 'MatchItem',
+        icon: Sports
+    },
+
 
     // 音乐榜单
-    kugou: {platform: 'kugou', title: '酷狗音乐飙升榜', category: 'entertainment', component: 'MusicItem'},
-    qq_music: {platform: 'qq_music', title: 'QQ音乐流行榜', category: 'entertainment', component: 'MusicItem'},
+    kugou: {platform: 'kugou', title: '酷狗音乐飙升榜', category: 'entertainment', component: 'MusicItem', icon: KuGou},
+    qq_music: {
+        platform: 'qq_music',
+        title: 'QQ音乐流行榜',
+        category: 'entertainment',
+        component: 'MusicItem',
+        icon: QQMusic
+    },
 
     // 股票走势
-    hotstock: {platform: 'hotstock', title: '雪球热股', category: 'finance', component: 'StockNewsItem'},//
-    stock_sha : {platform: 'stock_sha', title: '沪A 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
-    stock_shb : {platform: 'stock_shb', title: '沪B 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
-    stock_sza : {platform: 'stock_sza', title: '深A 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
-    stock_szb : {platform: 'stock_szb', title: '深B 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
-    stock_cyb : {platform: 'stock_cyb', title: '创业板 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
-    stock_zxb : {platform: 'stock_zxb', title: '中小板 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
-    stock_hk : {platform: 'stock_hk', title: '港股 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
-    stock_us : {platform: 'stock_us', title: '美股 涨跌幅榜', category: 'finance', component: 'StockLeaderboardItem'},
+    hotstock: {
+        platform: 'hotstock',
+        title: '雪球热股',
+        category: 'finance',
+        component: 'StockNewsItem',
+        icon: Hotstock
+    },//
+    stock_sha: {
+        platform: 'stock_sha',
+        title: '沪A 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
+    stock_shb: {
+        platform: 'stock_shb',
+        title: '沪B 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
+    stock_sza: {
+        platform: 'stock_sza',
+        title: '深A 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
+    stock_szb: {
+        platform: 'stock_szb',
+        title: '深B 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
+    stock_cyb: {
+        platform: 'stock_cyb',
+        title: '创业板 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
+    stock_zxb: {
+        platform: 'stock_zxb',
+        title: '中小板 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
+    stock_hk: {
+        platform: 'stock_hk',
+        title: '港股 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
+    stock_us: {
+        platform: 'stock_us',
+        title: '美股 涨跌幅榜',
+        category: 'finance',
+        component: 'StockLeaderboardItem',
+        icon: Hotstock
+    },
 
 
     // 视频列表
@@ -116,14 +284,21 @@ export const PLATFORMS: Record<string, PlatformConfig> = {
         platform: 'b_hot_video',
         title: '哔哩哔哩视频',
         category: 'entertainment',
-        component: 'VideoListItem'
+        component: 'VideoListItem',
+        icon: Blbl
     },
-    b_rank: {platform: 'b_rank', title: '哔哩哔哩排行榜', category: 'entertainment', component: 'VideoListItem'},
+    b_rank: {
+        platform: 'b_rank',
+        title: '哔哩哔哩排行榜',
+        category: 'entertainment',
+        component: 'VideoListItem',
+        icon: Blbl
+    },
 
     // 普通新闻项
-    _51cto: {platform: '_51cto', title: '51CTO', category: 'tech', component: 'NormalNewsItem'},
-    nowcoder: {platform: 'nowcoder', title: '牛客网', category: 'tech', component: 'NormalNewsItem'},
-    hupu: {platform: 'hupu', title: '虎扑', category: 'social', component: 'NormalNewsItem'},
+    _51cto: {platform: '_51cto', title: '51CTO', category: 'tech', component: 'NormalNewsItem', icon: _51Cto},
+    nowcoder: {platform: 'nowcoder', title: '牛客网', category: 'tech', component: 'NormalNewsItem', icon: nowcoder},
+    hupu: {platform: 'hupu', title: '虎扑', category: 'social', component: 'NormalNewsItem', icon: Hupu},
 
 
 }
@@ -235,6 +410,7 @@ export function getPlatformConfigs(platformKeys: string[]): PlatformConfig[] {
 export function getPlatformsByCategory(category: string): string[] {
     return Object.values(PLATFORMS).filter(platform => platform.category === category).map(p => p.platform)
 }
+
 // 获取指定组件的所有平台
 export function getPlatformsByComponent(component: string): string[] {
     return Object.values(PLATFORMS).filter(platform => platform.component === component).map(p => p.platform)
@@ -275,4 +451,7 @@ export const NAVIGATION_ITEMS = [
 // 根据平台类型映射对应的新闻项组件
 export const NewsItemComponents: Record<string, string> = Object.fromEntries(
     Object.entries(PLATFORMS).map(([key, cfg]) => [key, cfg.component ?? 'NormalNewsItem'])
+)
+export const PlatformIcons = Object.fromEntries(
+    Object.entries(PLATFORMS).map(([key, cfg]) => [key, cfg.icon ?? Game])
 )

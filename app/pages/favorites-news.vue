@@ -15,8 +15,7 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
-import {PlatformIcons} from '@/config/icon'
-import {getRouteConfig} from '@/config/platforms'
+import {getRouteConfig, PlatformIcons} from '@/config/platforms'
 // 获取路由配置
 const routeConfig = getRouteConfig('/favorites-news')!
 

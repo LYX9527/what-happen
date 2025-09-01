@@ -12,11 +12,10 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import IntegratedTimeline from '@/components/IntegratedTimeline.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
-import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews} from "@/api"
-import {getRouteConfig, getPlatformConfigs, getCategoryLabel} from '@/config/platforms'
+import {getRouteConfig, getPlatformConfigs, getCategoryLabel, PlatformIcons} from '@/config/platforms'
 import type {TimelinePlatform} from "~/components/IntegratedTimeline.vue";
 
 // 获取时间线路由配置
@@ -26,9 +25,15 @@ const routeConfig = getRouteConfig('/')!
 useHead({
   title: '今日时事 - 新闻第一线',
   meta: [
-    {name: 'description', content: '今日时事为您实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态，包含头条、百度、知乎、V2EX、微博、贴吧、豆瓣、天涯、虎扑、Github、抖音、懂车帝...追踪全网热点、简单高效阅读'},
+    {
+      name: 'description',
+      content: '今日时事为您实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态，包含头条、百度、知乎、V2EX、微博、贴吧、豆瓣、天涯、虎扑、Github、抖音、懂车帝...追踪全网热点、简单高效阅读'
+    },
     {property: 'og:title', content: '今日时事 - 新闻第一线'},
-    {property: 'og:description', content: '今日时事为您实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态，包含头条、百度、知乎、V2EX、微博、贴吧、豆瓣、天涯、虎扑、Github、抖音、懂车帝...追踪全网热点、简单高效阅读'},
+    {
+      property: 'og:description',
+      content: '今日时事为您实时聚合各大平台最新资讯，按时间顺序展示热点新闻动态，包含头条、百度、知乎、V2EX、微博、贴吧、豆瓣、天涯、虎扑、Github、抖音、懂车帝...追踪全网热点、简单高效阅读'
+    },
     {property: "og:url", content: 'https://news.yltfspace.com'},
     {property: "og:type", content: 'website'},
     {name: 'keywords', content: '今日时事,新闻时间线,综合新闻,实时资讯,热点动态,新闻第一线,YltfSpace'}

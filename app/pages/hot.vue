@@ -13,11 +13,10 @@ import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
-import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews} from "@/api"
-import {getRouteConfig, getPlatformConfigs} from '@/config/platforms'
+import {getRouteConfig, getPlatformConfigs, PlatformIcons} from '@/config/platforms'
 
 // 获取路由配置
 const routeConfig = getRouteConfig('/hot')!
@@ -30,7 +29,10 @@ useHead({
     {property: 'og:title', content: routeConfig.title},
     {property: 'og:description', content: routeConfig.description},
     {property: "og:url", content: 'https://news.yltfspace.com' + routeConfig.path},
-    {name: 'keywords', content: '热门新闻,热点新闻,新闻排行,新闻聚合,今日热点,新闻第一线,微博热搜,知乎热榜,抖音热搜,快手热搜'}
+    {
+      name: 'keywords',
+      content: '热门新闻,热点新闻,新闻排行,新闻聚合,今日热点,新闻第一线,微博热搜,知乎热榜,抖音热搜,快手热搜'
+    }
   ]
 })
 
@@ -150,7 +152,7 @@ const fetchPlatformData = async (platform: string, timestamp?: number) => {
   state.error = null
 
   try {
-    const result = await apiFetchNews(platform,timestamp)
+    const result = await apiFetchNews(platform, timestamp)
     if (result && Array.isArray(result)) {
       state.data = result
     } else {

@@ -14,11 +14,10 @@ import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import {useFavorites} from '@/composables/useFavorites'
-import {PlatformIcons} from '@/config/icon'
 
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews} from "@/api"
-import {getRouteConfig} from '@/config/platforms'
+import {getRouteConfig, PlatformIcons} from '@/config/platforms'
 
 // 获取路由配置
 const routeConfig = getRouteConfig('/favorites-platforms')!
