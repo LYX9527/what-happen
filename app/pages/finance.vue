@@ -5,13 +5,15 @@ import {
   RefreshCw,
   Globe,
   Github,
-  Search
+  Search,
+  Sparkles
 } from 'lucide-vue-next'
 
 import AppSidebar from '@/components/AppSidebar.vue'
 import NewsRankCard from '@/components/NewsRankCard.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
+import AISummaryDialog from '@/components/AISummaryDialog.vue'
 import {useFavorites} from '@/composables/useFavorites'
 import type {NewsItem} from "@/api"
 import {fetchNews as apiFetchNews} from "@/api"
@@ -40,6 +42,9 @@ const {platforms} = useFavorites()
 
 // 全局搜索组件引用
 const globalSearchRef = ref()
+
+// AI总结弹窗状态
+const aiSummaryOpen = ref(false)
 
 // 检测是否为Mac平台 - SSR兼容版本
 const isMac = computed(() => {
@@ -323,8 +328,22 @@ onMounted(async () => {
           <div class="p-4">
             <!-- 页面标题 -->
             <div class="mb-6">
-              <h1 class="text-3xl font-bold tracking-tight ml-5">{{ routeConfig.title }}</h1>
-              <p class="text-muted-foreground mt-2 ml-5">{{ routeConfig.description }}</p>
+              <div class="flex items-start justify-between">
+                <div>
+                  <h1 class="text-3xl font-bold tracking-tight ml-5">{{ routeConfig.title }}</h1>
+                  <p class="text-muted-foreground mt-2 ml-5">{{ routeConfig.description }}</p>
+                </div>
+                <!-- AI总结按钮 -->
+                <UiButton
+                  @click="aiSummaryOpen = true"
+                  variant="outline"
+                  size="sm"
+                  class="mr-5 gap-2 group hover:border-primary transition-colors"
+                >
+                  <Sparkles class="w-4 h-4 group-hover:text-primary transition-colors" />
+                  <span class="hidden sm:inline">AI 总结</span>
+                </UiButton>
+              </div>
             </div>
 
             <!-- 操作栏 -->
@@ -363,4 +382,11 @@ onMounted(async () => {
       </div>
     </UiSidebarInset>
   </UiSidebarProvider>
+  
+  <!-- AI总结弹窗 -->
+  <AISummaryDialog 
+    v-model:open="aiSummaryOpen"
+    category="finance"
+    :category-title="routeConfig.title"
+  />
 </template>

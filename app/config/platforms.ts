@@ -434,6 +434,13 @@ export function getCategoryLabel(platform: string): string {
     }
 }
 
+// 根据平台名称获取中文名称
+export function getTitle(platform: string): string {
+    const category = PLATFORMS[platform]?.title
+    if (!category) return '未知平台'
+    return category
+}
+
 // 导航菜单配置
 export const NAVIGATION_ITEMS = [
     {path: '/', title: '首页', icon: 'Home'},
