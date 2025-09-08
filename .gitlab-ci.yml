@@ -1,29 +1,48 @@
 variables:
   NAME: 'what-happen'
   VERSION: 'v1.0.0'
-  IMAGE_NAME: ${NAME}:${VERSION}
-stages:
-  - master
+  IMAGE_NAME: ${CI_PROJECT_NAME}:${VERSION}
 
-master:
-  stage: master
+# 定义两个阶段，build 会先于 deploy 执行
+stages:
+  - build
+  - deploy
+
+# --- 阶段一：构建应用 ---
+build_app:
+  stage: build
+  # 1. 使用官方的 Node.js 镜像作为 Docker 执行器
+  image: node:lts-alpine
   only:
     - master
-  tags:
-    - online
-  before_script:
-    - export NVM_DIR="$HOME/.nvm"
-    - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' # 加载 nvm
-    # ---------------------
   script:
-    - echo "Node.js version:"
-    - node -v # 验证版本
-    - echo "npm version:"
-    - npm -v  # 验证版本
-    - rm -rf node_modules yarn.lock package-lock.json
-    - yarn
+    - echo "Starting build process inside a Node.js container..."
+    - node -v
+    - yarn --version
+    - yarn install
     - cp .env.example .env
     - yarn run build
+    - echo "Build completed."
+  # 2. 将构建产物定义为制品，以便后续阶段使用
+  artifacts:
+    paths:
+      - .output/  # ⚠️ 请确认你的打包产物目录就是 .output
+    expire_in: 1 hour # 制品保留1小时后自动删除
+
+# --- 阶段二：部署应用 ---
+deploy_app:
+  stage: deploy
+  # 3. 使用你原来的 shell 执行器
+  tags:
+    - online
+  only:
+    - master
+  script:
+    - echo "Deploying on the host machine..."
+    # 4. GitLab 会自动把 build_app 阶段的 .output 文件夹下载到这里
+    #    所以你可以直接使用它
+    - ls -l # 你可以取消这行注释，来查看 .output 文件夹是否已存在
     - cd docker
     - docker build --no-cache -t ${IMAGE_NAME} .
     - docker-compose up -d
+    - echo "Deployment finished."
