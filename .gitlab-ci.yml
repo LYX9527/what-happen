@@ -1,7 +1,7 @@
 variables:
   NAME: 'what-happen'
   VERSION: 'v1.0.0'
-  IMAGE_NAME: ${NAME}_${VERSION}
+  IMAGE_NAME: ${NAME}:${VERSION}
 stages:
   - build
   - push
@@ -38,8 +38,8 @@ push:
   script:
     - echo "Pushing Docker image to registry..."
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-    - docker tag ${IMAGE_NAME} ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}
-    - docker push ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}
+    - docker tag ${IMAGE_NAME} ${CI_REGISTRY_IMAGE}/${NAME}
+    - docker push ${CI_REGISTRY_IMAGE}/${NAME}
 
 clean:
   stage: clean
@@ -50,6 +50,6 @@ clean:
   script:
     - echo "Cleaning up local Docker images..."
     - docker rmi ${IMAGE_NAME} || true
-    - docker rmi ${CI_REGISTRY_IMAGE}/${IMAGE_NAME} || true
+    - docker rmi ${CI_REGISTRY_IMAGE}/${NAME} || true
     - docker system prune -f || true
     - echo "Cleanup completed."
