@@ -13,9 +13,6 @@
     },
     {
       "path": "./.nuxt/tsconfig.node.json"
-    },
-    {
-      "path": "./.nuxt/tsconfig.json"
     }
   ],
   "compilerOptions": {
