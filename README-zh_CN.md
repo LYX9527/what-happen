@@ -136,6 +136,17 @@
 5. **打开浏览器**
    访问 `http://localhost:5173`
 
+### 使用Docker运行
+
+如果你更倾向于使用 Docker 运行：
+
+```bash
+git clone https://github.com/LYX9527/what-happen
+cd what-happen/docker
+docker-compose up -d 
+# 访问应用 http://localhost:3001
+```
+
 ### 生产环境构建
 
 ```bash

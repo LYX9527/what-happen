@@ -137,6 +137,17 @@
 5. **Open your browser**
    Navigate to `http://localhost:5173`
 
+### Run with Docker
+
+If you prefer running with Docker:
+
+```bash
+git clone https://github.com/LYX9527/what-happen
+cd what-happen/docker
+docker-compose up -d 
+# Access the app at http://localhost:3001
+```
+
 ### Building for Production
 
 ```bash

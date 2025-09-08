@@ -1,0 +1,8 @@
+services:
+  what-happen-app:
+    image: yltfspace/what-happen
+    container_name: what-happen-app
+    restart: always
+    ports:
+      # - "127.0.0.1:3000:3000" # 仅绑定到本地主机
+      - "3000:3000" # 绑定到所有网络接口
