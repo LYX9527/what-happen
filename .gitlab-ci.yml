@@ -1,12 +1,14 @@
 variables:
   NAME: 'what-happen'
   VERSION: 'v1.0.0'
-  IMAGE_NAME: ${NAME}:${VERSION}
+  IMAGE_NAME: ${NAME}_${VERSION}
 stages:
-  - master
+  - build
+  - push
+  - clean
 
-master:
-  stage: master
+build:
+  stage: build
   only:
     - master
   tags:
@@ -26,4 +28,28 @@ master:
     - yarn build
     - cd docker
     - docker build --no-cache -t ${IMAGE_NAME} .
-    - docker-compose up -d
+
+push:
+  stage: push
+  only:
+    - master
+  tags:
+    - online
+  script:
+    - echo "Pushing Docker image to registry..."
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+    - docker tag ${IMAGE_NAME} ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}
+    - docker push ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}
+
+clean:
+  stage: clean
+  only:
+    - master
+  tags:
+    - online
+  script:
+    - echo "Cleaning up local Docker images..."
+    - docker rmi ${IMAGE_NAME} || true
+    - docker rmi ${CI_REGISTRY_IMAGE}/${IMAGE_NAME} || true
+    - docker system prune -f || true
+    - echo "Cleanup completed."
