@@ -1,5 +1,5 @@
 FROM node:lts-alpine
-COPY ../.output /app/
+COPY .output /app/
 WORKDIR /app
 ENV HOST=0.0.0.0
 ENV NODE_ENV=development
