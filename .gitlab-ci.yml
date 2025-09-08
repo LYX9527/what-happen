@@ -20,7 +20,8 @@ master:
     - node -v # 验证版本
     - echo "npm version:"
     - npm -v  # 验证版本
-    - npm ci
+    - rm -rf node_modules yarn.lock package-lock.json
+    - npm install
     - cp .env.example .env
     - npm run build
     - cd docker
