@@ -11,7 +11,15 @@ master:
     - master
   tags:
     - online
+  before_script:
+    - export NVM_DIR="$HOME/.nvm"
+    - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' # 加载 nvm
   script:
+    - echo "Starting build and deploy process..."
+    - echo "Node.js version:"
+    - node -v
+    - echo "Yarn version:"
+    - yarn -v
     - rm -rf node_modules
     - yarn
     - cp .env.example .env
