@@ -12,6 +12,10 @@ master:
   tags:
     - online
   script:
+    - echo "Node.js version:"
+    - node -v # 验证版本
+    - echo "npm version:"
+    - npm -v  # 验证版本
     - rm -rf node_modules yarn.lock package-lock.json
     - npm ci
     - cp .env.example .env
