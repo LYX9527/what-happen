@@ -26,8 +26,8 @@ build:
     - yarn
     - cp .env.example .env
     - yarn build
-    - cd docker
-    - docker build --no-cache -t ${IMAGE_NAME} .
+    - echo "Building docker image from project root..."
+    - docker build --no-cache -t ${IMAGE_NAME} -f docker/Dockerfile .
 
 push:
   stage: push
