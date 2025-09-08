@@ -1,0 +1,21 @@
+variables:
+  NAME: 'what-happen'
+  VERSION: 'v1.0.0'
+  IMAGE_NAME: ${NAME}:${VERSION}
+stages:
+  - master
+
+master:
+  stage: master
+  only:
+    - master
+  tags:
+    - online
+  script:
+    - rm -rf node_modules yarn.lock package-lock.json
+    - npm ci
+    - cp .env.example .env
+    - npm run build
+    - cd docker
+    - docker build --no-cache -t ${IMAGE_NAME} .
+    - docker-compose up -d
