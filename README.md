@@ -144,7 +144,10 @@ If you prefer running with Docker:
 ```bash
 git clone https://github.com/LYX9527/what-happen
 cd what-happen/docker
-docker-compose up -d 
+# If you have docker-compose installed or the docker compose plugin installed
+docker-compose up -d # or docker compose up -d
+# If neither is installed
+docker run -d --name what-happen-app --restart always -p 3001:3000 yltfspace/what-happen
 # Access the app at http://localhost:3001
 ```
 

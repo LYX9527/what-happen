@@ -143,7 +143,10 @@
 ```bash
 git clone https://github.com/LYX9527/what-happen
 cd what-happen/docker
-docker-compose up -d 
+# 如果你安装了 docker-compose 或 docker 安装了 compose 插件
+docker-compose up -d  # or docker compose up -d
+# 如果两个都没有安装
+docker run -d --name what-happen-app --restart always -p 3001:3000 yltfspace/what-happen
 # 访问应用 http://localhost:3001
 ```
 
