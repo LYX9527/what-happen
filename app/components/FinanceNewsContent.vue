@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {TrendingUp, TrendingDown} from 'lucide-vue-next'
-import type {NewsItem} from '@/api'
+import type {NewsItem} from '@/types/api'
 
 // Props
 interface Props {

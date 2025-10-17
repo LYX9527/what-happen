@@ -13,8 +13,8 @@ import GlobalSearch from '@/components/GlobalSearch.vue'
 import IntegratedTimeline from '@/components/IntegratedTimeline.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 
-import type {NewsItem} from "@/api"
-import {fetchNews as apiFetchNews} from "@/api"
+import type {NewsItem} from "@/types/api"
+import {useFetchNews} from "@/composables/useApi"
 import {getRouteConfig, getPlatformConfigs, getCategoryLabel, PlatformIcons} from '@/config/platforms'
 import type {TimelinePlatform} from "~/components/IntegratedTimeline.vue";
 
@@ -164,10 +164,11 @@ const fetchAllPlatformsData = async () => {
 
   const requests = platformConfigs.map(cfg => {
     const platform = cfg.platform
-    return apiFetchNews(platform)
-        .then(val => {
+    return useFetchNews(platform)
+        .then(response => {
           // 忽略过期的批次
           if (activeRunId.value !== runId) return
+          const val = response.data
           if (Array.isArray(val)) {
             pendingUpdates.set(platform, {data: val, error: null, loading: false})
           } else {

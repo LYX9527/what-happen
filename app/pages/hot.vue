@@ -16,8 +16,8 @@ import ThemeToggle from '@/components/ThemeToggle.vue'
 import AISummaryDialog from '@/components/AISummaryDialog.vue'
 import {useFavorites} from '@/composables/useFavorites'
 
-import type {NewsItem} from "@/api"
-import {fetchNews as apiFetchNews} from "@/api"
+import type {NewsItem} from "@/types/api"
+import {useFetchNews} from "@/composables/useApi"
 import {getRouteConfig, getPlatformConfigs, PlatformIcons} from '@/config/platforms'
 
 // 获取路由配置
@@ -157,7 +157,8 @@ const fetchPlatformData = async (platform: string, timestamp?: number) => {
   state.error = null
 
   try {
-    const result = await apiFetchNews(platform, timestamp)
+    const response = await useFetchNews(platform, timestamp)
+    const result = response.data
     if (result && Array.isArray(result)) {
       state.data = result
     } else {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {computed, ref, watch} from 'vue'
 import {Expand, Minimize, RefreshCw, Star, TrendingUp} from 'lucide-vue-next'
-import type {NewsItem} from '@/api'
+import type {NewsItem} from '@/types/api'
 import {useFavorites} from '@/composables/useFavorites'
 import {toast} from 'vue-sonner'
 import TimelineNewsContent from '@/components/TimelineNewsContent.vue'

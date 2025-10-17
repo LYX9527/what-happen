@@ -2,7 +2,7 @@
 import {computed, ref, watch} from 'vue'
 import {RefreshCw, Globe, Star, GripVertical, TrendingUp, TrendingDown} from 'lucide-vue-next'
 import {toast} from 'vue-sonner'
-import type {NewsItem} from "@/api"
+import type {NewsItem} from "@/types/api"
 import {useFavorites} from '@/composables/useFavorites'
 import {
   GitHubNewsItem,

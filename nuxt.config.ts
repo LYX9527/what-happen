@@ -8,6 +8,13 @@ export default defineNuxtConfig({
     // 明确启用SSR
     ssr: true,
 
+    // 运行时配置
+    runtimeConfig: {
+        public: {
+            apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:10010'
+        }
+    },
+
     // 客户端水合配置
     nitro: {
         prerender: {

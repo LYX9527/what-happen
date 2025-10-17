@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {NewsItem} from '@/api'
+import type {NewsItem} from '@/types/api'
 
 // Props
 interface Props {

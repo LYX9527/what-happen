@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {TrendingUp, TrendingDown, Minus} from 'lucide-vue-next'
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
-import type {NewsItem} from '@/api'
+import type {NewsItem} from '@/types/api'
 
 interface Props {
   item: NewsItem

@@ -8,7 +8,7 @@ import {
   TrendingUp,
   Clock
 } from 'lucide-vue-next'
-import type {NewsItem} from '@/api'
+import type {NewsItem} from '@/types/api'
 
 // Props
 interface Props {

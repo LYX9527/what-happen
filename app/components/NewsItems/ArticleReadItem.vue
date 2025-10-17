@@ -2,7 +2,7 @@
 import { Star } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import type { NewsItem } from "@/api"
+import type { NewsItem } from "@/types/api"
 import { useFavorites } from '@/composables/useFavorites'
 import { toast } from 'vue-sonner'
 

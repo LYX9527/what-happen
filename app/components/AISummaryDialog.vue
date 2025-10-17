@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue'
 import {Sparkles, TrendingUp, Hash, Loader2, AlertCircle} from 'lucide-vue-next'
-import type {AISummaryData} from '@/api'
-import {fetchAISummary} from '@/api'
+import type {AISummaryData} from '@/types/api'
+import {useFetchAISummary} from '@/composables/useApi'
 import {getTitle} from "~/config/platforms";
 
 interface Props {
@@ -35,7 +35,8 @@ const loadAISummary = async () => {
 
   try {
     // 首先尝试从真实API获取数据
-    summaryData.value = await fetchAISummary(props.category)
+    const response = await useFetchAISummary(props.category)
+    summaryData.value = response.data
   } catch (err) {
     console.warn('获取AI总结失败，使用模拟数据:', err)
   } finally {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {HoverCard, HoverCardContent, HoverCardTrigger} from '@/components/ui/hover-card'
-import type {MatchItem} from "@/api"
+import type {MatchItem} from "@/types/api"
 import {useFavorites} from '@/composables/useFavorites'
 import {computed} from 'vue'
 import {BOT, MID, SUP, TOP, JUN} from "@/components/icon";

@@ -1,5 +1,5 @@
 import { ref, computed, onMounted } from 'vue'
-import type { NewsItem } from '@/api'
+import type { NewsItem } from '@/types/api'
 
 // 收藏项类型，包含额外的元数据
 export interface FavoriteItem extends NewsItem {
