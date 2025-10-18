@@ -6,6 +6,7 @@ import {NewsItem} from "tools";
 import {QQMusicRes} from "~~/server/types/shared";
 const KUGOU_API = process.env.KUGOU_API || "https://www.kugou.com/yy/rank/home";
 import weekOfYear from "dayjs/plugin/weekOfYear.js";
+// @ts-ignore
 dayjs.extend(weekOfYear)
 export const kugou = async () => {
     if (!KUGOU_API) {
