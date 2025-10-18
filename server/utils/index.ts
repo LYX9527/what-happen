@@ -395,12 +395,12 @@ export const proxyPicture = (url: string, options: {
         const urlObj = new URL(url);
 
         // 如果已经是代理的URL，直接返回
-        if (urlObj.pathname.startsWith('/proxy/image')) {
+        if (urlObj.pathname.startsWith('/api/proxy/image')) {
             return url;
         }
 
         // 构建代理URL的基础部分
-        const baseProxyUrl = `${process.env.PROXY_URL || 'http://localhost:3000'}/proxy/image`;
+        const baseProxyUrl = `${process.env.PROXY_URL || 'http://localhost:3000'}/api/proxy/image`;
         const proxyUrl = new URL(baseProxyUrl);
 
         // 添加原始图片URL
