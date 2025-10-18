@@ -1,33 +1,38 @@
+import { apiManager } from '../manager'
+import { ApiResponse } from '../utils/response'
+import { getCache, setCache } from '../utils/cache'
+
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig()
-  const baseURL = config.public.apiBaseUrl || 'http://localhost:10010'
-  
   const query = getQuery(event)
   const platform = query.platform as string
-  const order = query.order as string | undefined
-  const timestamp = query._t as string | undefined
 
   if (!platform) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: '缺少 platform 参数',
-    })
+    return ApiResponse.error('缺少 platform 参数', 400)
   }
 
   try {
-    const params: string[] = [`platform=${encodeURIComponent(platform)}`]
-    if (order) params.push(`order=${order}`)
-    if (timestamp) params.push(`_t=${timestamp}`)
+    // 检查缓存
+    const cacheKey = `news:${platform}`
+    const cached = getCache(cacheKey, 120000) // 2分钟缓存
     
-    const response = await $fetch(`${baseURL}/news?${params.join('&')}`, {
-      timeout: 10000,
-    })
-    return response
-  } catch (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: '获取新闻数据失败',
-    })
+    if (cached) {
+      console.log(`从缓存返回 ${platform} 数据`)
+      return ApiResponse.success(cached)
+    }
+
+    // 获取 API 函数
+    const apiFunction = apiManager.getApi(platform)
+    
+    // 调用 API
+    const data = await apiFunction({ ...query })
+    
+    // 设置缓存
+    setCache(cacheKey, data)
+    
+    return ApiResponse.success(data)
+  } catch (error: any) {
+    console.error(`获取 ${platform} 数据失败:`, error)
+    return ApiResponse.error(error.message || '获取数据失败', 500)
   }
 })
 

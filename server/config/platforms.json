@@ -1,0 +1,103 @@
+[
+  {
+    "category": "social",
+    "name": "社会新闻",
+    "platform": [
+      "thepaper",
+      "cankaoxiaoxi",
+      "zaobao",
+      "tieba",
+      "kaopu",
+      "hupu"
+    ]
+  },
+  {
+    "category": "tech",
+    "name": "科技资讯",
+    "platform": [
+      "github",
+      "_36kr",
+      "ithome",
+      "solidot",
+      "v2ex",
+      "coolapk",
+      "juejin",
+      "sspai",
+      "csdn",
+      "fishpi",
+      "_51cto",
+      "nowcoder"
+    ]
+  },
+  {
+    "category": "hot",
+    "name": "热搜榜",
+    "platform": [
+      "weibo",
+      "baidu",
+      "kuaishou",
+      "douyin",
+      "zhihu",
+      "toutiao"
+    ]
+  },
+  {
+    "category": "entertainment",
+    "name": "娱乐资讯",
+    "platform": [
+      "b_hot_search",
+      "douban",
+      "bd_tv",
+      "kugou",
+      "qq_music",
+      "b_hot_video",
+      "b_rank"
+    ]
+  },
+  {
+    "category": "sports",
+    "name": "体育赛事",
+    "platform": [
+      "hupu_lol",
+      "hupu_fifa",
+      "hupu_nba",
+      "hupu_cba",
+      "hupu_csl",
+      "hupu_valorant",
+      "hupu_sports",
+      "hupu_kog"
+    ]
+  },
+  {
+    "category": "car",
+    "name": "汽车资讯",
+    "platform": [
+      "dcd_news",
+      "dcd_hot",
+      "autohome",
+      "autohome_hot",
+      "autohome_video"
+    ]
+  },
+  {
+    "category": "finance",
+    "name": "财经新闻",
+    "platform": [
+      "wallstreetcn_hot",
+      "jqka",
+      "cls_telegraph",
+      "gelonghui",
+      "wallstreetcn_live",
+      "wallstreetcn_news",
+      "hotstock",
+      "stock_sha",
+      "stock_shb",
+      "stock_sza",
+      "stock_szb",
+      "stock_cyb",
+      "stock_hk",
+      "stock_us"
+    ]
+  }
+]
+

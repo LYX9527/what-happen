@@ -1,17 +1,12 @@
-export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig()
-  const baseURL = config.public.apiBaseUrl || 'http://localhost:10010'
+import { ApiResponse } from '../utils/response'
+import platforms from '../config/platforms.json'
 
+export default defineEventHandler(async () => {
   try {
-    const response = await $fetch(`${baseURL}/platforms`, {
-      timeout: 10000,
-    })
-    return response
+    return ApiResponse.success(platforms)
   } catch (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: '获取平台列表失败',
-    })
+    console.error('获取平台列表失败:', error)
+    return ApiResponse.error('获取平台列表失败', 500)
   }
 })
 
