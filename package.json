@@ -9,6 +9,9 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
+  "engines": {
+    "node": "22.12.0"
+  },
   "dependencies": {
     "@jixun/qmweb-sign": "^2.0.3",
     "@nuxt/ui": "3.3.0",
@@ -26,7 +29,7 @@
     "jssha": "^3.3.1",
     "lucide-vue-next": "^0.536.0",
     "md5": "^2.3.0",
-    "nuxt": "^4.0.1",
+    "nuxt": "4.1.0",
     "reka-ui": "^2.4.1",
     "shadcn-nuxt": "2.2.0",
     "sharp": "^0.34.4",

@@ -95,6 +95,14 @@
 - **拖拽功能**: Vue Draggable Plus
 - **消息通知**: Vue Sonner
 
+## 快速部署
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FLYX9527%2Fwhat-happen)  
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/LYX9527/what-happen)  
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/LYX9527/what-happen)
+[![使用 EdgeOne Pages 部署](https://cdnstatic.tencentcs.com/edgeone/pages/deploy.svg)](https://edgeone.ai/pages/new?repository-url=https://github.com/LYX9527/what-happen)
+
+
 ## 快速开始
 
 ### 环境要求
