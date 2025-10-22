@@ -291,6 +291,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *Stay informed, stay connected*
 
 </div>
+
 ## Star History
 
 <a href="https://www.star-history.com/#LYX9527/what-happen&type=date&logscale&legend=top-left">
