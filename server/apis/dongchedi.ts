@@ -8,7 +8,11 @@ export const dongchediHot = async () => {
     if (!DONGCHEDI_API) {
         throw new Error("DongCheDi API is not set");
     }
-    let response = await axios.get(DONGCHEDI_API);
+    let response = await axios.get(DONGCHEDI_API,{
+        headers:{
+            'User-Agent': genRandomUserAgent(),
+        }
+    });
     const $ = load(response?.data)
     let nextdata = $("#__NEXT_DATA__");
     let parse: DongCheDiRes = JSON.parse($(nextdata).text());
@@ -28,7 +32,11 @@ export const dongchediNews = async () => {
     if (!DONGCHEDI_API) {
         throw new Error("DongCheDi API is not set");
     }
-    let response = await axios.get(DONGCHEDI_API);
+    let response = await axios.get(DONGCHEDI_API,{
+        headers:{
+            'User-Agent': genRandomUserAgent(),
+        }
+    });
     const $ = load(response?.data)
     let nextdata = $("#__NEXT_DATA__");
     let parse: DongCheDiRes = JSON.parse($(nextdata).text());

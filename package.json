@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "engines": {
-    "node": "22.12.0"
+    "node": "22.x"
   },
   "dependencies": {
     "@jixun/qmweb-sign": "^2.0.3",

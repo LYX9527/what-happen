@@ -29,8 +29,6 @@ export default defineNitroPlugin((nitroApp) => {
   apiManager.registerApi('_51cto', apis._51cto)
   apiManager.registerApi('nowcoder', apis.nowcoder)
   apiManager.registerApi('jin10', apis.jin10)
-  apiManager.registerApi('linuxdo_hot', apis.linuxDoHot)
-  apiManager.registerApi('linuxdo_latest', apis.linuxDoLatest)
 
   // 注册社会新闻平台
   apiManager.registerApi('thepaper', apis.thepaper)
@@ -51,8 +49,6 @@ export default defineNitroPlugin((nitroApp) => {
 
   // 注册其他需要特殊支持的平台
   apiManager.registerApi('sputniknewscn', apis.sputniknewscn)
-  apiManager.registerApi('guoheboke', apis.guoheboke)
-  apiManager.registerApi('smzdm', apis.smzdm)
   apiManager.registerApi('pcbeta_windows', apis.pcbetaWin)
   apiManager.registerApi('pcbeta_win11', apis.pcbetaWin11)
 

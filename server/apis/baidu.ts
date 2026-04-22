@@ -1,5 +1,4 @@
 import type {NewsItem} from '../types'
-
 const BAIDU_API = process.env.BAIDU_API || 'https://top.baidu.com/board?tab=realtime'
 const BAIDU_TELEPLAY_API = process.env.BAIDU_TELEPLAY_API || 'https://top.baidu.com/board?tab=teleplay'
 
@@ -11,9 +10,13 @@ export const baidu = async () => {
     if (!BAIDU_API) {
         throw new Error("Baidu API is not set")
     }
-    const rawData = await axios.get(BAIDU_API)
+    const rawData = await axios.get(BAIDU_API,{
+        headers:{
+            'User-Agent': genRandomUserAgent(),
+        }
+    })
     const jsonStr = (rawData.data as string).match(/<!--s-data:(.*?)-->/)
-    const data: BaiduRes = JSON.parse(jsonStr![1])
+    const data: BaiduRes = JSON.parse(jsonStr![1]).data
     return data.cards[0].content.filter(k => !k.isTop).map((k) => {
         return {
             id: k.rawUrl,
@@ -33,12 +36,16 @@ export const baiduTeleplay = async () => {
     if (!BAIDU_TELEPLAY_API) {
         throw new Error("Baidu Teleplay API is not set")
     }
-    const rawData = await axios.get(BAIDU_TELEPLAY_API);
+    const rawData = await axios.get(BAIDU_TELEPLAY_API,{
+        headers:{
+            'User-Agent': genRandomUserAgent(),
+        }
+    });
     const jsonStr = (rawData.data as string).match(/<!--s-data:(.*?)-->/);
     if (!jsonStr) {
         throw new Error("Failed to parse Baidu Teleplay data");
     }
-    const data: BaiduTeleplayRes = JSON.parse(sanitizeJsonString(jsonStr[1]));
+    const data: BaiduTeleplayRes = JSON.parse(sanitizeJsonString(jsonStr[1])).data;
     return data.cards[0].content.map((k) => {
         return {
             id: k.word,

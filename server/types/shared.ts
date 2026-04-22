@@ -1,4 +1,3 @@
-
 export interface BaiduRes {
     cards: {
         content: {
@@ -862,5 +861,6 @@ export interface Params {
     app: string;
     os: string;
     sv: string;
+
     [key: string]: any;
 }
